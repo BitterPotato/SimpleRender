@@ -1,7 +1,7 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
-#include "../util/type_def.hpp"
+#include "../raster/Frag.hpp"
 
 class framebuffer {
 public:

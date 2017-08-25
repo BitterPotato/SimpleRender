@@ -33,6 +33,21 @@
     <ClInclude Include="util\type_def.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="raster\Frag.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\FragCache.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\Line.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\Point.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\Triangle.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -47,5 +62,13 @@
     <ClCompile Include="main\SimpleRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="raster\FragCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="raster\Frag.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

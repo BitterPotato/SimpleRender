@@ -148,6 +148,11 @@
   <ItemGroup>
     <ClInclude Include="platform\framebuffer.hpp" />
     <ClInclude Include="platform\uniform.hpp" />
+    <ClInclude Include="raster\Frag.hpp" />
+    <ClInclude Include="raster\FragCache.hpp" />
+    <ClInclude Include="raster\Line.hpp" />
+    <ClInclude Include="raster\Point.hpp" />
+    <ClInclude Include="raster\Triangle.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="util\type_def.hpp" />
@@ -156,12 +161,16 @@
     <ClCompile Include="main\SimpleRender.cpp" />
     <ClCompile Include="platform\winbuffer.cpp" />
     <ClCompile Include="platform\winform.cpp" />
+    <ClCompile Include="raster\FragCache.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="raster\Frag.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
