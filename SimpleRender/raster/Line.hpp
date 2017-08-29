@@ -49,6 +49,7 @@ inline void rasterErrorYBased(const Vertex& lineBP, const Vertex& lineEP, float 
 	}
 }
 
+// do not support color interpolate temply
 inline FragCache rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width) {
 	FragCache fragCache;
 
@@ -98,6 +99,16 @@ inline FragCache rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, co
 	int y0 = lineBegin.y;
 	int x1 = lineEnd.x;
 	int y1 = lineEnd.y;
+
+	int b0 = lineBegin.info.bgra->b;
+	int g0 = lineBegin.info.bgra->g;
+	int r0 = lineBegin.info.bgra->r;
+	int a0 = lineBegin.info.bgra->a;
+	int b1 = lineEnd.info.bgra->b;
+	int g1 = lineEnd.info.bgra->g;
+	int r1 = lineEnd.info.bgra->r;
+	int a1 = lineEnd.info.bgra->a;
+
 	bool steep = std::abs(y1 - y0) > std::abs(x1 - x0);
 	if (steep) {
 		swap(&x0, &y0);
@@ -106,25 +117,43 @@ inline FragCache rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, co
 	if (x0 > x1) {
 		swap(&x0, &x1);
 		swap(&y0, &y1);
+
+		swap(&b0, &b1);
+		swap(&g0, &g1);
+		swap(&r0, &r1);
+		swap(&a0, &a1);
 	}
-	int deltaX = x1 - x0;
-	int deltaY = y1 - y0;
 	float error = 0;
-	float deltaError =(float) deltaY / (float)deltaX;
+	float deltaError = static_cast<float>(y1 - y0) / (x1 - x0);
+	float bDeltaError = static_cast<float>(b1 - b0) / (x1 - x0);
+	float gDeltaError = static_cast<float>(g1 - g0) / (x1 - x0);
+	float rDeltaError = static_cast<float>(r1 - r0) / (x1 - x0);
+	float aDeltaError = static_cast<float>(a1 - a0) / (x1 - x0);
 	
 	int ySege = y0 > y1 ? -1 : 1;
 	int curY = y0;
+	float curB = b0;
+	float curG = g0;
+	float curR = r0;
+	float curA = a0;
+
 	for (int curX = x0; curX <= x1; curX++) {
 		error += deltaError;
 		if (std::abs(error) >= 0.5f) {
 			curY += ySege;
 			error -= ySege;
 		}
-
+		curB += bDeltaError;
+		curG += gDeltaError;
+		curR += rDeltaError;
+		curA += aDeltaError;
+		
+		BGRA* interBGRA = new BGRA{ ipart(curB), ipart(curG), ipart(curR), ipart(curA) };
+		Info* interInfo = new Info{ interBGRA, lineBegin.info.depth, lineBegin.info.stencil };
 		if (steep)
-			fragCache.addFrag({ curY, curX, lineBegin.info });
+			fragCache.addFrag({ curY, curX, *interInfo });
 		else
-			fragCache.addFrag({ curX, curY, lineBegin.info });
+			fragCache.addFrag({ curX, curY, *interInfo });
 	}
 	return fragCache;
 }

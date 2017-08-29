@@ -71,22 +71,26 @@ void testCircleAn(int width, int height, framebuffer& fb) {
 // function plays the role of fragment shader
 void fsImpl(const Frag& frag) {
 	//if (frag.x < 400) {
-		mFramebuffer.setBufferPixel(frag.x, frag.y, bgra);
+		mFramebuffer.setBufferPixel(frag.x, frag.y, *frag.info.bgra);
 	//}
 }
 
 // ========== rasterization =============
 inline void testRasterPoint() {
 	BGRA bgra{ 255, 128, 64, 255 };
-	Info info{ bgra, 0, 0 };
+	Info info{ &bgra, 0, 0 };
 
 	Vertex vertex{ 760, 760,  info };
 	rasterPoint(vertex, 40).runFrags(*fsImpl);
 }
 
 inline void testRasterLine() {
-	BGRA bgra{ 255, 128, 64, 255 };
-	Info info{ bgra, 0, 0 };
+	//BGRA bgra{ 255, 128, 64, 255 };
+	//Info info{ bgra, 0, 0 };
+	BGRA bgraB{ 255, 255, 0, 255 };
+	Info infoB{ &bgraB, 0, 0 };
+	BGRA bgraE{ 0, 0, 255, 255 };
+	Info infoE{ &bgraE, 0, 0 };
 
 	//Vertex vertexBegin{ 100, 100, info };
 	//Vertex vertexEnd{ 100, 150, info };
@@ -101,8 +105,8 @@ inline void testRasterLine() {
 	//Vertex vertexEnd{ 300, 100, info };
 	//Vertex vertexBegin{ 100, 100, info };
 	//Vertex vertexEnd{ 200, 300, info };
-	Vertex vertexBegin{ 100, 100, info };
-	Vertex vertexEnd{ 800, 600, info };
+	Vertex vertexBegin{ 100, 100, infoB };
+	Vertex vertexEnd{ 800, 800, infoE };
 	rasterLine(vertexBegin, vertexEnd, 1).runFrags(*fsImpl);
 }
 
