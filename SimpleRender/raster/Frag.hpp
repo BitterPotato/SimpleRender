@@ -6,33 +6,52 @@
 #include "../util/type_def.hpp"
 
 // colors
-typedef struct BGRA {
-	int b; int g;  int r; int a;
-};
-// TODO: why method cause LINK2005 error
-//BGRA operator*(const BGRA& bgra, const float ratio) {
-//	return { mround(bgra.r*ratio), mround(bgra.g*ratio), mround(bgra.b*ratio), mround(bgra.a*ratio) };
-//}
+//struct BGRA {
+//	int b; int g;  int r; int a;
+//	// TODO: why method cause LINK2005 error
+//	friend BGRA operator*(const BGRA& bgra, const float ratio);
+//	//BGRA operator*(const BGRA& bgraA, const BGRA& bgraB) {
+//	//	return {};
+//	//}
+//};
 
-typedef struct Info {
+class BGRA {
+public:
+	int b; int g;  int r; int a;
+
+	friend BGRA operator*(const BGRA& bgra, const float ratio);
+};
+
+struct Info {
 	BGRA* bgra; int depth; int stencil;
+	Info(BGRA* bgra, int depth, int stencil) {
+		this->bgra = bgra;
+		this->depth = depth;
+		this->stencil = stencil;
+	}
 	~Info() {
 		std::cout << "Info de_construct\n";
 	}
 };
-//Info operator*(const Info& a, const float ratio) {
-//	return { a.bgra*ratio, a.depth, a.stencil };
-//}
 
 // just shallow copy
-typedef struct stu{
+struct Frag{
 	int x; int y; Info& info;
-	stu operator=(const stu& stuInst) {
+	Frag(Info& info) : info(info) {
+		this->x = 0;
+		this->y = 0;
+	}
+	Frag(int x, int y, Info& info): info(info) {
+		this->x = x;
+		this->y = y;
+	}
+	Frag operator=(const Frag& stuInst) {
 		x = stuInst.x;
 		y = stuInst.y;
 		info = stuInst.info;
+		return *this;
 	}
-} Frag;
+};
 
 typedef Frag Vertex;
 

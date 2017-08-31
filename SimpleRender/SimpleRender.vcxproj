@@ -146,6 +146,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="math\tvector.hpp" />
+    <ClInclude Include="math\tvector_trans.hpp" />
     <ClInclude Include="platform\framebuffer.hpp" />
     <ClInclude Include="platform\uniform.hpp" />
     <ClInclude Include="raster\Frag.hpp" />

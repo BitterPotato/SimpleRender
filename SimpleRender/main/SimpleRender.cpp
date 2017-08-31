@@ -1,14 +1,15 @@
 // SimpleRender.cpp : Defines the entry point for the console application.
 //
 
-//#define LINE_Bresenham
-#define LINE_WuXiaolin
+#define LINE_Bresenham
+//#define LINE_WuXiaolin
 
 #include "../util/type_def.hpp"
 #include "../platform/uniform.hpp"
 #include "../platform/framebuffer.hpp"
 #include "../raster/Point.hpp"
 #include "../raster/Line.hpp"
+#include "../raster/Triangle.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -107,9 +108,39 @@ inline void testRasterLine() {
 	//Vertex vertexEnd{ 200, 300, info };
 	Vertex vertexBegin{ 100, 100, infoB };
 	Vertex vertexEnd{ 800, 800, infoE };
-	rasterLine(vertexBegin, vertexEnd, 1).runFrags(*fsImpl);
+
+	FragCache fragCache;
+	rasterLine(vertexBegin, vertexEnd, 1, fragCache);
+	fragCache.runFrags(*fsImpl);
 }
 
+inline void testRasterTriangle() {
+	BGRA bgraA{255, 0, 0};
+	Info infoA{ &bgraA, 0, 0 };
+	Vertex vertexA{ 400, 100, infoA };
+
+	BGRA bgraB{ 0, 255, 0 };
+	Info infoB{ &bgraB, 0, 0 };
+	Vertex vertexB{ 100, 600, infoB };
+
+	BGRA bgraC{ 0, 0, 255 };
+	Info infoC{ &bgraC, 0, 0 };
+	Vertex vertexC{ 500, 300, infoC };
+
+	BGRA bgraD{ 255, 255, 255 };
+	Info infoD{ &bgraD, 0, 0 };
+	Vertex vertexD{ 750, 250, infoD };
+
+	FragCache fragCache;
+	rasterTriangle(vertexA, vertexB, vertexC, fragCache);
+	fragCache.runFrags(*fsImpl);
+	//rasterTriangle(vertexA, vertexC, vertexD).runFrags(*fsImpl);
+	//rasterTriangle(vertexB, vertexC, vertexD).runFrags(*fsImpl);
+
+	//rasterTriangle({ 400, 99, infoA }, { 100, 599, infoB }, { 499, 299, infoC }).runFrags(*fsImpl);
+	//rasterTriangle(vertexA, { 500, 299, infoC }, { 750, 249, infoD }).runFrags(*fsImpl);
+	//rasterTriangle(vertexB, vertexC, vertexD).runFrags(*fsImpl);
+}
 int main(void)
 {
 	int indicator = 0;
@@ -129,8 +160,9 @@ int main(void)
 	//testRectangle(width, height, mFramebuffer);
 	//testCircleAn(width, height, mFramebuffer);
 
-	testRasterLine();
+	//testRasterLine();
 	//testRasterPoint();
+	testRasterTriangle();
 
 	mUniform.runRender();
 

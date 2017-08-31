@@ -5,15 +5,15 @@
 
 #include <cmath>
 
-inline FragCache rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width);
-inline FragCache rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const int width);
-inline FragCache rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const int width);
+inline void rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
+inline void rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
+inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
 
-inline FragCache rasterLine(const Vertex& lineBegin, const Vertex& lineEnd, const int width) {
+inline void rasterLine(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& outFragCache) {
 #if defined(LINE_Bresenham)
-	return rasterLineBB(lineBegin, lineEnd, width);
+	rasterLineBB(lineBegin, lineEnd, width, outFragCache);
 #elif defined(LINE_WuXiaolin)
-	return rasterLineW(lineBegin, lineEnd, width);
+	rasterLineW(lineBegin, lineEnd, width, outFragCache);
 #endif
 }
 
@@ -50,9 +50,7 @@ inline void rasterErrorYBased(const Vertex& lineBP, const Vertex& lineEP, float 
 }
 
 // do not support color interpolate temply
-inline FragCache rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width) {
-	FragCache fragCache;
-
+inline void rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache) {
 	// 1. vertical line
 	if (lineBegin.x == lineEnd.x) {
 		// divide zero
@@ -69,7 +67,7 @@ inline FragCache rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, con
 		for (int curY = lineSmallY; curY <= lineBigY; curY++) {
 			fragCache.addFrag({ lineX, curY, lineBegin.info });
 		}
-		return fragCache;
+		return;
 	}
 
 	float slope = (float)(lineEnd.y - lineBegin.y) / (float)(lineEnd.x - lineBegin.x);
@@ -88,13 +86,9 @@ inline FragCache rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, con
 		else
 			rasterErrorXBased(lineBegin, lineEnd, slope, fragCache);
 	}
-
-	return fragCache;
 }
 
-inline FragCache rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const int width) {
-	FragCache fragCache;
-
+inline void rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache) {
 	int x0 = lineBegin.x;
 	int y0 = lineBegin.y;
 	int x1 = lineEnd.x;
@@ -155,13 +149,10 @@ inline FragCache rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, co
 		else
 			fragCache.addFrag({ curX, curY, *interInfo });
 	}
-	return fragCache;
 }
 
 
-inline FragCache rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const int width) {
-	FragCache fragCache;
-
+inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache) {
 	float x0 = lineBegin.x;
 	float y0 = lineBegin.y;
 	float x1 = lineEnd.x;
@@ -223,7 +214,5 @@ inline FragCache rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, con
 
 		intery += gradient;
 	}
-
-	return fragCache;
 }
 #endif

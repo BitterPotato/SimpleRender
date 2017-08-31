@@ -48,6 +48,12 @@
     <ClInclude Include="raster\Triangle.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="math\tvector.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tvector_trans.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
