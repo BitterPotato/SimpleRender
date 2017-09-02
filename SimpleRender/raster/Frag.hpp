@@ -24,7 +24,7 @@ public:
 
 struct Info {
 	BGRA* bgra; int depth; int stencil;
-	Info(BGRA* bgra, int depth, int stencil) {
+	Info(BGRA* bgra, int depth=0, int stencil=0) {
 		this->bgra = bgra;
 		this->depth = depth;
 		this->stencil = stencil;
@@ -37,11 +37,7 @@ struct Info {
 // just shallow copy
 struct Frag{
 	int x; int y; Info& info;
-	Frag(Info& info) : info(info) {
-		this->x = 0;
-		this->y = 0;
-	}
-	Frag(int x, int y, Info& info): info(info) {
+	Frag(Info& info, int x = 0, int y = 0): info(info) {
 		this->x = x;
 		this->y = y;
 	}

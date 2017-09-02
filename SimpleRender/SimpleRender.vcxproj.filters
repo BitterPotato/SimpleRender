@@ -54,6 +54,18 @@
     <ClInclude Include="math\tvector_trans.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="math\tmatrix.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tmatrix_trans.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tmatrix_gl.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tmatrix_rotate.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -79,9 +79,9 @@ void fsImpl(const Frag& frag) {
 // ========== rasterization =============
 inline void testRasterPoint() {
 	BGRA bgra{ 255, 128, 64, 255 };
-	Info info{ &bgra, 0, 0 };
+	Info info{ &bgra };
 
-	Vertex vertex{ 760, 760,  info };
+	Vertex vertex{ info, 760, 760 };
 	rasterPoint(vertex, 40).runFrags(*fsImpl);
 }
 
@@ -89,9 +89,9 @@ inline void testRasterLine() {
 	//BGRA bgra{ 255, 128, 64, 255 };
 	//Info info{ bgra, 0, 0 };
 	BGRA bgraB{ 255, 255, 0, 255 };
-	Info infoB{ &bgraB, 0, 0 };
+	Info infoB{ &bgraB };
 	BGRA bgraE{ 0, 0, 255, 255 };
-	Info infoE{ &bgraE, 0, 0 };
+	Info infoE{ &bgraE };
 
 	//Vertex vertexBegin{ 100, 100, info };
 	//Vertex vertexEnd{ 100, 150, info };
@@ -106,8 +106,8 @@ inline void testRasterLine() {
 	//Vertex vertexEnd{ 300, 100, info };
 	//Vertex vertexBegin{ 100, 100, info };
 	//Vertex vertexEnd{ 200, 300, info };
-	Vertex vertexBegin{ 100, 100, infoB };
-	Vertex vertexEnd{ 800, 800, infoE };
+	Vertex vertexBegin{ infoB, 100, 100 };
+	Vertex vertexEnd{ infoE, 800, 800 };
 
 	FragCache fragCache;
 	rasterLine(vertexBegin, vertexEnd, 1, fragCache);
@@ -116,20 +116,20 @@ inline void testRasterLine() {
 
 inline void testRasterTriangle() {
 	BGRA bgraA{255, 0, 0};
-	Info infoA{ &bgraA, 0, 0 };
-	Vertex vertexA{ 400, 100, infoA };
+	Info infoA{ &bgraA };
+	Vertex vertexA{ infoA, 400, 100 };
 
 	BGRA bgraB{ 0, 255, 0 };
-	Info infoB{ &bgraB, 0, 0 };
-	Vertex vertexB{ 100, 600, infoB };
+	Info infoB{ &bgraB };
+	Vertex vertexB{ infoB, 100, 600 };
 
 	BGRA bgraC{ 0, 0, 255 };
-	Info infoC{ &bgraC, 0, 0 };
-	Vertex vertexC{ 500, 300, infoC };
+	Info infoC{ &bgraC };
+	Vertex vertexC{ infoC, 500, 300 };
 
 	BGRA bgraD{ 255, 255, 255 };
-	Info infoD{ &bgraD, 0, 0 };
-	Vertex vertexD{ 750, 250, infoD };
+	Info infoD{ &bgraD };
+	Vertex vertexD{ infoD, 750, 250 };
 
 	FragCache fragCache;
 	rasterTriangle(vertexA, vertexB, vertexC, fragCache);
@@ -168,4 +168,3 @@ int main(void)
 
 	return 0;
 }
-

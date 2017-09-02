@@ -13,12 +13,16 @@ struct Bary {
 }; 
 
 inline float computeAreaRatio(const Point& point1, const Point& point2, const Point& pointSide, const Point& point) {
-	TVector2<int> vecSide1 = { point1.x - pointSide.x, point1.y - pointSide.y };
-	TVector2<int> vecSide2 = { point2.x - pointSide.x, point2.y - pointSide.y };
-	TVector2<int> vec1 = { point1.x - point.x, point1.y - point.y };
-	TVector2<int> vec2 = { point2.x - point.x, point2.y - point.y };
+	ivec2 vecSide1 = { point1.x - pointSide.x, point1.y - pointSide.y };
+	ivec2 vecSide2 = { point2.x - pointSide.x, point2.y - pointSide.y };
+	ivec2 vec1 = { point1.x - point.x, point1.y - point.y };
+	ivec2 vec2 = { point2.x - point.x, point2.y - point.y };
 
-	return  static_cast<float>(math::cross<int>(vec1, vec2)) / math::cross<int>(vecSide1, vecSide2);
+	int val1 = vecSide1[0];
+	int val2 = vecSide1[1];
+
+	float ret = static_cast<float>(math::det<int>(vec1, vec2)) / math::det<int>(vecSide1, vecSide2);
+	return ret;
 }
 
 
@@ -77,19 +81,11 @@ inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const V
 				BGRA* bgra = new BGRA();
 				computeInterColor(*vertexA.info.bgra, *vertexB.info.bgra, *vertexC.info.bgra, bary, *bgra);
 
-				Info* info = new Info(bgra, 0, 0);
-				fragCache.addFrag({x, y, *info});
+				Info* info = new Info(bgra);
+				fragCache.addFrag({ *info, x, y});
 			}
 		}
 	}
 }
 
-
-// as for function
-//1. 没副作用的方法类似const方法
-//2. 选择业务交接点，不纯的函数
-//3. 底层函数不纯影响所有调用它的方法
-//4. 常常意味着更多参数
-//5. C++容器的复制后果可能是性能糟糕的
-//6. 并非所有方法都使用复制，例如光栅化前的framebuffer和光栅化后的framebuffer
 #endif

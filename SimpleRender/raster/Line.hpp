@@ -29,7 +29,7 @@ inline void rasterErrorXBased(const Vertex& lineBP, const Vertex& lineEP, float 
 			error -= ySege;
 		}
 		// TODO color interpolate
-		outFragCache.addFrag({ curX, curY, lineBP.info });
+		outFragCache.addFrag({ lineBP.info, curX, curY});
 	}
 }
 
@@ -45,7 +45,7 @@ inline void rasterErrorYBased(const Vertex& lineBP, const Vertex& lineEP, float 
 			error -= xSege;
 		}
 		// TODO color interpolate
-		outFragCache.addFrag({ curX, curY, lineBP.info });
+		outFragCache.addFrag({ lineBP.info, curX, curY });
 	}
 }
 
@@ -65,7 +65,7 @@ inline void rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const in
 			lineBigY = lineEnd.y;
 		}
 		for (int curY = lineSmallY; curY <= lineBigY; curY++) {
-			fragCache.addFrag({ lineX, curY, lineBegin.info });
+			fragCache.addFrag({ lineBegin.info, lineX, curY });
 		}
 		return;
 	}
@@ -143,11 +143,11 @@ inline void rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const i
 		curA += aDeltaError;
 		
 		BGRA* interBGRA = new BGRA{ ipart(curB), ipart(curG), ipart(curR), ipart(curA) };
-		Info* interInfo = new Info{ interBGRA, lineBegin.info.depth, lineBegin.info.stencil };
+		Info* interInfo = new Info{ interBGRA };
 		if (steep)
-			fragCache.addFrag({ curY, curX, *interInfo });
+			fragCache.addFrag({ *interInfo, curY, curX });
 		else
-			fragCache.addFrag({ curX, curY, *interInfo });
+			fragCache.addFrag({ *interInfo, curX, curY });
 	}
 }
 
@@ -179,8 +179,8 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	// TODO: begin and end
 	if (steep)
 		swap(&xpxl1, &ypxl1);
-	fragCache.addFrag({ xpxl1, ypxl1, colorRatioInfo(lineBegin.info, rfpart(yend)*xgap) });
-	fragCache.addFrag({ xpxl1, ypxl1 + 1, colorRatioInfo(lineBegin.info, fpart(yend)*xgap) });
+	fragCache.addFrag({ colorRatioInfo(lineBegin.info, rfpart(yend)*xgap), xpxl1, ypxl1 });
+	fragCache.addFrag({ colorRatioInfo(lineBegin.info, fpart(yend)*xgap), xpxl1, ypxl1 + 1 });
 	if (steep)
 		swap(&xpxl1, &ypxl1);
 
@@ -194,8 +194,8 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	// TODO: begin and end
 	if (steep)
 		swap(&xpxl1, &ypxl1);
-	fragCache.addFrag({ xpxl2, ypxl2, colorRatioInfo(lineBegin.info, rfpart(yend)*xgap) });
-	fragCache.addFrag({ xpxl2, ypxl2 + 1, colorRatioInfo(lineBegin.info, fpart(yend)*xgap) });
+	fragCache.addFrag({ colorRatioInfo(lineBegin.info, rfpart(yend)*xgap), xpxl2, ypxl2  });
+	fragCache.addFrag({ colorRatioInfo(lineBegin.info, fpart(yend)*xgap), xpxl2, ypxl2 + 1 });
 	if (steep)
 		swap(&xpxl1, &ypxl1);
 
@@ -204,12 +204,12 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	for (int x = xpxl1 + 1; x < xpxl2; x++) {
 		// 点的颜色值按照比例分配给它的上下两个点
 		if (steep) {
-			fragCache.addFrag({ ipart(intery), x, colorRatioInfo(lineBegin.info, rfpart(intery)) });
-			fragCache.addFrag({ ipart(intery) + 1, x, colorRatioInfo(lineBegin.info, fpart(intery)) });
+			fragCache.addFrag({ colorRatioInfo(lineBegin.info, rfpart(intery)), ipart(intery), x });
+			fragCache.addFrag({ colorRatioInfo(lineBegin.info, fpart(intery)), ipart(intery) + 1, x });
 		}
 		else {
-			fragCache.addFrag({ x, ipart(intery), colorRatioInfo(lineBegin.info, rfpart(intery)) });
-			fragCache.addFrag({ x, ipart(intery) + 1, colorRatioInfo(lineBegin.info, fpart(intery)) });
+			fragCache.addFrag({ colorRatioInfo(lineBegin.info, rfpart(intery)), x, ipart(intery) });
+			fragCache.addFrag({ colorRatioInfo(lineBegin.info, fpart(intery)), x, ipart(intery) + 1 });
 		}
 
 		intery += gradient;

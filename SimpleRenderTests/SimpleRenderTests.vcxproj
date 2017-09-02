@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{06A14DB6-D049-4984-BF5C-E632E6214666}</ProjectGuid>
+    <ProjectGuid>{3CFC865F-4BA9-4C72-9EC9-EBCC1CA2DC99}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SimpleRender</RootNamespace>
+    <RootNamespace>SimpleRenderTests</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>E:\My_Workspace\googletest-master\googletest\include;E:\My_Workspace\googletest-master\googletest;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -147,28 +147,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="math\tmatrix.hpp" />
-    <ClInclude Include="math\tmatrix_gl.hpp" />
-    <ClInclude Include="math\tmatrix_rotate.hpp" />
-    <ClInclude Include="math\tmatrix_trans.hpp" />
-    <ClInclude Include="math\tvector.hpp" />
-    <ClInclude Include="math\tvector_trans.hpp" />
-    <ClInclude Include="platform\framebuffer.hpp" />
-    <ClInclude Include="platform\uniform.hpp" />
-    <ClInclude Include="raster\Frag.hpp" />
-    <ClInclude Include="raster\FragCache.hpp" />
-    <ClInclude Include="raster\Line.hpp" />
-    <ClInclude Include="raster\Point.hpp" />
-    <ClInclude Include="raster\Triangle.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="util\type_def.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main\SimpleRender.cpp" />
-    <ClCompile Include="platform\winbuffer.cpp" />
-    <ClCompile Include="platform\winform.cpp" />
-    <ClCompile Include="raster\FragCache.cpp" />
+    <ClCompile Include="SimpleRenderTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -177,7 +160,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="raster\Frag.inl" />
+    <ProjectReference Include="..\GT\GT.vcxproj">
+      <Project>{d2199057-44d0-44a3-96d5-1447daaf3f98}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleRender\SimpleRender.vcxproj">
+      <Project>{06a14db6-d049-4984-bf5c-e632e6214666}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
