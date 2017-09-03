@@ -4,7 +4,13 @@
 enum GL_MODE : uint8_t {
 	GL_POINTS,
 	GL_LINES,
-	GL_TRIANGLES
+	GL_TRIANGLES,
+	GL_TRIANGLES_STRIP
+};
+
+enum GL_PATTERN : uint8_t {
+	GL_NORMAL,
+	GL_WIREFRAME
 };
 
 #endif

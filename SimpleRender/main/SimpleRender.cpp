@@ -1,9 +1,6 @@
 // SimpleRender.cpp : Defines the entry point for the console application.
 //
 
-#define LINE_Bresenham
-//#define LINE_WuXiaolin
-
 #include "../util/type_def.hpp"
 #include "../platform/uniform.hpp"
 #include "../platform/framebuffer.hpp"
@@ -94,6 +91,21 @@ void testCircleAn(int width, int height, FrameBuffer& fb) {
 //	rasterPoint(vertex, 40).runFrags(*fsImpl);
 //}
 
+inline void testPoint() {
+	vector<FVertex> vertexData;
+
+	BGRA* bgraB = new BGRA(255, 128, 64);
+	Info* infoB = new Info(bgraB);
+	vertexData.push_back({ infoB, 0.75f, 0.75f });
+
+	MyVertexShader myVertexShader;
+	MyFragShader myFragShader(&mFramebuffer);
+	Pipeline pipeline;
+	pipeline.confViewport(WIDTH, HEIGHT);
+	pipeline.confMode(GL_POINTS);
+	pipeline.useProgram(vertexData, myVertexShader, myFragShader);
+}
+
 //inline void testRasterLine() {
 //	//BGRA bgra{ 255, 128, 64, 255 };
 //	//Info info{ bgra, 0, 0 };
@@ -123,6 +135,25 @@ void testCircleAn(int width, int height, FrameBuffer& fb) {
 //	fragCache.runFrags(*fsImpl);
 //}
 
+inline void testLine() {
+	vector<FVertex> vertexData;
+
+	BGRA* bgraB = new BGRA( 255, 255, 0 );
+	Info* infoB = new Info( bgraB );
+	vertexData.push_back({ infoB, -0.75f, -0.75f });
+
+	BGRA* bgraE = new BGRA( 0, 0, 255);
+	Info* infoE = new Info( bgraE );
+	vertexData.push_back({ infoE, 1.0f, 1.0f });
+
+	MyVertexShader myVertexShader;
+	MyFragShader myFragShader(&mFramebuffer);
+	Pipeline pipeline;
+	pipeline.confViewport(WIDTH, HEIGHT);
+	pipeline.confMode(GL_LINES);
+	pipeline.useProgram(vertexData, myVertexShader, myFragShader);
+}
+
 //inline void testRasterTriangle() {
 //	BGRA bgraA{255, 0, 0};
 //	Info infoA{ &bgraA };
@@ -151,7 +182,7 @@ void testCircleAn(int width, int height, FrameBuffer& fb) {
 //	//rasterTriangle(vertexB, vertexC, vertexD).runFrags(*fsImpl);
 //}
 
-void testPipeline() {
+inline void testTriangle() {
 	vector<FVertex> vertexData;
 
 	BGRA* bgraA = new BGRA( 255, 0, 0 );
@@ -173,6 +204,35 @@ void testPipeline() {
 	pipeline.confMode(GL_TRIANGLES);
 	pipeline.useProgram(vertexData, myVertexShader, myFragShader);
 }
+
+inline void testTriangleStrip() {
+	vector<FVertex> vertexData;
+
+	BGRA* bgraA = new BGRA(255, 0, 0);
+	Info* infoA = new Info(bgraA);
+	vertexData.push_back({ infoA, 0.0f, -0.75f });
+
+	BGRA* bgraB = new BGRA(0, 255, 0);
+	Info* infoB = new Info(bgraB);
+	vertexData.push_back({ infoB, -0.75f, 0.5f });
+
+	BGRA* bgraC = new BGRA(0, 0, 255);
+	Info* infoC = new Info(bgraC);
+	vertexData.push_back({ infoC, 0.25f, -0.25f });
+
+	BGRA* bgraD = new BGRA(255, 255, 255);
+	Info* infoD = new Info(bgraD);
+	vertexData.push_back({ infoD, 0.875f, -0.375f });
+
+	MyVertexShader myVertexShader;
+	MyFragShader myFragShader(&mFramebuffer);
+	Pipeline pipeline;
+	pipeline.confViewport(WIDTH, HEIGHT);
+	pipeline.confMode(GL_TRIANGLES_STRIP);
+	pipeline.confPattern(GL_WIREFRAME);
+	pipeline.useProgram(vertexData, myVertexShader, myFragShader);
+}
+
 
 void testTrivia() {
 	FVertex vertexData;
@@ -197,8 +257,12 @@ int main(void)
 	//testRasterLine();
 	//testRasterPoint();
 	//testRasterTriangle();
-	testPipeline();
 	//testTrivia();
+
+	//testPoint();
+	//testLine();
+	//testTriangle();
+	testTriangleStrip();
 
 	mUniform.runRender();
 

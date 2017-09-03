@@ -3,17 +3,14 @@
 
 #include "FragCache.hpp"
 
-inline FragCache rasterPoint(const Vertex& vertex, const int size) {
-
-	FragCache fragCache;
+inline void rasterPoint(const Vertex& vertex, const int size, FragCache& outFragCache) {
 	for (int i = -size; i <= size; i++) {
 		for (int j = -size; j < size; j++) {
-			Frag frag(vertex.info, vertex.x + i, vertex.y + j);
-			fragCache.addFrag(frag);
+			BGRA* bgra = new BGRA(*vertex.info->bgra);
+			Info* info = new Info(bgra);
+			outFragCache.addFrag({ info , vertex.x + i, vertex.y + j});
 		}
 	}
-
-	return fragCache;
 }
 
 #endif

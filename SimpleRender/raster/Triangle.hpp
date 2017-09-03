@@ -6,6 +6,9 @@
 
 #include <algorithm>
 
+#define NOTOUT_TRINGLE_COUNT 3
+#define LINE_DET 0.01f
+
 struct Bary {
 	float alpha;
 	float beta;
@@ -30,6 +33,11 @@ inline bool isPartInTri(const float x) {
 	return x >= 0 && x <= 1;
 }
 
+inline bool isBaryOnTri(const Bary& bary) {
+	return (bary.alpha >= 0 && bary.alpha <= LINE_DET)
+		|| (bary.beta >= 0 && bary.beta <= LINE_DET)
+		|| (bary.gamma >= 0 && bary.gamma <= LINE_DET);
+}
 
 inline void computeBaryCoord(const Point& pointA, const Point& pointB, const Point& pointC, const Point& point, Bary& outBary, int& outCount) {
 	outBary.alpha = computeAreaRatio(pointB, pointC, pointA, point);
@@ -54,9 +62,7 @@ inline void computeInterColor(const BGRA& bgraA, const BGRA& bgraB, const BGRA& 
 	outBgra.r = bgraA.r*bary.alpha + bgraB.r*bary.beta + bgraC.r*bary.gamma;
 	outBgra.a = bgraA.a*bary.alpha + bgraB.a*bary.beta + bgraC.a*bary.gamma;
 }
-// TODO: on triangle
 
-// TODO: 1. bounding box
 inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, FragCache& fragCache) {
 	using std::min;
 	using std::max;
@@ -77,12 +83,44 @@ inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const V
 			Bary bary;
 			int count = 0;
 			computeBaryCoord(pointA, pointB, pointC, point, bary, count);
-			if (count == 3) {
+			if (count == NOTOUT_TRINGLE_COUNT) {
 				BGRA* bgra = new BGRA();
 				computeInterColor(*(vertexA.info->bgra), *(vertexB.info->bgra), *(vertexC.info->bgra), bary, *bgra);
 
 				Info* info = new Info(bgra);
 				fragCache.addFrag({ info, x, y});
+			}
+		}
+	}
+}
+
+inline void rasterTriangleWire(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, FragCache& fragCache) {
+	using std::min;
+	using std::max;
+
+	// find bounding box
+	int top_left_x = min(vertexA.x, min(vertexB.x, vertexC.x));
+	int top_left_y = min(vertexA.y, min(vertexB.y, vertexC.y));
+	int bottom_right_x = max(vertexA.x, max(vertexB.x, vertexC.x));
+	int bottom_right_y = max(vertexA.y, max(vertexB.y, vertexC.y));
+
+	// tranverse, compute barycentric coordinate
+	Point pointA{ vertexA.x, vertexA.y };
+	Point pointB{ vertexB.x, vertexB.y };
+	Point pointC{ vertexC.x, vertexC.y };
+	for (int x = top_left_x; x < bottom_right_x; x++) {
+		for (int y = top_left_y; y < bottom_right_y; y++) {
+			Point point{ x, y };
+			Bary bary;
+			int count = 0;
+			computeBaryCoord(pointA, pointB, pointC, point, bary, count);
+			// attention: only there diffs
+			if (count == NOTOUT_TRINGLE_COUNT && isBaryOnTri(bary)) {
+				BGRA* bgra = new BGRA();
+				computeInterColor(*(vertexA.info->bgra), *(vertexB.info->bgra), *(vertexC.info->bgra), bary, *bgra);
+
+				Info* info = new Info(bgra);
+				fragCache.addFrag({ info, x, y });
 			}
 		}
 	}

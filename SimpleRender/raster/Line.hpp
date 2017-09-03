@@ -5,6 +5,9 @@
 
 #include <cmath>
 
+#define LINE_Bresenham
+//#define LINE_WuXiaolin
+
 inline void rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
 inline void rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
 inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);

@@ -34,6 +34,11 @@ public:
 	void confMode(const GL_MODE& mode) {
 		this->mMode = mode;
 	}
+
+	void confPattern(const GL_PATTERN& pattern) {
+		this->mPattern = pattern;
+	}
+
 	inline void useProgram(vector<FVertex>& vertexData, const VertexShader& vertexShader, const FragShader& fragShader) const {
 		vector<Vertex> vecVertex;
 		for (auto iter = vertexData.begin(); iter != vertexData.end(); iter++) {
@@ -50,13 +55,14 @@ public:
 		}
 		// 3. raster
 		FragCache fragCache;
-		raster(mMode, vecVertex, fragCache);
+		raster(mMode, mPattern, vecVertex, fragCache);
 
 		// 4. frag vertex
 		fragCache.runFrags(fragShader);
 	}
 private:
 	GL_MODE mMode;
+	GL_PATTERN mPattern = GL_NORMAL;
 
 	int width, height;
 
