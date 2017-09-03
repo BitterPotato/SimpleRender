@@ -8,18 +8,18 @@
 #include <tchar.h>
 
 
-class uniform {
+class Uniform {
 public:
 	int screen_w, screen_h;
 
 	f_keys mKeyCallback;
 
-	uniform(int width, int height, framebuffer* framebuffer);
+	Uniform(int width, int height, FrameBuffer* framebuffer);
 
 	void runRender();
 
 private:
-	framebuffer* mFrameBuffer;
+	FrameBuffer* mFrameBuffer;
 
 	int screen_init(int w, int h, const TCHAR *title);	// ÆÁÄ»³õÊ¼»¯
 	int screen_close(void);								// ¹Ø±ÕÆÁÄ»

@@ -66,6 +66,21 @@
     <ClInclude Include="math\tmatrix_rotate.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="pipeline\frag_shader.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\raster_stage.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\stage_flow.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\stage_struc.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\vertex_shader.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -81,6 +96,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="raster\FragCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pipeline\frag_shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pipeline\vertex_shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

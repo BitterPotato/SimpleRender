@@ -79,10 +79,10 @@ inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const V
 			computeBaryCoord(pointA, pointB, pointC, point, bary, count);
 			if (count == 3) {
 				BGRA* bgra = new BGRA();
-				computeInterColor(*vertexA.info.bgra, *vertexB.info.bgra, *vertexC.info.bgra, bary, *bgra);
+				computeInterColor(*(vertexA.info->bgra), *(vertexB.info->bgra), *(vertexC.info->bgra), bary, *bgra);
 
 				Info* info = new Info(bgra);
-				fragCache.addFrag({ *info, x, y});
+				fragCache.addFrag({ info, x, y});
 			}
 		}
 	}

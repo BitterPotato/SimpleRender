@@ -21,19 +21,19 @@ LRESULT screen_events(HWND, UINT, WPARAM, LPARAM);
 #pragma comment(lib, "user32.lib")
 #endif
 
-uniform::uniform(int width, int height, framebuffer* framebuffer) {
+Uniform::Uniform(int width, int height, FrameBuffer* framebuffer) {
 	TCHAR *title = _T("SimpleRender");
 	mFrameBuffer = framebuffer;
 	screen_init(width, height, title);
 }
 
-void uniform::runRender() {
+void Uniform::runRender() {
 	while (screen_exit == 0 && screen_keys[VK_ESCAPE] == 0) {
 		screen_dispatch();
 
 		// function pointers
-		if(uniform::mKeyCallback)
-			uniform::mKeyCallback(screen_keys);
+		if(Uniform::mKeyCallback)
+			Uniform::mKeyCallback(screen_keys);
 
 		screen_update();
 		Sleep(1);
@@ -41,7 +41,7 @@ void uniform::runRender() {
 }
 
 // 初始化窗口并设置标题
-int uniform::screen_init(int w, int h, const TCHAR *title) {
+int Uniform::screen_init(int w, int h, const TCHAR *title) {
 	WNDCLASS wc = { CS_BYTEALIGNCLIENT, (WNDPROC)screen_events, 0, 0, 0,
 		NULL, NULL, NULL, NULL, _T("SCREEN3.1415926") };
 	BITMAPINFO bi = { { sizeof(BITMAPINFOHEADER), w, -h, 1, 32, BI_RGB,
@@ -94,7 +94,7 @@ int uniform::screen_init(int w, int h, const TCHAR *title) {
 	return 0;
 }
 
-int uniform::screen_close(void) {
+int Uniform::screen_close(void) {
 	if (screen_dc) {
 		if (screen_ob) {
 			SelectObject(screen_dc, screen_ob);
@@ -125,7 +125,7 @@ LRESULT screen_events(HWND hWnd, UINT msg,
 	return 0;
 }
 
-void uniform::screen_dispatch(void) {
+void Uniform::screen_dispatch(void) {
 	MSG msg;
 	while (1) {
 		if (!PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) break;
@@ -134,7 +134,7 @@ void uniform::screen_dispatch(void) {
 	}
 }
 
-void uniform::screen_update(void) {
+void Uniform::screen_update(void) {
 	HDC hDC = GetDC(screen_handle);
 	BitBlt(hDC, 0, 0, screen_w, screen_h, screen_dc, 0, 0, SRCCOPY);
 	ReleaseDC(screen_handle, hDC);

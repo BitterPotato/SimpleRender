@@ -153,6 +153,11 @@
     <ClInclude Include="math\tmatrix_trans.hpp" />
     <ClInclude Include="math\tvector.hpp" />
     <ClInclude Include="math\tvector_trans.hpp" />
+    <ClInclude Include="pipeline\frag_shader.hpp" />
+    <ClInclude Include="pipeline\raster_stage.hpp" />
+    <ClInclude Include="pipeline\stage_flow.hpp" />
+    <ClInclude Include="pipeline\stage_struc.hpp" />
+    <ClInclude Include="pipeline\vertex_shader.hpp" />
     <ClInclude Include="platform\framebuffer.hpp" />
     <ClInclude Include="platform\uniform.hpp" />
     <ClInclude Include="raster\Frag.hpp" />
@@ -166,6 +171,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\SimpleRender.cpp" />
+    <ClCompile Include="pipeline\frag_shader.cpp" />
+    <ClCompile Include="pipeline\vertex_shader.cpp" />
     <ClCompile Include="platform\winbuffer.cpp" />
     <ClCompile Include="platform\winform.cpp" />
     <ClCompile Include="raster\FragCache.cpp" />

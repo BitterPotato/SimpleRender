@@ -2,6 +2,7 @@
 #define FRAGCACHE_HPP
 
 #include "Frag.hpp"
+#include "../pipeline/frag_shader.hpp"
 
 #include <vector>
 #include <algorithm>
@@ -9,7 +10,7 @@
 class FragCache {
 public:
 	void addFrag(const Frag& frag);
-	void runFrags(fragShader fs);
+	void runFrags(const FragShader& fragShader);
 	FragCache() {
 
 	}

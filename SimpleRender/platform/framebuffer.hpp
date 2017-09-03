@@ -3,7 +3,7 @@
 
 #include "../raster/Frag.hpp"
 
-class framebuffer {
+class FrameBuffer {
 public:
 	void linkForm(void* ptr);
 	void setBufferStorage(const int width, const int height);
