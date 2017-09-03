@@ -110,16 +110,18 @@ struct Frag{
 typedef Frag Vertex;
 
 struct FVertex {
-	float x; float y; Info* info;
-	FVertex(float x = 0.0f, float y = 0.0f) {
+	float x; float y; float z; Info* info;
+	FVertex(float x = 0.0f, float y = 0.0f, float z = 0.0f) {
 		info = new Info();
 		this->x = x;
 		this->y = y;
+		this->z = z;
 	}
-	FVertex(Info* info, float x = 0.0f, float y = 0.0f) {
+	FVertex(Info* info, float x = 0.0f, float y = 0.0f, float z = 0.0f) {
 		this->info = info;
 		this->x = x;
 		this->y = y;
+		this->z = z;
 	}
 	FVertex(const FVertex& fVertex) : x(fVertex.x), y(fVertex.y){
 		info = new Info(*fVertex.info);
@@ -140,6 +142,7 @@ struct FVertex {
 		// the two objects are effectively swapped
 		swap(first.x, second.x);
 		swap(first.y, second.y);
+		swap(first.z, second.z);
 		swap(*first.info, *second.info);
 	}
 	~FVertex() {

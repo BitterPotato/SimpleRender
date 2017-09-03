@@ -14,7 +14,13 @@ public:
 	inline TVectorN(const TVectorN& vecN) {
 		assign(vecN);
 	}
-	inline TVectorN operator/(T ratio) const {
+	inline TVectorN operator-(const TVectorN& vecN) const {
+		TVectorN res;
+		for (int i = 0; i < len; i++)
+			res[i] = data[i] - vecN[i];
+		return res;
+	}
+	inline TVectorN operator/(const T& ratio) const {
 		TVectorN res;
 		for (int i = 0; i < len; i++)
 			res[i] = data[i] / ratio;

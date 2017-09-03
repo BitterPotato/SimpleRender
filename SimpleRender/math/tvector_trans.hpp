@@ -44,20 +44,25 @@ namespace math{
 	}
 
 	template<typename T>
-	TVector3<T> asVec3(const TVector4<T> vec4) {
+	TVector3<T> asVec3(const TVector4<T>& vec4) {
 		return TVector3(vec4[0], vec4[1], vec4[2]);
 	}
 
 	// for homogeneous coordinate
 	template<typename T>
-	TVector4<T> asVec4_homo(const TVector3<T> vec3) {
+	TVector4<T> asVec4_homo(const TVector3<T>& vec3) {
 		return TVector3(vec3[0], vec3[1], vec3[2], T(1));
 	}
 
 	// just for enlarge
 	template<typename T>
-	TVector4<T> asVec4_exp(const TVector3<T> vec3) {
-		return TVector3(vec3[0], vec3[1], vec3[2], T(0));
+	TVector4<T> asVec4_exp(const TVector3<T>& vec3) {
+		return TVector3<T>(vec3[0], vec3[1], vec3[2], T(0));
+	}
+
+	template<typename T>
+	TVector3<T> homogeneous(const TVector4<T>& vec4) {
+		return TVector3<T>(vec4[0] / vec4[3], vec4[1] / vec4[3], vec4[2] / vec4[3]);
 	}
 }
 
