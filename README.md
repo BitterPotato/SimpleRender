@@ -12,7 +12,9 @@
 
       ​
 
-- [ ] Texture Mapping(perspective correct)
+- [x] Texture Mapping(perspective correct)
+
+      > 扰动、噪声
 
       ​
 

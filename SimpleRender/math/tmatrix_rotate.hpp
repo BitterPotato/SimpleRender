@@ -9,9 +9,11 @@
 #include <cmath>
 #include <exception>
 #include <stdexcept>
+#include <string>
 
 using std::sin;
 using std::cos;
+using std::string;
 using std::logic_error;
 
 using math::normalize;
@@ -99,10 +101,37 @@ namespace math {
 
 		return axis_trans * asZRotateMat(radians) * inver_axis_trans;
 	}
+
+	// ----------------- euler ------------------
+	// radians version
+	fmat3 eulerAsMatrix(const float pitch, const float yaw, const float roll, const string& order) {
+		if (order == "xyz") {
+			return asXRotateMat(pitch)*asYRotateMat(yaw)*asZRotateMat(roll);
+		}
+		else if (order == "xzy") {
+			return asXRotateMat(pitch)*asZRotateMat(roll)*asYRotateMat(yaw);
+		}
+		else if (order == "yzx") {
+			return asYRotateMat(yaw)*asZRotateMat(roll)*asXRotateMat(pitch);
+		}
+		else if (order == "yxz") {
+			return asYRotateMat(yaw)*asXRotateMat(pitch)*asZRotateMat(roll);
+		}
+		else if (order == "zxy") {
+			return asZRotateMat(roll)*asXRotateMat(pitch)*asYRotateMat(yaw);
+		}
+		else if (order == "zyx") {
+			return asZRotateMat(roll)*asYRotateMat(yaw)*asXRotateMat(pitch);
+		}
+	}
+
+	// degrees version
+	fmat3 eulerAsMatrix(const int pi, const int ya, const int ro, const string& order) {
+		return eulerAsMatrix(radians(static_cast<float>(pi)), radians(static_cast<float>(ya)), radians(static_cast<float>(ro)), order);
+	}
+
+	// ----------------- quaternion ------------------
+
 }
-// ----------------- eluer ------------------
-
-
-// ----------------- quaternion ------------------
 
 #endif

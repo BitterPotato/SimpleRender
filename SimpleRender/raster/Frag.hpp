@@ -107,24 +107,87 @@ struct Frag{
 	}
 };
 
-typedef Frag Vertex;
+struct TexCoord {
+	float u; float v;
+	TexCoord(float u = 0.0f, float v = 0.0f) {
+		this->u = u;
+		this->v = v;
+	}
+	// copy/=/deconstructor unnecessary
+};
+
+struct Vertex {
+	int x; int y; Info* info;
+	TexCoord tex;
+	// save the homogeneous divide value
+	float h;
+
+	Vertex(int x = 0, int y = 0) {
+		info = new Info();
+		tex = TexCoord();
+		h = 0.0f;
+
+		this->x = x;
+		this->y = y;
+	}
+	Vertex(Info* info, int x = 0, int y = 0, TexCoord tex = TexCoord(), float h = 0.0f) {
+		this->info = info;
+		this->tex = tex;
+		this->h = h;
+
+		this->x = x;
+		this->y = y;
+	}
+	Vertex(const Vertex& vertex) : x(vertex.x), y(vertex.y), h(vertex.h) {
+		info = new Info(*vertex.info);
+		tex = vertex.tex;
+	}
+	Vertex& operator=(Vertex vertex) {
+		swap(*this, vertex);
+		return *this;
+	}
+	friend void swap(Vertex& first, Vertex& second) // nothrow
+	{
+		// enable ADL (not necessary in our case, but good practice)
+		using std::swap;
+
+		// by swapping the members of two objects,
+		// the two objects are effectively swapped
+		swap(first.x, second.x);
+		swap(first.y, second.y);
+		swap(first.h, second.h);
+
+		swap(first.tex, second.tex);
+		swap(*first.info, *second.info);
+	}
+	~Vertex() {
+		delete info;
+	}
+};
 
 struct FVertex {
 	float x; float y; float z; Info* info;
+	TexCoord tex;
+	
 	FVertex(float x = 0.0f, float y = 0.0f, float z = 0.0f) {
 		info = new Info();
+		tex = TexCoord();
+
 		this->x = x;
 		this->y = y;
 		this->z = z;
 	}
-	FVertex(Info* info, float x = 0.0f, float y = 0.0f, float z = 0.0f) {
+	FVertex(Info* info, float x = 0.0f, float y = 0.0f, float z = 0.0f, TexCoord tex = TexCoord()) {
 		this->info = info;
+		this->tex = tex;
+
 		this->x = x;
 		this->y = y;
 		this->z = z;
 	}
-	FVertex(const FVertex& fVertex) : x(fVertex.x), y(fVertex.y){
+	FVertex(const FVertex& fVertex) : x(fVertex.x), y(fVertex.y), z(fVertex.z){
 		info = new Info(*fVertex.info);
+		tex = fVertex.tex;
 	}
 	FVertex& operator=(FVertex fVertex) {
 		using std::swap;
@@ -143,6 +206,7 @@ struct FVertex {
 		swap(first.x, second.x);
 		swap(first.y, second.y);
 		swap(first.z, second.z);
+		swap(first.tex, second.tex);
 		swap(*first.info, *second.info);
 	}
 	~FVertex() {

@@ -3,6 +3,7 @@
 
 #include "FragCache.hpp"
 #include "../math/tvector_trans.hpp"
+#include "../raster/Texture.hpp"
 
 #include <algorithm>
 
@@ -55,6 +56,24 @@ inline void computeBaryCoord(const Point& pointA, const Point& pointB, const Poi
 	}
 }
 
+inline void toPerspectiveCorrect(float h0, float h1, float h2, Bary& outBary) {
+	float beta = outBary.beta;
+	float gamma = outBary.gamma;
+
+	float denominator = h1*h2 + h2*beta*(h0 - h1) + h1*gamma*(h0 - h2);
+	outBary.beta = h0*h2*beta / denominator;
+	outBary.gamma = h0*h1*gamma / denominator;
+	outBary.alpha = 1 - outBary.beta - outBary.gamma;
+}
+
+inline void computeInterUV(const TexCoord& texA, const TexCoord& texB, const TexCoord& texC, const Bary& bary, BGRA& outBgra, const Texture* texture) {
+	float u = texA.u*bary.alpha + texB.u*bary.beta + texC.u*bary.gamma;
+	float v = texA.v*bary.alpha + texB.v*bary.beta + texC.v*bary.gamma;
+
+	int x = u*texture->width();
+	int y = v*texture->height();
+	texture->getPixelColor(x, y, outBgra);
+}
 
 inline void computeInterColor(const BGRA& bgraA, const BGRA& bgraB, const BGRA& bgraC, const Bary& bary, BGRA& outBgra) {
 	outBgra.b = bgraA.b*bary.alpha + bgraB.b*bary.beta + bgraC.b*bary.gamma;
@@ -63,7 +82,7 @@ inline void computeInterColor(const BGRA& bgraA, const BGRA& bgraB, const BGRA& 
 	outBgra.a = bgraA.a*bary.alpha + bgraB.a*bary.beta + bgraC.a*bary.gamma;
 }
 
-inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, FragCache& fragCache) {
+inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const Texture* texture, FragCache& fragCache) {
 	using std::min;
 	using std::max;
 
@@ -85,7 +104,17 @@ inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const V
 			computeBaryCoord(pointA, pointB, pointC, point, bary, count);
 			if (count == NOTOUT_TRINGLE_COUNT) {
 				BGRA* bgra = new BGRA();
-				computeInterColor(*(vertexA.info->bgra), *(vertexB.info->bgra), *(vertexC.info->bgra), bary, *bgra);
+				if (texture != nullptr) {
+					float h0 = vertexA.h;
+					float h1 = vertexB.h;
+					float h2 = vertexC.h;
+					toPerspectiveCorrect(h0, h1, h2, bary);
+
+					computeInterUV(vertexA.tex, vertexB.tex, vertexC.tex, bary, *bgra, texture);
+				}
+				else {
+					computeInterColor(*(vertexA.info->bgra), *(vertexB.info->bgra), *(vertexC.info->bgra), bary, *bgra);
+				}
 
 				Info* info = new Info(bgra);
 				fragCache.addFrag({ info, x, y});

@@ -81,6 +81,12 @@
     <ClInclude Include="pipeline\vertex_shader.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="format\scf_parser.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\Texture.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -102,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pipeline\vertex_shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\FITexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

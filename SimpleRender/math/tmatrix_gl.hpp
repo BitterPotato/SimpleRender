@@ -23,19 +23,19 @@ namespace math {
 		TVector3<T> dirtVec = normalize(center - position);
 		TVector3<T> beforeUpVec = normalize(up);
 
-		TVector3<T> rightVec = normalize(cross(dirtVec, upVec));
+		TVector3<T> rightVec = normalize(cross(dirtVec, beforeUpVec));
 		TVector3<T> afterUpVec = cross(rightVec, dirtVec);
 
 		//TMatrix4<T> posiMatrix = TMatrix4<T>(T(1));
 		//posiMatrix[3][0] = -position.x;
 		//posiMatrix[3][1] = -position.y;
 		//posiMatrix[3][2] = -position.z;
-		TMatrix4<T> posiMatrix = translate(TVector3(-position.x, -position.y, -position.z));
+		TMatrix4<T> posiMatrix = translate(TVector3<T>(-position[0], -position[1], -position[2]));
 
 		TMatrix4<T> dirtMatrix = TMatrix4<T>(
 			asVec4_exp(rightVec),
 			asVec4_exp(afterUpVec),
-			TVector4<T>(-dirtVec.x, -dirtVec.y, -dirtVec.z, 0),
+			TVector4<T>(-dirtVec[0], -dirtVec[1], -dirtVec[2], 0),
 			TVector4<T>(T(0), T(0), T(0), T(1))
 		);
 		dirtMatrix = transpose(dirtMatrix);
@@ -68,9 +68,9 @@ namespace math {
 		T t = pointThat[1];
 		T f = pointThat[2];
 
-		auto translateVec = TVector3(-(l+r)/2, -(b+t)/2, -(n+f)/2);
+		auto translateVec = TVector3<T>(-(l+r)/2, -(b+t)/2, -(n+f)/2);
 		TMatrix4<T> translateMatrix = translate(translateVec);
-		auto scaleVec = TVector3(2 /abs(r - l), 2 / abs(t - b), 2 / abs(n - f));
+		auto scaleVec = TVector3<T>(2 /abs(r - l), 2 / abs(t - b), 2 / abs(n - f));
 		TMatrix4<T> scaleMatrix = scale4T(scaleVec);
 
 		// first translate and then scale
@@ -104,7 +104,7 @@ namespace math {
 	**/
 	template<typename T>
 	static inline TMatrix4<T> perspectiveMatrix(const T& fovy, const T& aspect, const T& n, const T& f) {
-		TMatrix4<T> persMatrix = TMatrix4(
+		TMatrix4<T> persMatrix = TMatrix4<T>(
 			TVector4<T>(n, 0, 0, 0),
 			TVector4<T>(0, n, 0, 0),
 			TVector4<T>(0, 0, n + f, 1),
@@ -117,8 +117,8 @@ namespace math {
 		T b = -t;
 		T l = -r;
 
-		TVector3 pointThis = TVector3(l, b, n);
-		TVector3 pointThat = TVector3(r, t, f);
+		TVector3<T> pointThis = TVector3<T>(l, b, n);
+		TVector3<T> pointThat = TVector3<T>(r, t, f);
 
 		// first transform frustum to standard visual body
 		return frontviewMatrix(pointThis, pointThat) * persMatrix;

@@ -6,6 +6,7 @@
 #include "../SimpleRender/math/tmatrix_trans.hpp"
 
 #include <iostream>
+#include <string>
 
 using std::cin;
 using math::dot;
@@ -19,6 +20,8 @@ using math::scale3T;
 using math::asRotateMat;
 using math::radians;
 using math::degrees;
+using math::eulerAsMatrix;
+using math::asMat4;
 
 TEST(DotTests, Dot)
 {
@@ -119,4 +122,12 @@ TEST(RotateTests, Rotate) {
 	fvec3 res(-1, 3, 0);
 	fvec3 tres = rotate_mat3*orig;
 	EXPECT_EQ(res, tres);
+}
+TEST(EulerTests, Euler) {
+	//int pitch = 10, yaw = 0, roll = 0;
+	const string EULER_ORDER = "xyz";
+	//fmat4 mat = asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER));
+	fmat4 mat = asMat4(eulerAsMatrix(10, 0, 0, EULER_ORDER));
+	fmat4 emat = fmat4(1.0f);
+	EXPECT_EQ(emat, mat);
 }

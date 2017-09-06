@@ -4,6 +4,7 @@
 #include "vertex_shader.hpp"
 #include "frag_shader.hpp"
 #include "raster_stage.hpp"
+#include "../raster/Texture.hpp"
 #include "../platform/framebuffer.hpp"
 #include "../math/tmatrix_trans.hpp"
 #include "../math/tvector_trans.hpp"
@@ -19,6 +20,12 @@ using std::vector;
 namespace gl {
 class Pipeline {
 public:
+	Pipeline() {
+
+	}
+	void confTransform(const fmat4& transformMatrix) {
+		this->mTransformMatrix = transformMatrix;
+	}
 	void confCamera(const fmat4& lookatMatrix) {
 		this->mLookatMatrix = lookatMatrix;
 	}
@@ -39,6 +46,10 @@ public:
 		this->mPattern = pattern;
 	}
 
+	void confTexture(Texture* texture) {
+		this->texture = texture;
+	}
+
 	inline void useProgram(vector<FVertex>& vertexData, const VertexShader& vertexShader, const FragShader& fragShader) const {
 		vector<Vertex> vecVertex;
 		for (auto iter = vertexData.begin(); iter != vertexData.end(); iter++) {
@@ -55,10 +66,17 @@ public:
 		}
 		// 3. raster
 		FragCache fragCache;
-		raster(mMode, mPattern, vecVertex, fragCache);
+		raster(mMode, mPattern, vecVertex, texture, fragCache);
 
 		// 4. frag vertex
 		fragCache.runFrags(fragShader);
+	}
+
+	Pipeline(const Pipeline& pipeline) = delete;
+	Pipeline& operator=(Pipeline pipeline) = delete;
+	~Pipeline() {
+		if (texture != nullptr)
+			delete texture;
 	}
 private:
 	GL_MODE mMode;
@@ -66,22 +84,27 @@ private:
 
 	int width, height;
 
+	fmat4 mTransformMatrix = fmat4(1.0f);
 	fmat4 mLookatMatrix = fmat4(1.0f);
 	fmat4 mProjMatrix = fmat4(1.0f);
 	fmat3 mViewportMatrix = fmat3(1.0f);
 
+	Texture* texture = nullptr;
+
 	inline void pipeTrans(const FVertex& fVertex, Vertex& outVertex) const {
+		// save info that doesn't change
 		*outVertex.info = *fVertex.info;
+		outVertex.tex = fVertex.tex;
 		
 		fvec4 outCoord4(fVertex.x, fVertex.y, fVertex.z, 1.0f);
-		// 1. Model - World Transform
-		// omit there
-		
+		// 1. Model - World Transform	
 		// 2. World - Camera Transform
 		// 3. Camera - Clip Transform
-		outCoord4 = mProjMatrix*mLookatMatrix*outCoord4;
+		outCoord4 = mProjMatrix*mLookatMatrix*mTransformMatrix*outCoord4;
 
 		// 3_5. as for perspective projection, needs a stage called 'Homogeneous'
+		// save homogeneous info
+		outVertex.h = outCoord4[3];
 		fvec3 outCoord3 = homogeneous(outCoord4);
 
 		// 4. Clip - Viewport Transform

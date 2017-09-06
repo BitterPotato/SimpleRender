@@ -57,7 +57,7 @@ namespace math{
 	// just for enlarge
 	template<typename T>
 	TVector4<T> asVec4_exp(const TVector3<T>& vec3) {
-		return TVector3<T>(vec3[0], vec3[1], vec3[2], T(0));
+		return TVector4<T>(vec3[0], vec3[1], vec3[2], T(0));
 	}
 
 	template<typename T>

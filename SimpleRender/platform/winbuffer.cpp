@@ -23,3 +23,8 @@ void FrameBuffer::setBufferPixel(const int x, const int y, const BGRA & bgra) {
 		fbuffer[startIndex + 3] = bgra.a;
 	}
 }
+void FrameBuffer::clearColor(const BGRA& bgra) {
+	for (int x = 0; x < width; x++)
+		for (int y = 0; y < height; y++)
+			setBufferPixel(x, y, bgra);
+}

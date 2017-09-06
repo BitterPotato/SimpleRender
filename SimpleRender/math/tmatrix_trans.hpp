@@ -25,13 +25,13 @@ namespace math {
 	// -------------------- not universal --------------------
 	template<typename T>
 	static inline TMatrix3<T> asMat3(const TMatrix4<T> mat4) {
-		return TMatrix3(asVec3(mat4[0]), asVec3(mat4[1]), asVec3(mat4[2]));
+		return TMatrix3<T>(asVec3(static_cast<TVector4<T>>(mat4[0])), asVec3(static_cast<TVector4<T>>(mat4[1])), asVec3(static_cast<TVector4<T>>(mat4[2])));
 	}
 
 	template<typename T>
 	static inline TMatrix4<T> asMat4(const TMatrix3<T> mat3) {
-		TVector4 vec4(T(0), T(0), T(0), T(1));
-		return TMatrix4(asVec4_exp(mat3[0]), asVec4_exp(mat3[1]), asVec4_exp(mat3[2]), vec4);
+		TVector4<T> vec4(T(0), T(0), T(0), T(1));
+		return TMatrix4<T>(asVec4_exp(static_cast<TVector3<T>>(mat3[0])), asVec4_exp(static_cast<TVector3<T>>(mat3[1])), asVec4_exp(static_cast<TVector3<T>>(mat3[2])), vec4);
 	}
 
 	template<typename T>
