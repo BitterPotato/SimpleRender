@@ -32,6 +32,10 @@ namespace math {
 		//posiMatrix[3][2] = -position.z;
 		TMatrix4<T> posiMatrix = translate(TVector3<T>(-position[0], -position[1], -position[2]));
 
+		// treat the (0, 0, 1) as the default camera
+		// and for the clip space to be (-1, -1, -1) to (1, 1, 1)
+		//TMatrix4<T> posiMatrix = translate(TVector3<T>(-position[0], -position[1], 1-position[2]));
+
 		TMatrix4<T> dirtMatrix = TMatrix4<T>(
 			asVec4_exp(rightVec),
 			asVec4_exp(afterUpVec),
@@ -55,6 +59,21 @@ namespace math {
 
 		// first scale and then translate
 		return translateMatrix*scaleMatrix;
+	}
+
+	// when viewport: (-1, -1) on the up-left instead of bottom-left
+	template<typename T>
+	static inline TMatrix3<T> viewportMatrixReflectY(const T& width, const T& height) {
+		auto scaleVec = TVector3<T>(width / T(2), height / T(2), T(1));
+		TMatrix3<T> scaleMatrix = scale3T(scaleVec);
+		TMatrix3<T> translateMatrix = TMatrix3<T>(T(1));
+		translateMatrix[2][0] = (width - T(1)) / T(2);
+		translateMatrix[2][1] = (height - T(1)) / T(2);
+		TMatrix3<T> reflectMatrix = TMatrix3<T>(T(1));
+		reflectMatrix[1][1] = -1;
+
+		// first scale and then translate
+		return translateMatrix*scaleMatrix*reflectMatrix;
 	}
 
 	// inputs are the two diagonal points of entity (whatever which one is bigger)

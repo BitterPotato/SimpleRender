@@ -7,14 +7,8 @@
 #include "../raster/Triangle.hpp"
 
 #include <vector>
-#include <exception>
-#include <stdexcept>
 
 using std::vector;
-using std::logic_error;
-
-#define TRIANGLE_POINTS 3
-#define LINE_POINTS 2
 
 #define WIDTH 1
 #define SIZE 10
@@ -36,15 +30,11 @@ static inline void raster(const GL_MODE& mode, const GL_PATTERN& pattern, const 
 		}
 		break;
 	case GL_LINES:
-		if (vecVertex.size() % LINE_POINTS != 0)
-			throw logic_error("not enough points for triangles");
 		for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter += 2) {
 			rasterLine(*iter, *(iter + 1), WIDTH, fragCache);
 		}
 		break;
 	case GL_TRIANGLES:
-		if (vecVertex.size() % TRIANGLE_POINTS != 0)
-			throw logic_error("not enough points for triangles");
 		for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter += 3) {
 			rasterUniverTriangle(pattern, *iter, *(iter + 1), *(iter + 2), texture, fragCache);
 		}

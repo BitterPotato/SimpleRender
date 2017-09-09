@@ -20,6 +20,7 @@
 #include <string>
 
 using gl::Pipeline;
+using math::frontviewMatrix;
 using math::perspectiveMatrix;
 using math::lookatMatrix;
 using math::eulerAsMatrix;
@@ -55,10 +56,22 @@ fvec3 cameraUp(0.0f, 1.0f, 0.0f);
 int pitch = 0, yaw = 0, roll = 0;
 
 void refreshFrame() {
-	mPipeline.confCamera(lookatMatrix(cameraPosition, cameraCenter, cameraUp));
 	mPipeline.confTransform(asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER)));
+	mPipeline.confCamera(lookatMatrix(cameraPosition, cameraCenter, cameraUp));
+	mPipeline.confProjection(frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
+		fvec3(1.0f, 1.0f, -2.0f)));
+	mPipeline.confViewport(WIDTH, HEIGHT);
 	mPipeline.useProgram(vertexData, myVertexShader, myFragShader);
 }
+
+void initConfig() {
+	mPipeline.confTransform(asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER)));
+	mPipeline.confCamera(lookatMatrix(cameraPosition, cameraCenter, cameraUp));
+	mPipeline.confProjection(frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
+		fvec3(1.0f, 1.0f, -2.0f)));
+	mPipeline.confViewport(WIDTH, HEIGHT);
+}
+
 void keysCallback(int* screen_keys) {
 	// =============== move camera positions ==================
 	if (screen_keys[VK_UP]) {
@@ -230,15 +243,30 @@ inline void testPoint() {
 //}
 
 inline void testLine() {
-	BGRA* bgraB = new BGRA( 255, 255, 0 );
-	Info* infoB = new Info( bgraB );
-	vertexData.push_back({ infoB, -0.75f, -0.75f });
+	//BGRA* bgraB = new BGRA( 255, 255, 0 );
+	//Info* infoB = new Info( bgraB );
+	//vertexData.push_back({ infoB, -0.75f, -0.75f });
 
-	BGRA* bgraE = new BGRA( 0, 0, 255);
-	Info* infoE = new Info( bgraE );
-	vertexData.push_back({ infoE, 1.0f, 1.0f });
+	//BGRA* bgraE = new BGRA( 0, 0, 255);
+	//Info* infoE = new Info( bgraE );
+	//vertexData.push_back({ infoE, 0.95f, 0.95f });
+	// TODO: for precision problem, this may generate the points outsides the screen
+	//vertexData.push_back({ infoE, 1.0f, 1.0f });
 
-	mPipeline.confViewport(WIDTH, HEIGHT);
+	BGRA* bgraC = new BGRA(0, 0, 255);
+	Info* infoC = new Info(bgraC);
+	vertexData.push_back(FVertex(infoC, 0.0f, -0.5f, -1.0f));
+
+	BGRA* bgraF = new BGRA(255, 255, 0);
+	Info* infoF = new Info(bgraF);
+	vertexData.push_back(FVertex(infoF, 0.0f, 0.5f, 1.0f));
+
+	initConfig();
+	fmat4 front = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
+		fvec3(1.0f, 1.0f, -2.0f));
+	fmat4 persp1 = perspectiveMatrix(radians(45.0f), 1.0f, -0.1f, -3.0f);
+	fmat4 persp2 = perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -100.0f);
+	mPipeline.confProjection(persp2);
 	mPipeline.confMode(GL_LINES);
 	mPipeline.useProgram(vertexData, myVertexShader, myFragShader);
 }
@@ -274,14 +302,24 @@ inline void testLine() {
 inline void testTriangle() {
 	BGRA* bgraA = new BGRA( 255, 0, 0 );
 	Info* infoA = new Info ( bgraA );
-	vertexData.push_back({ infoA, 0.0f, -0.75f });
 
 	BGRA* bgraB = new BGRA( 0, 255, 0 );
 	Info* infoB = new Info(bgraB);
-	vertexData.push_back({ infoB, -0.75f, 0.5f });
 
 	BGRA* bgraC = new BGRA( 0, 0, 255 );
 	Info* infoC = new Info( bgraC );
+
+	// clip one vertex
+	//vertexData.push_back({ infoA, -0.0f, -2.0f });
+	//vertexData.push_back({ infoB, -0.75f, 0.5f });
+	//vertexData.push_back({ infoC, 0.25f, -0.25f });
+	// clip two vertexes
+	//vertexData.push_back({ infoA, 0.0f, -0.75f });
+	//vertexData.push_back({ infoB, -0.75f, 1.5f });
+	//vertexData.push_back({ infoC, 0.25f, 1.5f });
+
+	vertexData.push_back({ infoA, 0.0f, -0.75f });
+	vertexData.push_back({ infoB, -0.75f, 0.5f });
 	vertexData.push_back({ infoC, 0.25f, -0.25f });
 	
 	mPipeline.confViewport(WIDTH, HEIGHT);
@@ -386,10 +424,10 @@ int main(void)
 	//testTrivia();
 
 	//testPoint();
-	//testLine();
+	testLine();
 	//testTriangle();
 	//testTriangleStrip();
-	testCube();
+	//testCube();
 
 	mUniform.runRender();
 

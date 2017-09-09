@@ -17,9 +17,9 @@ void FrameBuffer::setBufferStorage(const int width, const int height) {
 void FrameBuffer::setBufferPixel(const int x, const int y, const BGRA & bgra) {
 	if (x < width && y < height) {
 		int startIndex = (y*width + x) * 4;
-		fbuffer[startIndex] = bgra.r;
+		fbuffer[startIndex] = bgra.b;
 		fbuffer[startIndex + 1] = bgra.g;
-		fbuffer[startIndex + 2] = bgra.b;
+		fbuffer[startIndex + 2] = bgra.r;
 		fbuffer[startIndex + 3] = bgra.a;
 	}
 }

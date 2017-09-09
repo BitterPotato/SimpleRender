@@ -25,10 +25,20 @@ public:
 		this->a = a;
 	}
 	BGRA(const BGRA& bgra) : b(bgra.b), g(bgra.g), r(bgra.r), a(bgra.a) {}
+	friend BGRA* inter(const BGRA* from, const BGRA* to, const float t) {
+		BGRA* bgra = new BGRA();
+		bgra->b = (1 - t)*from->b + t*to->b;
+		bgra->g = (1 - t)*from->g + t*to->g;
+		bgra->r = (1 - t)*from->r + t*to->r;
+		bgra->a = (1 - t)*from->a + t*to->a;
+
+		return bgra;
+	}
 	friend BGRA operator*(const BGRA& bgra, const float ratio);
 };
 
 struct Info {
+	// TODO: make use of depth and stencil
 	BGRA* bgra; int depth; int stencil;
 	Info(int depth=0, int stencil=0) {
 		// default construct
@@ -64,6 +74,15 @@ struct Info {
 		swap(*first.bgra, *second.bgra);
 		swap(first.depth, second.depth);
 		swap(first.stencil, second.stencil);
+	}
+	friend Info* inter(const Info* from, const Info* to, const float t) {
+		Info* info = new Info();
+
+		BGRA* bgra = inter(from->bgra, to->bgra, t);
+		info->bgra = bgra;
+		info->depth = (1 - t)*from->depth + t*to->depth;
+		info->stencil = (1 - t) * from->stencil + t*to->stencil;
+		return info;
 	}
 	~Info() {
 		delete bgra;
@@ -112,6 +131,9 @@ struct TexCoord {
 	TexCoord(float u = 0.0f, float v = 0.0f) {
 		this->u = u;
 		this->v = v;
+	}
+	friend TexCoord inter(const TexCoord& from, const TexCoord& to, const float t) {
+		return TexCoord((1 - t)*from.u + t*to.u, (1 - t)*from.v + t*to.v);
 	}
 	// copy/=/deconstructor unnecessary
 };
@@ -166,26 +188,30 @@ struct Vertex {
 };
 
 struct FVertex {
-	float x; float y; float z; Info* info;
+	float x; float y; float z; float w;
+	// TODO: has the member info, seems strange
+	Info* info;
 	TexCoord tex;
 	
-	FVertex(float x = 0.0f, float y = 0.0f, float z = 0.0f) {
+	FVertex(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f) {
 		info = new Info();
 		tex = TexCoord();
 
 		this->x = x;
 		this->y = y;
 		this->z = z;
+		this->w = w;
 	}
-	FVertex(Info* info, float x = 0.0f, float y = 0.0f, float z = 0.0f, TexCoord tex = TexCoord()) {
+	FVertex(Info* info, float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f, TexCoord tex = TexCoord()) {
 		this->info = info;
 		this->tex = tex;
 
 		this->x = x;
 		this->y = y;
 		this->z = z;
+		this->w = w;
 	}
-	FVertex(const FVertex& fVertex) : x(fVertex.x), y(fVertex.y), z(fVertex.z){
+	FVertex(const FVertex& fVertex) : x(fVertex.x), y(fVertex.y), z(fVertex.z), w(fVertex.w){
 		info = new Info(*fVertex.info);
 		tex = fVertex.tex;
 	}
@@ -206,8 +232,21 @@ struct FVertex {
 		swap(first.x, second.x);
 		swap(first.y, second.y);
 		swap(first.z, second.z);
+		swap(first.w, second.w);
 		swap(first.tex, second.tex);
 		swap(*first.info, *second.info);
+	}
+	friend bool inter(const FVertex& from, const FVertex& to, const float t, FVertex& out) {
+		if (t < 0 || t > 1)
+			return false;
+
+		out.x = (1 - t)*from.x + t*to.x;
+		out.y = (1 - t)*from.y + t*to.y;
+		out.z = (1 - t)*from.z + t*to.z;
+		out.w = (1 - t)*from.w + t*to.w;
+		out.tex = inter(from.tex, to.tex, t);
+		out.info = inter(from.info, to.info, t);
+		return true;
 	}
 	~FVertex() {
 		delete info;

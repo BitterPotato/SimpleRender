@@ -8,4 +8,5 @@ void MyVertexShader::shade(const FVertex& input, FVertex& output) const {
 	output.x = input.x;
 	output.y = input.y;
 	output.z = input.z;
+	output.w = input.w;
 }

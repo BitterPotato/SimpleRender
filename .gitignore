@@ -293,7 +293,7 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-ig*.jpg
+*/ig*.jpg
 
 ### VisualStudio Patch ###
 # By default, sensitive information, such as encrypted password
