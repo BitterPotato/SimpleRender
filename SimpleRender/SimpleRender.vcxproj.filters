@@ -30,9 +30,6 @@
     <ClInclude Include="platform\uniform.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="util\type_def.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="raster\Frag.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>

@@ -182,7 +182,6 @@ XCOPY "$(SolutionDir)\SimpleRender\lib\FreeImagePlus.dll" "$(TargetDir)" /D /K /
     <ClInclude Include="raster\Triangle.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="util\type_def.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\SimpleRender.cpp" />

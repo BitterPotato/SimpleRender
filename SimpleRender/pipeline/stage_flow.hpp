@@ -1,6 +1,10 @@
 #ifndef STAGE_FLOW_HPP
 #define STAGE_FLOW_HPP
 
+//#define BSP_ENABLE
+//#define CLIP_ENABLE
+
+#include "bsp.hpp"
 #include "vertex_shader.hpp"
 #include "frag_shader.hpp"
 #include "raster_stage.hpp"
@@ -18,6 +22,7 @@ using gl::raster;
 using math::viewportMatrixReflectY;
 using math::viewportMatrix;
 using math::homogeneous;
+using math::asCameraPosi;
 
 using std::vector;
 using std::logic_error;
@@ -29,13 +34,16 @@ namespace gl {
 class Pipeline {
 public:
 	Pipeline() {
-
 	}
 	void confTransform(const fmat4& transformMatrix) {
 		this->mTransformMatrix = transformMatrix;
 	}
 	void confCamera(const fmat4& lookatMatrix) {
 		this->mLookatMatrix = lookatMatrix;
+	}
+	void confCamera(const fmat4& lookatMatrix, const fvec3& cameraPosi) {
+		confCamera(lookatMatrix);
+		this->mCameraPosi = cameraPosi;
 	}
 	void confProjection(const fmat4& projMatrix) {
 		this->mProjMatrix = projMatrix;
@@ -58,9 +66,37 @@ public:
 		this->texture = texture;
 	}
 
-	void useProgram(const vector<FVertex>& vertexData, const VertexShader& vertexShader, const FragShader& fragShader) const {
-		if (!isDataValid(mMode, vertexData))
+	// turn over the control
+	void confVertexData(vector<FVertex>& outVertexData) {
+		if (!isDataValid(mMode, outVertexData)) {
+			dataValid = false;
 			return;
+		}
+		dataValid = true;
+
+#ifdef BSP_ENABLE
+		// trigger construct BSP
+		// may modify the outVertexData
+		mBSPTree = new BSPTree(mMode, outVertexData);
+#endif
+#ifndef BSP_ENABLE
+		this->vertexDataPtr = &outVertexData;
+#endif
+	}
+
+	void useProgram(const VertexShader& vertexShader, const FragShader& fragShader) {
+		if (!dataValid)
+			return;
+
+		// get camera position and run bsp
+#ifdef BSP_ENABLE
+		vector<FVertex> vertexData;
+		// get view point
+		mBSPTree->transferTo(mCameraPosi, vertexData);
+#endif
+#ifndef BSP_ENABLE
+		const auto vertexData = *vertexDataPtr;
+#endif
 
 		vector<FVertex> beforeClipVertexData;
 		for (auto iter = vertexData.begin(); iter != vertexData.end(); iter++) {
@@ -73,8 +109,13 @@ public:
 			beforeClipVertexData.push_back(afterVS);
 		}
 		// 3. clip 
+#ifdef CLIP_ENABLE
 		vector<FVertex> afterClipVertexData;
 		this->clip(mMode, beforeClipVertexData, afterClipVertexData);
+#endif
+#ifndef CLIP_ENABLE
+		vector<FVertex>& afterClipVertexData = beforeClipVertexData;
+#endif
 		
 		// 3.5 homogeneous && viewport transform
 		vector<Vertex> beforeRasterVertexData;
@@ -85,7 +126,7 @@ public:
 		}
 
 		// 4. raster
-		FragCache fragCache;
+		FragCache fragCache(width, height);
 		raster(mMode, mPattern, beforeRasterVertexData, texture, fragCache);
 
 		// 5. frag vertex
@@ -97,12 +138,22 @@ public:
 	~Pipeline() {
 		if (texture != nullptr)
 			delete texture;
+#ifdef BSP_ENABLE
+		delete mBSPTree;
+#endif
+#ifndef BSP_ENABLE
+		if (vertexDataPtr != nullptr)
+			delete vertexDataPtr;
+#endif
+		
 	}
 private:
 	GL_MODE mMode;
 	GL_PATTERN mPattern = GL_NORMAL;
 
 	int width, height;
+
+	fvec3 mCameraPosi;
 
 	fmat4 mTransformMatrix = fmat4(1.0f);
 	fmat4 mLookatMatrix = fmat4(1.0f);
@@ -111,7 +162,15 @@ private:
 
 	Texture* texture = nullptr;
 
-	bool isDataValid(const GL_MODE& mode, const vector<FVertex> vertexData) const {
+#ifdef BSP_ENABLE
+	BSPTree* mBSPTree;
+#endif
+#ifndef BSP_ENABLE
+	vector<FVertex>* vertexDataPtr;
+#endif
+	bool dataValid = false;
+
+	bool isDataValid(const GL_MODE& mode, const vector<FVertex>& vertexData) const {
 		switch (mode) {
 		case GL_LINES:
 			if (vertexData.size() % LINE_POINTS != 0) {
@@ -353,6 +412,7 @@ private:
 
 		// save info that doesn't change
 		*outVertex.info = *fVertex.info;
+		outVertex.info->depth = fVertex.z;
 		outVertex.tex = fVertex.tex;
 
 		// save homogeneous info

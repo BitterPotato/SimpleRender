@@ -2,11 +2,11 @@
 #define UNIFORM_HPP
 
 #include "framebuffer.hpp"
-#include "../util/type_def.hpp"
 
 #include <windows.h>
 #include <tchar.h>
 
+typedef void(*f_keys) (int*);
 
 class Uniform {
 public:

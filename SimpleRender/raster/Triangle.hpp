@@ -82,6 +82,10 @@ inline void computeInterColor(const BGRA& bgraA, const BGRA& bgraB, const BGRA& 
 	outBgra.a = bgraA.a*bary.alpha + bgraB.a*bary.beta + bgraC.a*bary.gamma;
 }
 
+void computeInterDepth(const float depthA, const float depthB, const float depthC, const Bary& bary, float& outDepth) {
+	outDepth = depthA*bary.alpha + depthB*bary.beta + depthC*bary.gamma;
+}
+
 inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const Texture* texture, FragCache& fragCache) {
 	using std::min;
 	using std::max;
@@ -116,7 +120,10 @@ inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const V
 					computeInterColor(*(vertexA.info->bgra), *(vertexB.info->bgra), *(vertexC.info->bgra), bary, *bgra);
 				}
 
-				Info* info = new Info(bgra);
+				float depth;
+				computeInterDepth(vertexA.info->depth, vertexB.info->depth, vertexC.info->depth, bary, depth);
+
+				Info* info = new Info(bgra, depth);
 				fragCache.addFrag({ info, x, y});
 			}
 		}
@@ -148,7 +155,10 @@ inline void rasterTriangleWire(const Vertex& vertexA, const Vertex& vertexB, con
 				BGRA* bgra = new BGRA();
 				computeInterColor(*(vertexA.info->bgra), *(vertexB.info->bgra), *(vertexC.info->bgra), bary, *bgra);
 
-				Info* info = new Info(bgra);
+				float depth;
+				computeInterDepth(vertexA.info->depth, vertexB.info->depth, vertexC.info->depth, bary, depth);
+
+				Info* info = new Info(bgra, depth);
 				fragCache.addFrag({ info, x, y });
 			}
 		}

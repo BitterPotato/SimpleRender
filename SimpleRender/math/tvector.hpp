@@ -90,6 +90,7 @@ template<typename T>
 class TVector3 : public TVectorN<T, 3>{
 public:
 	typedef TVectorN<T, 3> base;
+	TVector3() {}
 	TVector3(T x, T y, T z) {
 		base::data[0] = x;
 		base::data[1] = y;

@@ -1,7 +1,6 @@
 // SimpleRender.cpp : Defines the entry point for the console application.
 //
 
-#include "../util/type_def.hpp"
 #include "../platform/uniform.hpp"
 #include "../platform/framebuffer.hpp"
 #include "../raster/Point.hpp"
@@ -26,6 +25,7 @@ using math::lookatMatrix;
 using math::eulerAsMatrix;
 using math::asMat4;
 using math::radians;
+using math::translate;
 
 using std::cout;
 using std::cin;
@@ -55,21 +55,21 @@ fvec3 cameraCenter(0.0f, 0.0f, 0.0f);
 fvec3 cameraUp(0.0f, 1.0f, 0.0f);
 int pitch = 0, yaw = 0, roll = 0;
 
-void refreshFrame() {
+void refreshConfig() {
 	mPipeline.confTransform(asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER)));
-	mPipeline.confCamera(lookatMatrix(cameraPosition, cameraCenter, cameraUp));
+	mPipeline.confCamera(lookatMatrix(cameraPosition, cameraCenter, cameraUp), cameraPosition);
 	mPipeline.confProjection(frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
 		fvec3(1.0f, 1.0f, -2.0f)));
 	mPipeline.confViewport(WIDTH, HEIGHT);
-	mPipeline.useProgram(vertexData, myVertexShader, myFragShader);
 }
 
-void initConfig() {
-	mPipeline.confTransform(asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER)));
-	mPipeline.confCamera(lookatMatrix(cameraPosition, cameraCenter, cameraUp));
-	mPipeline.confProjection(frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
-		fvec3(1.0f, 1.0f, -2.0f)));
-	mPipeline.confViewport(WIDTH, HEIGHT);
+void refreshFrame() {
+	mPipeline.useProgram(myVertexShader, myFragShader);
+}
+
+void refreshAll() {
+	refreshConfig();
+	refreshFrame();
 }
 
 void keysCallback(int* screen_keys) {
@@ -81,7 +81,7 @@ void keysCallback(int* screen_keys) {
 		cameraPosition[1] += POSITION_STEP;
 		//cameraCenter[1] += POSITION_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	if (screen_keys[VK_DOWN]) {
 		mFramebuffer.clearColor({ 0, 0, 0 });
@@ -89,23 +89,23 @@ void keysCallback(int* screen_keys) {
 		cameraPosition[1] -= POSITION_STEP;
 		//cameraCenter[1] -= POSITION_STEP;
 		
-		refreshFrame();
+		refreshAll();
 	}
 	if (screen_keys[VK_LEFT]) {
 		mFramebuffer.clearColor({ 0, 0, 0 });
 
 		cameraPosition[0] -= POSITION_STEP;
-		cameraCenter[0] -= POSITION_STEP;
+		//cameraCenter[0] -= POSITION_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	if (screen_keys[VK_RIGHT]) {
 		mFramebuffer.clearColor({ 0, 0, 0 });
 
 		cameraPosition[0] += POSITION_STEP;
-		cameraCenter[0] += POSITION_STEP;
+		//cameraCenter[0] += POSITION_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	// first anticlockwise and then clockwise
 	// pitch, yaw modifies cameraCenter, and roll modifies cameraUp(as for camera)
@@ -116,14 +116,14 @@ void keysCallback(int* screen_keys) {
 
 		pitch += DEGREE_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	if (screen_keys[VK_F2]) {
 		mFramebuffer.clearColor({ 0, 0, 0 });
 
 		pitch -= DEGREE_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	// ======== yaw ========
 	if (screen_keys[VK_F3]) {
@@ -131,14 +131,14 @@ void keysCallback(int* screen_keys) {
 
 		yaw += DEGREE_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	if (screen_keys[VK_F4]) {
 		mFramebuffer.clearColor({ 0, 0, 0 });
 
 		yaw -= DEGREE_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	// ======== roll ========
 	if (screen_keys[VK_F5]) {
@@ -146,14 +146,14 @@ void keysCallback(int* screen_keys) {
 
 		roll += DEGREE_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 	if (screen_keys[VK_F6]) {
 		mFramebuffer.clearColor({ 0, 0, 0 });
 
 		roll -= DEGREE_STEP;
 
-		refreshFrame();
+		refreshAll();
 	}
 
 }
@@ -208,9 +208,9 @@ inline void testPoint() {
 	Info* infoB = new Info(bgraB);
 	vertexData.push_back({ infoB, 0.75f, 0.75f });
 
-	mPipeline.confViewport(WIDTH, HEIGHT);
 	mPipeline.confMode(GL_POINTS);
-	mPipeline.useProgram(vertexData, myVertexShader, myFragShader);
+	mPipeline.confVertexData(vertexData);
+	refreshAll();
 }
 
 //inline void testRasterLine() {
@@ -261,14 +261,16 @@ inline void testLine() {
 	Info* infoF = new Info(bgraF);
 	vertexData.push_back(FVertex(infoF, 0.0f, 0.5f, 1.0f));
 
-	initConfig();
-	fmat4 front = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
-		fvec3(1.0f, 1.0f, -2.0f));
-	fmat4 persp1 = perspectiveMatrix(radians(45.0f), 1.0f, -0.1f, -3.0f);
-	fmat4 persp2 = perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -100.0f);
-	mPipeline.confProjection(persp2);
+	refreshConfig();
+	// TODO: perspective matrix should be fixed
+	//fmat4 front = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
+	//	fvec3(1.0f, 1.0f, -2.0f));
+	//fmat4 persp1 = perspectiveMatrix(radians(45.0f), 1.0f, -0.1f, -3.0f);
+	//fmat4 persp2 = perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -100.0f);
+	//mPipeline.confProjection(persp2);
 	mPipeline.confMode(GL_LINES);
-	mPipeline.useProgram(vertexData, myVertexShader, myFragShader);
+	mPipeline.confVertexData(vertexData);
+	refreshFrame();
 }
 
 //inline void testRasterTriangle() {
@@ -322,9 +324,10 @@ inline void testTriangle() {
 	vertexData.push_back({ infoB, -0.75f, 0.5f });
 	vertexData.push_back({ infoC, 0.25f, -0.25f });
 	
-	mPipeline.confViewport(WIDTH, HEIGHT);
+	
 	mPipeline.confMode(GL_TRIANGLES);
-	mPipeline.useProgram(vertexData, myVertexShader, myFragShader);
+	mPipeline.confVertexData(vertexData);
+	refreshAll();
 }
 
 inline void testTriangleStrip() {
@@ -344,10 +347,10 @@ inline void testTriangleStrip() {
 	Info* infoD = new Info(bgraD);
 	vertexData.push_back({ infoD, 0.875f, -0.375f });
 
-	mPipeline.confViewport(WIDTH, HEIGHT);
+	mPipeline.confVertexData(vertexData);
 	mPipeline.confMode(GL_TRIANGLES_STRIP);
 	mPipeline.confPattern(GL_WIREFRAME);
-	mPipeline.useProgram(vertexData, myVertexShader, myFragShader);
+	refreshAll();
 }
 
 void testCube() {
@@ -390,12 +393,14 @@ void testCube() {
 	//vertexData.push_back();
 	scfParse("media/cube.scj", vertexData);
 	Texture* texture = new FITexture("media/test.jpg");
-	mPipeline.confViewport(WIDTH, HEIGHT);
-	cameraPosition[1] += 3*POSITION_STEP;
+	cameraPosition[1] += 3 * POSITION_STEP;
+	refreshConfig();
+	
 	// TODO: change near plane seems don't have any effect
-	mPipeline.confProjection(perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -10.0f));
+	//mPipeline.confProjection(perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -10.0f));
 	mPipeline.confTexture(texture);
 	mPipeline.confMode(GL_TRIANGLES);
+	mPipeline.confVertexData(vertexData);
 	refreshFrame();
 }
 void testTrivia() {
@@ -424,10 +429,10 @@ int main(void)
 	//testTrivia();
 
 	//testPoint();
-	testLine();
+	//testLine();
 	//testTriangle();
 	//testTriangleStrip();
-	//testCube();
+	testCube();
 
 	mUniform.runRender();
 

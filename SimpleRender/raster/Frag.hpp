@@ -1,10 +1,9 @@
 #ifndef FRAG_HPP
 #define FRAG_HPP
 
+#include "../math/tvector.hpp"
+
 #include <iostream>
-
-#include "../util/type_def.hpp"
-
 // colors
 //struct BGRA {
 //	int b; int g;  int r; int a;
@@ -38,15 +37,17 @@ public:
 };
 
 struct Info {
-	// TODO: make use of depth and stencil
-	BGRA* bgra; int depth; int stencil;
-	Info(int depth=0, int stencil=0) {
+	// depth can be integer, but that needs one more step:
+	// map the z \in (n, f) -> (0, B-1)
+	// for simplicity, just use float
+	BGRA* bgra; float depth; int stencil;
+	Info(float depth=0.0f, int stencil=0) {
 		// default construct
 		bgra = new BGRA();
 		this->depth = depth;
 		this->stencil = stencil;
 	}
-	Info(BGRA* bgra, int depth=0, int stencil=0) {
+	Info(BGRA* bgra, float depth=0.0f, int stencil=0) {
 		this->bgra = bgra;
 		this->depth = depth;
 		this->stencil = stencil;
@@ -247,6 +248,9 @@ struct FVertex {
 		out.tex = inter(from.tex, to.tex, t);
 		out.info = inter(from.info, to.info, t);
 		return true;
+	}
+	friend fvec3 extractVec(const FVertex& fVertex) {
+		return fvec3(fVertex.x, fVertex.y, fVertex.z);
 	}
 	~FVertex() {
 		delete info;
