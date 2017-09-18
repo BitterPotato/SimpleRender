@@ -161,16 +161,21 @@ XCOPY "$(SolutionDir)\SimpleRender\lib\FreeImagePlus.dll" "$(TargetDir)" /D /K /
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="format\scf_parser.hpp" />
+    <ClInclude Include="main\SimpleDelegate.hpp" />
     <ClInclude Include="math\tmatrix.hpp" />
     <ClInclude Include="math\tmatrix_gl.hpp" />
     <ClInclude Include="math\tmatrix_rotate.hpp" />
     <ClInclude Include="math\tmatrix_trans.hpp" />
     <ClInclude Include="math\tvector.hpp" />
     <ClInclude Include="math\tvector_trans.hpp" />
+    <ClInclude Include="mesh\shape.hpp" />
+    <ClInclude Include="pipeline\bsp.hpp" />
     <ClInclude Include="pipeline\frag_shader.hpp" />
+    <ClInclude Include="pipeline\gl_utils.hpp" />
     <ClInclude Include="pipeline\raster_stage.hpp" />
+    <ClInclude Include="pipeline\render_state.hpp" />
+    <ClInclude Include="pipeline\render_struc.hpp" />
     <ClInclude Include="pipeline\stage_flow.hpp" />
-    <ClInclude Include="pipeline\stage_struc.hpp" />
     <ClInclude Include="pipeline\vertex_shader.hpp" />
     <ClInclude Include="platform\framebuffer.hpp" />
     <ClInclude Include="platform\uniform.hpp" />
@@ -184,22 +189,18 @@ XCOPY "$(SolutionDir)\SimpleRender\lib\FreeImagePlus.dll" "$(TargetDir)" /D /K /
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main\SimpleDelegate.cpp" />
     <ClCompile Include="main\SimpleRender.cpp" />
+    <ClCompile Include="mesh\sphere.cpp" />
+    <ClCompile Include="pipeline\bsp.cpp" />
     <ClCompile Include="pipeline\frag_shader.cpp" />
+    <ClCompile Include="pipeline\render_state.cpp" />
+    <ClCompile Include="pipeline\stage_flow.cpp" />
     <ClCompile Include="pipeline\vertex_shader.cpp" />
     <ClCompile Include="platform\winbuffer.cpp" />
     <ClCompile Include="platform\winform.cpp" />
     <ClCompile Include="raster\FITexture.cpp" />
     <ClCompile Include="raster\FragCache.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="raster\Frag.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

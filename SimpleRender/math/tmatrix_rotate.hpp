@@ -104,7 +104,7 @@ namespace math {
 
 	// ----------------- euler ------------------
 	// radians version
-	fmat3 eulerAsMatrix(const float pitch, const float yaw, const float roll, const string& order) {
+	static fmat3 eulerAsMatrix(const float pitch, const float yaw, const float roll, const string& order) {
 		if (order == "xyz") {
 			return asXRotateMat(pitch)*asYRotateMat(yaw)*asZRotateMat(roll);
 		}
@@ -126,7 +126,7 @@ namespace math {
 	}
 
 	// degrees version
-	fmat3 eulerAsMatrix(const int pi, const int ya, const int ro, const string& order) {
+	static fmat3 eulerAsMatrix(const int pi, const int ya, const int ro, const string& order) {
 		return eulerAsMatrix(radians(static_cast<float>(pi)), radians(static_cast<float>(ya)), radians(static_cast<float>(ro)), order);
 	}
 

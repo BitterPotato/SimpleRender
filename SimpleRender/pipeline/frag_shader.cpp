@@ -2,6 +2,6 @@
 
 void MyFragShader::shade(const Frag& frag) const {
 	//if (frag.x < 400) {
-	framebuffer->setBufferPixel(frag.x, frag.y, *(frag.info->bgra));
+	mFrameBuffer.setBufferPixel(frag.x, frag.y, *(frag.info->bgra));
 	//}
 }

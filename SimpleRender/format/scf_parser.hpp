@@ -19,7 +19,7 @@ using std::istringstream;
 //using std::sscanf_s;
 
 typedef map<string, string> MapType;
-void replaceAll(string& subject, const string& search, const string& replace) {
+static void replaceAll(string& subject, const string& search, const string& replace) {
 	size_t pos = 0;
 	while ((pos = subject.find(search, pos)) != string::npos) {
 		subject.replace(pos, search.length(), replace);
@@ -27,13 +27,13 @@ void replaceAll(string& subject, const string& search, const string& replace) {
 	}
 }
 
-void substituteConst(const MapType& constMap, string& outString) {
+static void substituteConst(const MapType& constMap, string& outString) {
 	for (auto iter = constMap.begin(); iter != constMap.end(); iter++) {
 		replaceAll(outString, iter->first, iter->second);
 	}
 }
 
-void scfParse(const string& path, vector<FVertex>& outVertexData) {
+static void scfParse(const string& path, vector<FVertex>& outVertexData) {
 	MapType constMap;
 	constMap["l"] = "0.2";
 	constMap["m"] = "128";

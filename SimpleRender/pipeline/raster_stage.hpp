@@ -1,37 +1,42 @@
 #ifndef RASTER_STAGE_HPP
 #define RASTER_STAGE_HPP
 
-#include "stage_struc.hpp"
+#include "render_struc.hpp"
 #include "../raster/Point.hpp"
 #include "../raster/Line.hpp"
 #include "../raster/Triangle.hpp"
+#include "../raster/Frag.hpp"
+#include "../raster/Texture.hpp"
+#include "../raster/FragCache.hpp"
 
 #include <vector>
+#include <memory>
 
 using std::vector;
+using std::unique_ptr;
 
-#define WIDTH 1
-#define SIZE 10
+#define LINE_WIDTH 1
+#define POINT_SIZE 10
 
 namespace gl {
 
-static inline void rasterUniverTriangle(const GL_PATTERN& pattern, const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const Texture* texture, FragCache& fragCache) {
+static void rasterUniverTriangle(const GL_PATTERN& pattern, const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const unique_ptr<Texture>& texture, FragCache& fragCache) {
 	if (pattern == GL_NORMAL)
 		rasterTriangle(vertexA, vertexB, vertexC, texture, fragCache);
 	else if (pattern == GL_WIREFRAME)
 		rasterTriangleWire(vertexA, vertexB, vertexC, fragCache);
 }
 
-static inline void raster(const GL_MODE& mode, const GL_PATTERN& pattern, const vector<Vertex>& vecVertex, Texture* texture, FragCache& fragCache) {
+static inline void raster(const GL_MODE& mode, const GL_PATTERN& pattern, const vector<Vertex>& vecVertex, const unique_ptr<Texture>& texture, FragCache& fragCache) {
 	switch (mode) {
 	case GL_POINTS:
 		for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter++) {
-			rasterPoint(*iter, SIZE, fragCache);
+			rasterPoint(*iter, POINT_SIZE, fragCache);
 		}
 		break;
 	case GL_LINES:
 		for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter += 2) {
-			rasterLine(*iter, *(iter + 1), WIDTH, fragCache);
+			rasterLine(*iter, *(iter + 1), LINE_WIDTH, fragCache);
 		}
 		break;
 	case GL_TRIANGLES:

@@ -7,15 +7,17 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <memory>
 
 using std::vector;
+using std::unique_ptr;
 
 #define Z_BUFFERTEST
 
 class FragCache {
 public:
 	void addFrag(const Frag& frag);
-	void runFrags(const FragShader& fragShader);
+	void runFrags(const unique_ptr<FragShader>& fragShader);
 	FragCache(int width, int height) {
 		mFragIndexes = vector<vector<int>>(height, vector<int>(width, -1));
 	}

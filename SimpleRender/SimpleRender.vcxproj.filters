@@ -24,84 +24,111 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="platform\framebuffer.hpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="pipeline\stage_flow.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="platform\uniform.hpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="pipeline\render_state.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="raster\Frag.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="raster\FragCache.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="raster\Line.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="raster\Point.hpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="main\SimpleDelegate.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="raster\Triangle.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math\tvector.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math\tvector_trans.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math\tmatrix.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math\tmatrix_trans.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math\tmatrix_gl.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="math\tmatrix_rotate.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pipeline\frag_shader.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline\raster_stage.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline\stage_flow.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline\stage_struc.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline\vertex_shader.hpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="pipeline\gl_utils.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="format\scf_parser.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\uniform.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\raster_stage.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\frag_shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\bsp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tmatrix_gl.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\render_struc.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\FragCache.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\shape.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\Frag.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tvector.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="raster\Texture.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tmatrix_trans.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tvector_trans.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\framebuffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\Point.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="raster\Line.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline\vertex_shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tmatrix.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="platform\winbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="platform\winform.cpp">
+    <ClCompile Include="main\SimpleDelegate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main\SimpleRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="raster\FragCache.cpp">
+    <ClCompile Include="pipeline\stage_flow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\winform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pipeline\frag_shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pipeline\render_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\FragCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pipeline\bsp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\winbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pipeline\vertex_shader.cpp">
@@ -110,10 +137,5 @@
     <ClCompile Include="raster\FITexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="raster\Frag.inl">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

@@ -18,11 +18,6 @@ using std::tan;
 
 namespace math {
 	template<typename T>
-	static TVector3<T>& asCameraPosi(const TMatrix4<T>& lookat) {
-		return TVector3<T>(-lookat[3][0], -lookat[3][1], -lookat[3][2]);
-	}
-
-	template<typename T>
 	static inline TMatrix4<T> lookatMatrix(const TVector3<T>& position,
 		const TVector3<T>& center, const TVector3<T>& up) {
 		TVector3<T> dirtVec = normalize(center - position);

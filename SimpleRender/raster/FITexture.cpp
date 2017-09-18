@@ -5,6 +5,7 @@ FITexture::FITexture(const char* img) {
 }
 FITexture::~FITexture() {
 	// do nothing
+	image = NULL;
 }
 
 int FITexture::width() const {

@@ -1,7 +1,7 @@
 #ifndef BSP_HPP
 #define BSP_HPP
 
-#include "stage_struc.hpp"
+#include "render_struc.hpp"
 #include "../raster/Frag.hpp"
 #include "../math/tvector_trans.hpp"
 

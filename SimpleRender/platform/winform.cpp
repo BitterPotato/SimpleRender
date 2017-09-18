@@ -42,7 +42,7 @@ void Uniform::runRender() {
 
 // 初始化窗口并设置标题
 int Uniform::screen_init(int w, int h, const TCHAR *title) {
-	WNDCLASS wc = { CS_BYTEALIGNCLIENT, (WNDPROC)screen_events, 0, 0, 0,
+	WNDCLASS wc = { CS_HREDRAW || CS_VREDRAW, (WNDPROC)screen_events, 0, 0, 0,
 		NULL, NULL, NULL, NULL, _T("SCREEN3.1415926") };
 	BITMAPINFO bi = { { sizeof(BITMAPINFOHEADER), w, -h, 1, 32, BI_RGB,
 		w * h * 4, 0, 0, 0, 0 } };

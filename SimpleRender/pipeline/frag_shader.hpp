@@ -5,13 +5,11 @@
 
 class FragShader {
 public:
-	FragShader(FrameBuffer* framebuffer) {
-		this->framebuffer = framebuffer;
-	}
+	FragShader(FrameBuffer& framebuffer) : mFrameBuffer(framebuffer){}
 	virtual void shade(const Frag& frag) const = 0;
 
 protected:
-	FrameBuffer* framebuffer;
+	FrameBuffer& mFrameBuffer;
 };
 
 class MyFragShader : public FragShader {

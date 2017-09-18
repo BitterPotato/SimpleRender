@@ -66,7 +66,7 @@ inline void toPerspectiveCorrect(float h0, float h1, float h2, Bary& outBary) {
 	outBary.alpha = 1 - outBary.beta - outBary.gamma;
 }
 
-inline void computeInterUV(const TexCoord& texA, const TexCoord& texB, const TexCoord& texC, const Bary& bary, BGRA& outBgra, const Texture* texture) {
+inline void computeInterUV(const TexCoord& texA, const TexCoord& texB, const TexCoord& texC, const Bary& bary, BGRA& outBgra, const unique_ptr<Texture>& texture) {
 	float u = texA.u*bary.alpha + texB.u*bary.beta + texC.u*bary.gamma;
 	float v = texA.v*bary.alpha + texB.v*bary.beta + texC.v*bary.gamma;
 
@@ -82,11 +82,11 @@ inline void computeInterColor(const BGRA& bgraA, const BGRA& bgraB, const BGRA& 
 	outBgra.a = bgraA.a*bary.alpha + bgraB.a*bary.beta + bgraC.a*bary.gamma;
 }
 
-void computeInterDepth(const float depthA, const float depthB, const float depthC, const Bary& bary, float& outDepth) {
+static void computeInterDepth(const float depthA, const float depthB, const float depthC, const Bary& bary, float& outDepth) {
 	outDepth = depthA*bary.alpha + depthB*bary.beta + depthC*bary.gamma;
 }
 
-inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const Texture* texture, FragCache& fragCache) {
+inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const unique_ptr<Texture>& texture, FragCache& fragCache) {
 	using std::min;
 	using std::max;
 
