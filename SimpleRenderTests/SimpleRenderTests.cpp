@@ -4,11 +4,13 @@
 #include "gtest/gtest.h"
 #include "../SimpleRender/math/tvector_trans.hpp"
 #include "../SimpleRender/math/tmatrix_trans.hpp"
+#include "../SimpleRender/raster/Frag.hpp"
 
 #include <iostream>
 #include <string>
 
 using std::cin;
+using std::cout;
 using math::dot;
 using math::transpose;
 using math::length;
@@ -130,4 +132,12 @@ TEST(EulerTests, Euler) {
 	fmat4 mat = asMat4(eulerAsMatrix(10, 0, 0, EULER_ORDER));
 	fmat4 emat = fmat4(1.0f);
 	EXPECT_EQ(emat, mat);
+}
+TEST(VectorTests, Vector) {
+	cout << 1;
+}
+TEST(InfoTests, Info) {
+	Info test(getInfo());
+	int wait;
+	cin >> wait;
 }

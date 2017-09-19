@@ -6,14 +6,17 @@
 #include <windows.h>
 #include <winuser.h>
 #include <tchar.h>
+#include <functional>
 
-typedef void(*f_keys) (int*);
+//typedef void(*f_keys) (int*);
+
+using std::function;
 
 class Uniform {
 public:
 	int screen_w, screen_h;
 
-	f_keys mKeyCallback;
+	function<void (int* screen_keys)> mKeyCallback;
 
 	Uniform(int width, int height, FrameBuffer* framebuffer);
 

@@ -22,21 +22,24 @@ namespace math{
 		return (T)sqrt(ret);
 	}
 
+
 	template<typename T, const int len>
-	static inline TVectorN<T, len> normalize(const TVectorN<T, len>& v) {
+	// notice: use type v is wrong
+	//static inline auto normalize(const TVectorN<T, len>& v) -> decltype(v) {
+	static inline auto normalize(const TVectorN<T, len>& v) {
 		return v / length(v);
 	}
 	
 	// ------------------ not universal ------------------
 	template<typename T>
-	static inline T det(const TVector2<T>& va, const TVector2<T>& vb) {
+	static inline T det(const TVectorN<T, 2>& va, const TVectorN<T, 2>& vb) {
 		T ret = va[0] * vb[1] - va[1] * vb[0];
 		return ret;
 	}
 
 	template<typename T>
-	static inline TVector3<T> cross(const TVector3<T>& va, const TVector3<T>& vb) {
-		return TVector3<T>(
+	static inline auto cross(const TVectorN<T, 3>& va, const TVectorN<T, 3>& vb) {
+		return TVectorN<T, 3>(
 			va[1]*vb[2] - va[2]*vb[1],
 			va[2] * vb[0] - va[0] * vb[2],
 			va[0] * vb[1] - va[1] * vb[0]
@@ -44,25 +47,25 @@ namespace math{
 	}
 
 	template<typename T>
-	TVector3<T> asVec3(const TVector4<T>& vec4) {
-		return TVector3(vec4[0], vec4[1], vec4[2]);
+	auto asVec3(const TVectorN<T, 4>& vec4) {
+		return TVectorN<T, 3>(vec4[0], vec4[1], vec4[2]);
 	}
 
 	// for homogeneous coordinate
 	template<typename T>
-	TVector4<T> asVec4_homo(const TVector3<T>& vec3) {
-		return TVector3(vec3[0], vec3[1], vec3[2], T(1));
+	auto asVec4_homo(const TVectorN<T, 3>& vec3) {
+		return TVectorN<T, 3>(vec3[0], vec3[1], vec3[2], T(1));
 	}
 
 	// just for enlarge
 	template<typename T>
-	TVector4<T> asVec4_exp(const TVector3<T>& vec3) {
-		return TVector4<T>(vec3[0], vec3[1], vec3[2], T(0));
+	auto asVec4_exp(const TVectorN<T, 3>& vec3) {
+		return TVectorN<T, 4>(vec3[0], vec3[1], vec3[2], T(0));
 	}
 
 	template<typename T>
-	TVector3<T> homogeneous(const TVector4<T>& vec4) {
-		return TVector3<T>(vec4[0] / vec4[3], vec4[1] / vec4[3], vec4[2] / vec4[3]);
+	auto homogeneous(const TVectorN<T, 4>& vec4) {
+		return TVectorN<T, 3>(vec4[0] / vec4[3], vec4[1] / vec4[3], vec4[2] / vec4[3]);
 	}
 }
 

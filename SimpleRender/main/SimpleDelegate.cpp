@@ -65,7 +65,7 @@ void SimpleDelegate::keysCallback(int* screen_keys) {
 }
 
 void SimpleDelegate::initRender(const int width, const int height) {
-	mPipeline = new Pipeline(mRenderState);
+	mPipeline = unique_ptr<Pipeline>(new Pipeline(mRenderState));
 
 	mRenderState.attachViewport(width, height);
 	unique_ptr<VertexShader> myVertexShader(new MyVertexShader());

@@ -3,12 +3,12 @@
 
 #include "SimpleDelegate.hpp"
 
-SimpleDelegate* simpleDelegate;
+//SimpleDelegate* simpleDelegate;
 
-void keysCallback(int* screen_keys) {
-	if (simpleDelegate)
-		simpleDelegate->keysCallback(screen_keys);
-}
+//void keysCallback(int* screen_keys) {
+//	if (simpleDelegate)
+//		simpleDelegate->keysCallback(screen_keys);
+//}
 
 int main(void)
 {
@@ -19,14 +19,11 @@ int main(void)
 	Uniform uniform(width, height, &frameBuffer);
 	frameBuffer.setBufferStorage(width, height);
 
-	simpleDelegate = new SimpleDelegate(uniform, frameBuffer, width, height);
-	uniform.mKeyCallback = keysCallback;
+	SimpleDelegate simpleDelegate(uniform, frameBuffer, width, height);
+	uniform.mKeyCallback = [&simpleDelegate](int* screen_keys) {simpleDelegate.keysCallback(screen_keys); };
 	
-	simpleDelegate->testCube();
+	simpleDelegate.testCube();
 
 	uniform.runRender();
-
-	int wait;
-	cin >> wait;
 	return 0;
 }

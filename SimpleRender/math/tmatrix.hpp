@@ -19,13 +19,13 @@ public:
 	inline TMatrixN(const TMatrixN& matrixN) {
 		assign(matrixN);
 	}
-	inline col_type& operator[](int n) {
+	inline auto& operator[](int n) {
 		return data[n];
 	}
-	inline const col_type& operator[](int n) const {
+	inline const auto& operator[](int n) const {
 		return data[n];
 	}
-	inline row_type row(int n) const {
+	inline auto row(int n) const {
 		row_type result;
 		for (int i = 0; i < w; i++) {
 			result[i] = data[i][n];
@@ -53,7 +53,7 @@ protected:
 };
 
 template <typename T, const int w, const int h>
-inline TVectorN<T, w> operator*(const TMatrixN<T, w, h>& matrixN, const TVectorN<T, w>& vecN) {
+inline auto operator*(const TMatrixN<T, w, h>& matrixN, const TVectorN<T, w>& vecN) {
 	TVectorN<T, w> ret;
 	for (int j = 0; j < h; j++) {
 		ret[j] = dot(matrixN.row(j), vecN);
@@ -61,7 +61,7 @@ inline TVectorN<T, w> operator*(const TMatrixN<T, w, h>& matrixN, const TVectorN
 	return ret;
 }
 template <typename T, const int w, const int h, const int l>
-inline TMatrixN<T, h, l> operator*(const TMatrixN<T, w, h>& matrixThis, const TMatrixN<T, l, w>& matrixThat) {
+inline auto operator*(const TMatrixN<T, w, h>& matrixThis, const TMatrixN<T, l, w>& matrixThat) {
 	TMatrixN<T, h, l> result;
 	for (int i = 0; i < l; i++)
 		for (int j = 0; j < h; j++)
@@ -80,7 +80,7 @@ public:
 		base::data[2][2] = t;
 	}
 	TMatrix3(const TMatrixN<T, 3, 3>& matrixN) : TMatrixN<T, 3, 3>(matrixN) {}
-	TMatrix3(const TVector3<T>& vec1, const TVector3<T>& vec2, const TVector3<T>& vec3) {
+	TMatrix3(const TVectorN<T, 3>& vec1, const TVectorN<T, 3>& vec2, const TVectorN<T, 3>& vec3) {
 		base::data[0] = vec1;
 		base::data[1] = vec2;
 		base::data[2] = vec3;
@@ -115,7 +115,7 @@ public:
 	}
 	// notice: https://stackoverflow.com/questions/22880493/no-suitable-user-defined-conversion
 	TMatrix4(const TMatrixN<T, 4, 4>& matrixN) : TMatrixN<T, 4, 4>(matrixN) {}
-	TMatrix4(const TVector4<T>& vec1, const TVector4<T>& vec2, const TVector4<T>& vec3, const TVector4<T>& vec4) {
+	TMatrix4(const TVectorN<T, 4>& vec1, const TVectorN<T, 4>& vec2, const TVectorN<T, 4>& vec3, const TVectorN<T, 4>& vec4) {
 		base::data[0] = vec1;
 		base::data[1] = vec2;
 		base::data[2] = vec3;

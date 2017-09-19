@@ -33,6 +33,7 @@ using std::unique_ptr;
 #define LINE_POINTS 2
 
 class RenderState {
+	friend class SimpleDelegate;
 public:
 	GL_MODE mMode;
 	GL_PATTERN mPattern = GL_NORMAL;
@@ -54,7 +55,7 @@ public:
 	BSPTree* mBSPTree;
 #endif
 #ifndef BSP_ENABLE
-	vector<FVertex>* vertexDataPtr;
+	unique_ptr<vector<FVertex>> vertexDataPtr;
 #endif
 	
 	RenderState() {
@@ -68,8 +69,7 @@ public:
 		delete mBSPTree;
 #endif
 #ifndef BSP_ENABLE
-		if (vertexDataPtr != nullptr)
-			delete vertexDataPtr;
+		// do nothing
 #endif
 	}
 

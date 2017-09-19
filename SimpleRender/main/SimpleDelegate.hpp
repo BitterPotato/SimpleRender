@@ -12,11 +12,13 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <memory>
 
 using gl::Pipeline;
 
 using std::cout;
 using std::cin;
+using std::unique_ptr;
 
 const float POSITION_STEP = 0.2f;
 const float DEGREE_STEP = 2;
@@ -29,8 +31,6 @@ public:
 		initRender(width, height);
 	}
 	~SimpleDelegate() {
-		if (mPipeline)
-			delete mPipeline;
 	}
 	void keysCallback(int* screen_keys);
 	void testRectangle(int width, int height, FrameBuffer& fb);
@@ -49,7 +49,7 @@ private:
 
 	vector<FVertex> vertexData;
 	RenderState mRenderState;
-	Pipeline* mPipeline;
+	unique_ptr<Pipeline> mPipeline;
 
 	void initRender(const int width, const int height);
 	void clearColor();

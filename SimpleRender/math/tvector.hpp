@@ -1,7 +1,11 @@
 #ifndef TVECTOR_HPP
 #define TVECTOR_HPP
 
+//#define NDEBUG 
+
 #include <iostream>
+#include <assert.h> 
+
 using std::cout;
 using std::endl;
 
@@ -9,7 +13,24 @@ template <typename T, const int len>
 class TVectorN {
 public:
 	TVectorN() {
-
+	}
+	TVectorN(T x, T y) {
+		assert(len == 2);
+		data[0] = x;
+		data[1] = y;
+	}
+	TVectorN(T x, T y, T z) {
+		assert(len == 3);
+		data[0] = x;
+		data[1] = y;
+		data[2] = z;
+	}
+	TVectorN(T x, T y, T z, T w) {
+		assert(len == 4);
+		data[0] = x;
+		data[1] = y;
+		data[2] = z;
+		data[3] = w;
 	}
 	inline TVectorN(const TVectorN& vecN) {
 		assign(vecN);
@@ -71,52 +92,14 @@ protected:
 //	T* data;
 };
 
-template<typename T>
-class TVector2 : public TVectorN<T, 2>{
-public:
-	typedef TVectorN<T, 2> base;
-	TVector2(T x, T y) {
-		base::data[0] = x;
-		base::data[1] = y;
-	}
-	TVector2(const TVectorN<T, 2>& vec) : TVectorN<T, 2>(vec) {}
-	//TVector2(T x, T y) {
-	//	data[0] = x;
-	//	data[1] = y;
-	//}
-};
+using ivec2 = TVectorN<int, 2>;
+using fvec2 = TVectorN<float, 2>;
+using ivec3 = TVectorN<int, 3>;
+using fvec3 = TVectorN<float, 3>;
+using ivec4 = TVectorN<int, 4>;
+using fvec4 = TVectorN<float, 4>;
 
-template<typename T>
-class TVector3 : public TVectorN<T, 3>{
-public:
-	typedef TVectorN<T, 3> base;
-	TVector3() {}
-	TVector3(T x, T y, T z) {
-		base::data[0] = x;
-		base::data[1] = y;
-		base::data[2] = z;
-	}
-	TVector3(const TVectorN<T, 3>& vec) : TVectorN<T, 3>(vec) {}
-};
-
-template<typename T>
-class TVector4 : public TVectorN<T, 4> {
-public:
-	typedef TVectorN<T, 4> base;
-	TVector4(T x, T y, T z, T w) {
-		base::data[0] = x;
-		base::data[1] = y;
-		base::data[2] = z;
-		base::data[3] = w;
-	}
-	TVector4(const TVectorN<T, 4>& vec) : TVectorN<T, 4>(vec) {}
-};
-
-typedef TVector2<int> ivec2;
-typedef TVector2<float> fvec2;
-typedef TVector3<int> ivec3;
-typedef TVector3<float> fvec3;
-typedef TVector4<int> ivec4;
-typedef TVector4<float> fvec4;
+template <typename T, const int len>
+using VecN = TVectorN<T, len>;
 
 #endif

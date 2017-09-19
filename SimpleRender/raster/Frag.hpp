@@ -4,6 +4,9 @@
 #include "../math/tvector.hpp"
 
 #include <iostream>
+
+using std::cout;
+
 // colors
 //struct BGRA {
 //	int b; int g;  int r; int a;
@@ -23,7 +26,7 @@ public:
 		this->r = r;
 		this->a = a;
 	}
-	BGRA(const BGRA& bgra) : b(bgra.b), g(bgra.g), r(bgra.r), a(bgra.a) {}
+	//BGRA(const BGRA& bgra) : b(bgra.b), g(bgra.g), r(bgra.r), a(bgra.a) {}
 	friend BGRA* inter(const BGRA* from, const BGRA* to, const float t) {
 		BGRA* bgra = new BGRA();
 		bgra->b = (1 - t)*from->b + t*to->b;
@@ -51,18 +54,37 @@ struct Info {
 		this->bgra = bgra;
 		this->depth = depth;
 		this->stencil = stencil;
+		//cout << "constructor" << endl;
 	}
 	// some sort of constructor
 	Info(const Info& info) {
 		bgra = new BGRA(*info.bgra);
 		depth = info.depth;
 		stencil = info.stencil;
+		//cout << "copy constructor" << endl;
 	}
+	//Info(Info&& info) noexcept {
+	//	bgra = info.bgra;
+	//	depth = info.depth;
+	//	stencil = info.stencil;
+	//	info.bgra = nullptr;
+	//	cout << "move constructor" << endl;
+	//}
 	// deep copy, avoid self =
 	Info& operator=(Info info){
 		swap(*this, info);
 		return *this;
 	}
+	//Info operator=(Info&& info) noexcept {
+	//	if (this != &info) {
+	//		delete bgra;
+	//		bgra = info.bgra;
+	//		depth = info.depth;
+	//		stencil = info.stencil;
+	//		info.bgra = nullptr;
+	//	}
+	//	return *this;
+	//}
 	friend void swap(Info& first, Info& second) // nothrow
 	{
 		// enable ADL (not necessary in our case, but good practice)
@@ -86,10 +108,19 @@ struct Info {
 		return info;
 	}
 	~Info() {
-		delete bgra;
+		if (bgra) {
+			delete bgra;
+			bgra = nullptr;
+		}
+		
 		//std::cout << "Info de_construct\n";
 	}
 };
+
+static Info getInfo() {
+	BGRA* bgra = new BGRA(128, 128, 128);
+	return Info( bgra, 0, 0 );
+}
 
 // just shallow copy
 struct Frag{

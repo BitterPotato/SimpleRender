@@ -107,7 +107,8 @@ void RenderState::attachVertexData(const GL_MODE& mode, vector<FVertex>& outVert
 	// may modify the outVertexData
 	mBSPTree = new BSPTree(mMode, outVertexData);
 #endif
-#ifndef BSP_ENABLE
-	this->vertexDataPtr = &outVertexData;
+#ifndef BSP_ENABLE 
+	// TODO: maybe wrong usage
+	this->vertexDataPtr = unique_ptr<vector<FVertex>>(&outVertexData);
 #endif
 }
