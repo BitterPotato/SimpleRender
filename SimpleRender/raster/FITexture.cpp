@@ -21,8 +21,7 @@ bool FITexture::getPixelColor(int x, int y, BGRA& bgra) const {
 	RGBQUAD color;
 	bool res = image.getPixelColor(x, y, &color);
 
-	// TODO: why the color cannot get results in place
-	bgra.r = color.rgbBlue;
+	bgra.r = color.rgbRed;
 	bgra.g = color.rgbGreen;
-	bgra.b = color.rgbRed;
+	bgra.b = color.rgbBlue;
 }

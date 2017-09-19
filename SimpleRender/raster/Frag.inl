@@ -34,6 +34,6 @@ inline Info& colorRatioInfo(const Info& info, float ratio) {
 }
 
 inline BGRA operator*(const BGRA& bgra, const float ratio) {
-	return { mround(bgra.r*ratio), mround(bgra.g*ratio), mround(bgra.b*ratio), mround(bgra.a*ratio) };
+	return { mround(bgra.b*ratio), mround(bgra.g*ratio), mround(bgra.r*ratio), mround(bgra.a*ratio) };
 }
 #endif

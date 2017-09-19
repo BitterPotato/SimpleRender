@@ -3,6 +3,11 @@
 
 #include "SimpleDelegate.hpp"
 
+#include <iostream>
+#include <vector>
+
+using std::vector;
+using std::cout;
 //SimpleDelegate* simpleDelegate;
 
 //void keysCallback(int* screen_keys) {
@@ -22,8 +27,12 @@ int main(void)
 	SimpleDelegate simpleDelegate(uniform, frameBuffer, width, height);
 	uniform.mKeyCallback = [&simpleDelegate](int* screen_keys) {simpleDelegate.keysCallback(screen_keys); };
 	
-	simpleDelegate.testCube();
+	simpleDelegate.testLine();
 
 	uniform.runRender();
+	
+
+	//int wait;
+	//cin >> wait;
 	return 0;
 }

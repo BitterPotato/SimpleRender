@@ -137,7 +137,6 @@ TEST(VectorTests, Vector) {
 	cout << 1;
 }
 TEST(InfoTests, Info) {
-	Info test(getInfo());
 	int wait;
 	cin >> wait;
 }

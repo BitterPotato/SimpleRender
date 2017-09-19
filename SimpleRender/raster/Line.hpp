@@ -4,9 +4,10 @@
 #include "FragCache.hpp"
 
 #include <cmath>
+#include <iostream>
 
-#define LINE_Bresenham
-//#define LINE_WuXiaolin
+//#define LINE_Bresenham
+#define LINE_WuXiaolin
 
 inline void rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
 inline void rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
@@ -182,8 +183,9 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	// TODO: begin and end
 	if (steep)
 		swap(&xpxl1, &ypxl1);
-	fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, rfpart(yend)*xgap), xpxl1, ypxl1 });
-	fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, fpart(yend)*xgap), xpxl1, ypxl1 + 1 });
+
+	fragCache.addFrag({ *lineBegin.info*(rfpart(yend)*xgap), xpxl1, ypxl1 });
+	fragCache.addFrag({ *lineBegin.info*(fpart(yend)*xgap), xpxl1, ypxl1 + 1 });
 	if (steep)
 		swap(&xpxl1, &ypxl1);
 
@@ -197,8 +199,8 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	// TODO: begin and end
 	if (steep)
 		swap(&xpxl1, &ypxl1);
-	fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, rfpart(yend)*xgap), xpxl2, ypxl2  });
-	fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, fpart(yend)*xgap), xpxl2, ypxl2 + 1 });
+	fragCache.addFrag({ *lineBegin.info*(rfpart(yend)*xgap), xpxl2, ypxl2  });
+	fragCache.addFrag({ *lineBegin.info*(fpart(yend)*xgap), xpxl2, ypxl2 + 1 });
 	if (steep)
 		swap(&xpxl1, &ypxl1);
 
@@ -207,12 +209,12 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	for (int x = xpxl1 + 1; x < xpxl2; x++) {
 		// 点的颜色值按照比例分配给它的上下两个点
 		if (steep) {
-			fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, rfpart(intery)), ipart(intery), x });
-			fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, fpart(intery)), ipart(intery) + 1, x });
+			fragCache.addFrag({ *lineBegin.info*(rfpart(intery)), ipart(intery), x });
+			fragCache.addFrag({ *lineBegin.info*(fpart(intery)), ipart(intery) + 1, x });
 		}
 		else {
-			fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, rfpart(intery)), x, ipart(intery) });
-			fragCache.addFrag({ &colorRatioInfo(*lineBegin.info, fpart(intery)), x, ipart(intery) + 1 });
+			fragCache.addFrag({ *lineBegin.info*(rfpart(intery)), x, ipart(intery) });
+			fragCache.addFrag({ *lineBegin.info*(fpart(intery)), x, ipart(intery) + 1 });
 		}
 
 		intery += gradient;

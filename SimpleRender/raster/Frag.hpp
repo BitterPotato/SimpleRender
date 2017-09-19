@@ -1,6 +1,8 @@
 #ifndef FRAG_HPP
 #define FRAG_HPP
 
+#define CONSTRUCT_INFO_ENABLE
+
 #include "../math/tvector.hpp"
 
 #include <iostream>
@@ -26,7 +28,7 @@ public:
 		this->r = r;
 		this->a = a;
 	}
-	//BGRA(const BGRA& bgra) : b(bgra.b), g(bgra.g), r(bgra.r), a(bgra.a) {}
+	BGRA(const BGRA& bgra) : b(bgra.b), g(bgra.g), r(bgra.r), a(bgra.a) {}
 	friend BGRA* inter(const BGRA* from, const BGRA* to, const float t) {
 		BGRA* bgra = new BGRA();
 		bgra->b = (1 - t)*from->b + t*to->b;
@@ -49,42 +51,57 @@ struct Info {
 		bgra = new BGRA();
 		this->depth = depth;
 		this->stencil = stencil;
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Info: first constructor" << endl;
+#endif
 	}
 	Info(BGRA* bgra, float depth=0.0f, int stencil=0) {
 		this->bgra = bgra;
 		this->depth = depth;
 		this->stencil = stencil;
-		//cout << "constructor" << endl;
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Info: second constructor" << endl;
+#endif
 	}
 	// some sort of constructor
 	Info(const Info& info) {
 		bgra = new BGRA(*info.bgra);
 		depth = info.depth;
 		stencil = info.stencil;
-		//cout << "copy constructor" << endl;
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Info: copy constructor" << endl;
+#endif
 	}
-	//Info(Info&& info) noexcept {
-	//	bgra = info.bgra;
-	//	depth = info.depth;
-	//	stencil = info.stencil;
-	//	info.bgra = nullptr;
-	//	cout << "move constructor" << endl;
-	//}
+	Info(Info&& info) noexcept {
+		bgra = info.bgra;
+		depth = info.depth;
+		stencil = info.stencil;
+		info.bgra = nullptr;
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Info: move constructor" << endl;
+#endif
+	}
 	// deep copy, avoid self =
 	Info& operator=(Info info){
 		swap(*this, info);
 		return *this;
 	}
-	//Info operator=(Info&& info) noexcept {
-	//	if (this != &info) {
-	//		delete bgra;
-	//		bgra = info.bgra;
-	//		depth = info.depth;
-	//		stencil = info.stencil;
-	//		info.bgra = nullptr;
-	//	}
-	//	return *this;
-	//}
+	Info* operator*(float ratio) {
+		BGRA tmpBGRA = *bgra*ratio;
+		BGRA* rBgra = new BGRA(tmpBGRA);
+		Info* rInfo = new Info{ rBgra, depth, stencil };
+		return rInfo;
+	}
+	Info& operator=(Info&& info) noexcept {
+		if (this != &info) {
+			delete bgra;
+			bgra = info.bgra;
+			depth = info.depth;
+			stencil = info.stencil;
+			info.bgra = nullptr;
+		}
+		return *this;
+	}
 	friend void swap(Info& first, Info& second) // nothrow
 	{
 		// enable ADL (not necessary in our case, but good practice)
@@ -107,7 +124,7 @@ struct Info {
 		info->stencil = (1 - t) * from->stencil + t*to->stencil;
 		return info;
 	}
-	~Info() {
+	~Info() noexcept {
 		if (bgra) {
 			delete bgra;
 			bgra = nullptr;
@@ -116,11 +133,6 @@ struct Info {
 		//std::cout << "Info de_construct\n";
 	}
 };
-
-static Info getInfo() {
-	BGRA* bgra = new BGRA(128, 128, 128);
-	return Info( bgra, 0, 0 );
-}
 
 // just shallow copy
 struct Frag{
@@ -134,12 +146,34 @@ struct Frag{
 		this->info = info;
 		this->x = x;
 		this->y = y;
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Frag: constructor" << endl;
+#endif
 	}
 	Frag(const Frag& frag) : x(frag.x), y(frag.y) {
 		info = new Info(*frag.info);
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Frag: copy constructor" << endl;
+#endif
+	}
+	Frag(Frag&& frag) noexcept : info(frag.info), x(frag.x), y(frag.y) {
+		frag.info = nullptr;
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Frag: move constructor" << endl;
+#endif
 	}
 	Frag& operator=(Frag frag) {
 		swap(*this, frag);
+		return *this;
+	}
+	Frag& operator=(Frag&& frag) noexcept {
+		if (&frag != this) {
+			delete info;
+			info = frag.info;
+			x = frag.x;
+			y = frag.y;
+			frag.info = nullptr;
+		}
 		return *this;
 	}
 	friend void swap(Frag& first, Frag& second) // nothrow
@@ -154,7 +188,13 @@ struct Frag{
 		swap(*first.info, *second.info);
 	}
 	~Frag() {
-		delete info;
+		if (info) {
+			delete info;
+			info = nullptr;
+		}
+#ifdef CONSTRUCT_INFO_ENABLE
+		cout << "Frag: deconstructor" << endl;
+#endif
 	}
 };
 

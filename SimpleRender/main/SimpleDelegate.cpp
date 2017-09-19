@@ -126,11 +126,11 @@ void SimpleDelegate::testLine() {
 
 	BGRA* bgraC = new BGRA(0, 0, 255);
 	Info* infoC = new Info(bgraC);
-	vertexData.push_back(FVertex(infoC, 0.0f, -0.5f, -1.0f));
+	vertexData.push_back(FVertex(infoC, 0.0f, -0.5f, -0.8f));
 
 	BGRA* bgraF = new BGRA(255, 255, 0);
 	Info* infoF = new Info(bgraF);
-	vertexData.push_back(FVertex(infoF, 0.0f, 0.5f, 1.0f));
+	vertexData.push_back(FVertex(infoF, 0.0f, 0.5f, 0.8f));
 
 	// TODO: perspective matrix should be fixed
 	//fmat4 front = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),

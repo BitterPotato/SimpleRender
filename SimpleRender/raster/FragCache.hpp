@@ -16,7 +16,7 @@ using std::unique_ptr;
 
 class FragCache {
 public:
-	void addFrag(const Frag& frag);
+	void addFrag(Frag&& frag);
 	void runFrags(const unique_ptr<FragShader>& fragShader);
 	FragCache(int width, int height) {
 		mFragIndexes = vector<vector<int>>(height, vector<int>(width, -1));
@@ -35,9 +35,5 @@ public:
 private:
 	vector<Frag> mFragData;
 	vector<vector<int>> mFragIndexes;
-
-	int smallestY = 800, biggestY = 0;
-	int smallestX = 800, biggestX = 0;
-	bool havePrinted = false;
 };
 #endif
