@@ -1,4 +1,3 @@
-#include "../stdafx.h"
 #include "framebuffer.hpp"
 
 #include <cstdlib>

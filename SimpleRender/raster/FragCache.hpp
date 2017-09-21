@@ -13,6 +13,8 @@ using std::vector;
 using std::unique_ptr;
 
 #define Z_BUFFERTEST
+#define Z_BUFFERWRITE
+#define BLEND
 
 class FragCache {
 public:

@@ -27,12 +27,12 @@ int main(void)
 	SimpleDelegate simpleDelegate(uniform, frameBuffer, width, height);
 	uniform.mKeyCallback = [&simpleDelegate](int* screen_keys) {simpleDelegate.keysCallback(screen_keys); };
 	
-	simpleDelegate.testLine();
+	simpleDelegate.testCube();
 
 	uniform.runRender();
 	
 
-	//int wait;
-	//cin >> wait;
+	int wait;
+	cin >> wait;
 	return 0;
 }

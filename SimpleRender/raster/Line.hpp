@@ -2,12 +2,14 @@
 #define LINE_HPP
 
 #include "FragCache.hpp"
+#include "../math/basic.hpp"
+#include "../util/func.hpp"
 
 #include <cmath>
 #include <iostream>
 
-//#define LINE_Bresenham
-#define LINE_WuXiaolin
+#define LINE_Bresenham
+//#define LINE_WuXiaolin
 
 inline void rasterLineB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
 inline void rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const int width, FragCache& fragCache);
@@ -109,17 +111,17 @@ inline void rasterLineBB(const Vertex& lineBegin, const Vertex& lineEnd, const i
 
 	bool steep = std::abs(y1 - y0) > std::abs(x1 - x0);
 	if (steep) {
-		swap(&x0, &y0);
-		swap(&x1, &y1);
+		myswap(&x0, &y0);
+		myswap(&x1, &y1);
 	}
 	if (x0 > x1) {
-		swap(&x0, &x1);
-		swap(&y0, &y1);
+		myswap(&x0, &x1);
+		myswap(&y0, &y1);
 
-		swap(&b0, &b1);
-		swap(&g0, &g1);
-		swap(&r0, &r1);
-		swap(&a0, &a1);
+		myswap(&b0, &b1);
+		myswap(&g0, &g1);
+		myswap(&r0, &r1);
+		myswap(&a0, &a1);
 	}
 	float error = 0;
 	float deltaError = static_cast<float>(y1 - y0) / (x1 - x0);
@@ -163,12 +165,12 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	float y1 = lineEnd.y;
 	bool steep = std::abs(y1 - y0) > std::abs(x1 - x0);
 	if (steep) {
-		swap(&x0, &y0);
-		swap(&x1, &y1);
+		myswap(&x0, &y0);
+		myswap(&x1, &y1);
 	}
 	if (x0 > x1) {
-		swap(&x0, &x1);
-		swap(&y0, &y1);
+		myswap(&x0, &x1);
+		myswap(&y0, &y1);
 	}
 	float deltaX = x1 - x0;
 	float deltaY = y1 - y0;
@@ -182,12 +184,12 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	int ypxl1 = ipart(yend);
 	// TODO: begin and end
 	if (steep)
-		swap(&xpxl1, &ypxl1);
+		myswap(&xpxl1, &ypxl1);
 
 	fragCache.addFrag({ *lineBegin.info*(rfpart(yend)*xgap), xpxl1, ypxl1 });
 	fragCache.addFrag({ *lineBegin.info*(fpart(yend)*xgap), xpxl1, ypxl1 + 1 });
 	if (steep)
-		swap(&xpxl1, &ypxl1);
+		myswap(&xpxl1, &ypxl1);
 
 	float intery = yend + gradient;
 
@@ -198,11 +200,11 @@ inline void rasterLineW(const Vertex& lineBegin, const Vertex& lineEnd, const in
 	int ypxl2 = ipart(yend);
 	// TODO: begin and end
 	if (steep)
-		swap(&xpxl1, &ypxl1);
+		myswap(&xpxl1, &ypxl1);
 	fragCache.addFrag({ *lineBegin.info*(rfpart(yend)*xgap), xpxl2, ypxl2  });
 	fragCache.addFrag({ *lineBegin.info*(fpart(yend)*xgap), xpxl2, ypxl2 + 1 });
 	if (steep)
-		swap(&xpxl1, &ypxl1);
+		myswap(&xpxl1, &ypxl1);
 
 	
 	// main loop

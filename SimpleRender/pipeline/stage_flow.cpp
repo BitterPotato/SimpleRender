@@ -18,10 +18,10 @@ namespace gl {
 		vector<FVertex> beforeClipVertexData;
 		for (auto iter = vertexData.begin(); iter != vertexData.end(); iter++) {
 			// 1. vertex shader
-			FVertex& afterVS = FVertex();
+			FVertex afterVS;
 			vertexShader->shade(*iter, afterVS);
 
-			// 2. pipeline deal£¨model - lookat - projection transform£©
+			// 2. pipeline dealï¿½ï¿½model - lookat - projection transformï¿½ï¿½
 			this->pipeTrans(afterVS);
 			beforeClipVertexData.push_back(afterVS);
 		}

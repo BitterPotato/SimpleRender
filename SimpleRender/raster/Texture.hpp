@@ -2,7 +2,7 @@
 #define TEXTURE_HPP
 
 #include "Frag.hpp"
-#include "../third/FreeImagePlus.h"
+#include "../third/FreeImage.h"
 
 class Texture {
 public:
@@ -13,15 +13,15 @@ public:
 
 class FITexture : public Texture {
 public:
-	FITexture(const char* img);
-	FITexture(const FITexture& texture) = delete;
-	FITexture& operator=(FITexture texture) = delete;
-	~FITexture();
+    FITexture(const char* img);
+    FITexture(const FITexture& texture) = delete;
+    FITexture& operator=(FITexture texture) = delete;
+    ~FITexture();
 
-	int width() const;
-	int height() const;
-	bool getPixelColor(int x, int y, BGRA& bgra) const;
+    int width() const;
+    int height() const;
+    bool getPixelColor(int x, int y, BGRA& bgra) const;
 private:
-	fipImage image;
+    FIBITMAP* image;
 };
 #endif

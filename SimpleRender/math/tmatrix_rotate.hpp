@@ -1,7 +1,7 @@
 #ifndef TMATRIX_ROTATE_HPP
 #define TMATRIX_ROTATE_HPP
 
-#define M_PI 3.1415926
+//#define M_PI 3.1415926
 
 #include "tmatrix.hpp"
 #include "tvector_trans.hpp"
@@ -89,7 +89,7 @@ namespace math {
 		fvec3 axis_z = normalize(axis);
 		fvec3 axis_ty = normalize(noncollinear(axis_z));
 		fvec3 axis_x = normalize(cross(axis_ty, axis_z));
-		// Õý½»µ¥Î»ÏòÁ¿µÄ²æ»ý±ØÎªµ¥Î»ÏòÁ¿
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½
 		fvec3 axis_y = cross(axis_z, axis_x);
 
 		fmat3 axis_trans = fmat3(
@@ -122,6 +122,9 @@ namespace math {
 		}
 		else if (order == "zyx") {
 			return asZRotateMat(roll)*asYRotateMat(yaw)*asXRotateMat(pitch);
+		}
+		else {
+			throw logic_error("not valid parameter");
 		}
 	}
 

@@ -14,7 +14,27 @@ struct Bary {
 	float alpha;
 	float beta;
 	float gamma;
-}; 
+};
+
+inline void computeInterUV(const TexCoord& texA, const TexCoord& texB, const TexCoord& texC, const Bary& bary, BGRA& outBgra, const unique_ptr<Texture>& texture) {
+	float u = texA.u*bary.alpha + texB.u*bary.beta + texC.u*bary.gamma;
+	float v = texA.v*bary.alpha + texB.v*bary.beta + texC.v*bary.gamma;
+
+	int x = u*texture->width();
+	int y = v*texture->height();
+	texture->getPixelColor(x, y, outBgra);
+}
+
+inline void computeInterColor(const BGRA& bgraA, const BGRA& bgraB, const BGRA& bgraC, const Bary& bary, BGRA& outBgra) {
+	outBgra.b = bgraA.b*bary.alpha + bgraB.b*bary.beta + bgraC.b*bary.gamma;
+	outBgra.g = bgraA.g*bary.alpha + bgraB.g*bary.beta + bgraC.g*bary.gamma;
+	outBgra.r = bgraA.r*bary.alpha + bgraB.r*bary.beta + bgraC.r*bary.gamma;
+	outBgra.a = bgraA.a*bary.alpha + bgraB.a*bary.beta + bgraC.a*bary.gamma;
+}
+
+inline void computeInterDepth(const float depthA, const float depthB, const float depthC, const Bary& bary, float& outDepth) {
+	outDepth = depthA*bary.alpha + depthB*bary.beta + depthC*bary.gamma;
+}
 
 inline float computeAreaRatio(const Point& point1, const Point& point2, const Point& pointSide, const Point& point) {
 	ivec2 vecSide1 = { point1.x - pointSide.x, point1.y - pointSide.y };
@@ -40,7 +60,7 @@ inline bool isBaryOnTri(const Bary& bary) {
 		|| (bary.gamma >= 0 && bary.gamma <= LINE_DET);
 }
 
-inline void computeBaryCoord(const Point& pointA, const Point& pointB, const Point& pointC, const Point& point, Bary& outBary, int& outCount) {
+static void computeBaryCoord(const Point& pointA, const Point& pointB, const Point& pointC, const Point& point, Bary& outBary, int& outCount) {
 	outBary.alpha = computeAreaRatio(pointB, pointC, pointA, point);
 	if (isPartInTri(outBary.alpha)) {
 		outCount++;
@@ -66,27 +86,7 @@ inline void toPerspectiveCorrect(float h0, float h1, float h2, Bary& outBary) {
 	outBary.alpha = 1 - outBary.beta - outBary.gamma;
 }
 
-inline void computeInterUV(const TexCoord& texA, const TexCoord& texB, const TexCoord& texC, const Bary& bary, BGRA& outBgra, const unique_ptr<Texture>& texture) {
-	float u = texA.u*bary.alpha + texB.u*bary.beta + texC.u*bary.gamma;
-	float v = texA.v*bary.alpha + texB.v*bary.beta + texC.v*bary.gamma;
-
-	int x = u*texture->width();
-	int y = v*texture->height();
-	texture->getPixelColor(x, y, outBgra);
-}
-
-inline void computeInterColor(const BGRA& bgraA, const BGRA& bgraB, const BGRA& bgraC, const Bary& bary, BGRA& outBgra) {
-	outBgra.b = bgraA.b*bary.alpha + bgraB.b*bary.beta + bgraC.b*bary.gamma;
-	outBgra.g = bgraA.g*bary.alpha + bgraB.g*bary.beta + bgraC.g*bary.gamma;
-	outBgra.r = bgraA.r*bary.alpha + bgraB.r*bary.beta + bgraC.r*bary.gamma;
-	outBgra.a = bgraA.a*bary.alpha + bgraB.a*bary.beta + bgraC.a*bary.gamma;
-}
-
-static void computeInterDepth(const float depthA, const float depthB, const float depthC, const Bary& bary, float& outDepth) {
-	outDepth = depthA*bary.alpha + depthB*bary.beta + depthC*bary.gamma;
-}
-
-inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const unique_ptr<Texture>& texture, FragCache& fragCache) {
+static void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const unique_ptr<Texture>& texture, FragCache& fragCache) {
 	using std::min;
 	using std::max;
 
@@ -130,7 +130,7 @@ inline void rasterTriangle(const Vertex& vertexA, const Vertex& vertexB, const V
 	}
 }
 
-inline void rasterTriangleWire(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, FragCache& fragCache) {
+static void rasterTriangleWire(const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, FragCache& fragCache) {
 	using std::min;
 	using std::max;
 

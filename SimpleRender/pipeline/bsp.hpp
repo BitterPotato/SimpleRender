@@ -4,6 +4,7 @@
 #include "render_struc.hpp"
 #include "../raster/Frag.hpp"
 #include "../math/tvector_trans.hpp"
+#include "../util/func.hpp"
 
 #include <vector>
 #include <cmath>
@@ -171,16 +172,16 @@ private:
 
 			// convert to vc on tri
 			if (fa == 0) {
-				swap(&fa, &fc);
-				swap(&tri->va, &tri->vc);
-				swap(&fa, &fb);
-				swap(&tri->va, &tri->vb);
+				myswap(&fa, &fc);
+				myswap(&tri->va, &tri->vc);
+				myswap(&fa, &fb);
+				myswap(&tri->va, &tri->vb);
 			}
 			if (fb == 0) {
-				swap(&fb, &fc);
-				swap(&tri->vb, &tri->vc);
-				swap(&fa, &fb);
-				swap(&tri->va, &tri->vb);
+				myswap(&fb, &fc);
+				myswap(&tri->vb, &tri->vc);
+				myswap(&fa, &fb);
+				myswap(&tri->va, &tri->vb);
 			}
 
 			FVertex vD; int indexVD = vertexList.size();
@@ -206,16 +207,16 @@ private:
 
 			// convert to vc on one side, va & vb on the other
 			if(fa*fc >= 0) {
-				swap(&fb, &fc);
-				swap(&tri->vb, &tri->vc);
-				swap(&fa, &fb);
-				swap(&tri->va, &tri->vb);
+				myswap(&fb, &fc);
+				myswap(&tri->vb, &tri->vc);
+				myswap(&fa, &fb);
+				myswap(&tri->va, &tri->vb);
 			}
 			if (fb*fc >= 0) {
-				swap(&fa, &fc);
-				swap(&tri->va, &tri->vc);
-				swap(&fa, &fb);
-				swap(&tri->va, &tri->vb);
+				myswap(&fa, &fc);
+				myswap(&tri->va, &tri->vc);
+				myswap(&fa, &fb);
+				myswap(&tri->va, &tri->vb);
 			}
 
 			FVertex vA, vB; 

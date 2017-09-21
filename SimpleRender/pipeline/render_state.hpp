@@ -95,7 +95,7 @@ public:
 
 	bool checkDataAndRet(const GL_MODE& mode, const vector<FVertex>& vertexData) const;
 
-	void RenderState::attachVertexData(const GL_MODE& Mode, vector<FVertex>& outVertexData);
+	void attachVertexData(const GL_MODE& Mode, vector<FVertex>& outVertexData);
 private:
 	const string EULER_ORDER = "xyz";
 

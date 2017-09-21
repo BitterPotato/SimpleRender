@@ -103,7 +103,7 @@ namespace math {
 		T n = pointThis[2];
 		T f = pointThat[2];
 
-		auto persMatrix = TMatrix4(
+		auto persMatrix = TMatrix4<T>(
 			TVectorN<T, 3>(n, 0, 0, 0),
 			TVectorN<T, 3>(0, n, 0, 0),
 			TVectorN<T, 3>(0, 0, n + f, 1),

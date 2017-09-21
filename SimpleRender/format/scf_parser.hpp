@@ -8,6 +8,7 @@
 #include <map>
 #include <fstream>
 #include <sstream>
+#include <cstdio>
 #include <stdio.h>
 
 using std::string;
@@ -16,7 +17,7 @@ using std::map;
 using std::getline;
 using std::ifstream;
 using std::istringstream;
-//using std::sscanf_s;
+//using std::sscanf;
 
 typedef map<string, string> MapType;
 static void replaceAll(string& subject, const string& search, const string& replace) {
@@ -55,12 +56,12 @@ static void scfParse(const string& path, vector<FVertex>& outVertexData) {
 			substituteConst(constMap, line);
 
 			char name;
-			sscanf_s(line.c_str(), "[%c]", &name);
+			sscanf(line.c_str(), "[%c]", &name);
 
 			if (name == 'v') {
 				float x, y, z;
 				int b, g, r;
-				sscanf_s(line.c_str(), "[v] %f %f %f | %d %d %d", &x, &y, &z, &b, &g, &r);
+				sscanf(line.c_str(), "[v] %f %f %f | %d %d %d", &x, &y, &z, &b, &g, &r);
 
 				BGRA* bgra = new BGRA(b, g, r);
 				Info* info = new Info(bgra);
@@ -68,14 +69,14 @@ static void scfParse(const string& path, vector<FVertex>& outVertexData) {
 			}
 			else if (name == 't') {
 				float u, v;
-				sscanf_s(line.c_str(), "[t] %f %f", &u, &v);
+				sscanf(line.c_str(), "[t] %f %f", &u, &v);
 				tmpTexData.push_back(TexCoord(u, v));
 			}
 			else if (name == 'f') {
 				int i1, i2, i3;
 				int t1, t2, t3;
 
-				sscanf_s(line.c_str(), "[f] v%d/t%d v%d/t%d v%d/t%d", &i1, &t1, &i2, &t2, &i3, &t3);
+				sscanf(line.c_str(), "[f] v%d/t%d v%d/t%d v%d/t%d", &i1, &t1, &i2, &t2, &i3, &t3);
 				tmpVertexData[i1].tex = tmpTexData[t1];
 				tmpVertexData[i2].tex = tmpTexData[t2];
 				tmpVertexData[i3].tex = tmpTexData[t3];
@@ -96,7 +97,7 @@ static void scfParse(const string& path, vector<FVertex>& outVertexData) {
 			//float cstVal;
 			//cstName = (char*)malloc(10 * sizeof(char));
 			////cstVal = (char*)malloc(10 * sizeof(char));
-			//sscanf_s(line.c_str(), ": %s = %f", cstName, &cstVal);
+			//sscanf(line.c_str(), ": %s = %f", cstName, &cstVal);
 			//constMap[cstName] = cstVal;
 			break;
 		}

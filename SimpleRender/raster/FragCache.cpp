@@ -6,10 +6,22 @@ void FragCache::addFrag(Frag&& frag) {
 
 	int index = mFragIndexes[frag.y][frag.x];
 	//try {
-		if (index == -1 || (index != -1 &&
-			frag.info->depth < mFragData[index].info->depth)) {
+	if (index == -1) {
+#ifdef Z_BUFFERWRITE
+		mFragIndexes[frag.y][frag.x] = mFragData.size();
+#endif
+		mFragData.push_back(std::move(frag));
+	} 
+	else if(index != -1 && frag.info->depth < mFragData[index].info->depth) {
+#ifdef Z_BUFFERWRITE
 			mFragIndexes[frag.y][frag.x] = mFragData.size();
+#endif
+#ifdef BLEND
 			mFragData.push_back(std::move(frag));
+#endif
+#ifndef BLEND
+			mFragData.push_back(std::move(frag));
+#endif
 		}
 	//}
 	//catch (...) {

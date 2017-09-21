@@ -4,10 +4,12 @@
 //#define NDEBUG 
 
 #include <iostream>
-#include <assert.h> 
+#include <assert.h>
+#include <cmath>
 
 using std::cout;
 using std::endl;
+using std::sqrt;
 
 template <typename T, const int len>
 class TVectorN {

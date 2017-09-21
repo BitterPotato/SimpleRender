@@ -1,45 +1,14 @@
 #ifndef FRAG_HPP
 #define FRAG_HPP
 
-#define CONSTRUCT_INFO_ENABLE
+//#define CONSTRUCT_INFO_ENABLE
 
 #include "../math/tvector.hpp"
+#include "../material/color.hpp"
 
 #include <iostream>
 
 using std::cout;
-
-// colors
-//struct BGRA {
-//	int b; int g;  int r; int a;
-//	// TODO: why method cause LINK2005 error
-//	friend BGRA operator*(const BGRA& bgra, const float ratio);
-//	//BGRA operator*(const BGRA& bgraA, const BGRA& bgraB) {
-//	//	return {};
-//	//}
-//};
-
-class BGRA {
-public:
-	int b; int g;  int r; int a;
-	BGRA(int b=0, int g=0, int r=0, int a=0) {
-		this->b = b;
-		this->g = g;
-		this->r = r;
-		this->a = a;
-	}
-	BGRA(const BGRA& bgra) : b(bgra.b), g(bgra.g), r(bgra.r), a(bgra.a) {}
-	friend BGRA* inter(const BGRA* from, const BGRA* to, const float t) {
-		BGRA* bgra = new BGRA();
-		bgra->b = (1 - t)*from->b + t*to->b;
-		bgra->g = (1 - t)*from->g + t*to->g;
-		bgra->r = (1 - t)*from->r + t*to->r;
-		bgra->a = (1 - t)*from->a + t*to->a;
-
-		return bgra;
-	}
-	friend BGRA operator*(const BGRA& bgra, const float ratio);
-};
 
 struct Info {
 	// depth can be integer, but that needs one more step:
@@ -121,7 +90,7 @@ struct Info {
 		BGRA* bgra = inter(from->bgra, to->bgra, t);
 		info->bgra = bgra;
 		info->depth = (1 - t)*from->depth + t*to->depth;
-		info->stencil = (1 - t) * from->stencil + t*to->stencil;
+		info->stencil = static_cast<int>((1 - t) * from->stencil + t*to->stencil);
 		return info;
 	}
 	~Info() noexcept {
@@ -210,6 +179,7 @@ struct TexCoord {
 	// copy/=/deconstructor unnecessary
 };
 
+// after viewport
 struct Vertex {
 	int x; int y; Info* info;
 	TexCoord tex;
@@ -237,6 +207,7 @@ struct Vertex {
 		tex = vertex.tex;
 	}
 	Vertex& operator=(Vertex vertex) {
+		// TODO: this method actually call which function
 		swap(*this, vertex);
 		return *this;
 	}
@@ -259,6 +230,7 @@ struct Vertex {
 	}
 };
 
+// input
 struct FVertex {
 	float x; float y; float z; float w;
 	// TODO: has the member info, seems strange
@@ -288,8 +260,6 @@ struct FVertex {
 		tex = fVertex.tex;
 	}
 	FVertex& operator=(FVertex fVertex) {
-		using std::swap;
-
 		swap(*this, fVertex);
 		return *this;
 	}
@@ -329,7 +299,5 @@ struct FVertex {
 };
 
 typedef struct { int x; int y; } Point;
-
-#include "Frag.inl"
 
 #endif
