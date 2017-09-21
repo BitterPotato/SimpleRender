@@ -63,4 +63,6 @@ fabric.properties
 # Sonarlint plugin
 .idea/sonarlint
 
+SimpleRenderTests/lib/
+
 # End of https://www.gitignore.io/api/clion
