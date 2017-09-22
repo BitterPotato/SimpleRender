@@ -128,8 +128,11 @@ TEST_F(MathFixture, Rotate) {
 	fvec3 orig(3, 1, 0);
 	fvec3 res(-1, 3, 0);
 	fvec3 tres = rotate_mat3*orig;
+
+	// float error
 	EXPECT_EQ(res, tres);
 }
+// not for test
 TEST_F(MathFixture, Euler) {
 	//int pitch = 10, yaw = 0, roll = 0;
 	const string EULER_ORDER = "xyz";
@@ -139,15 +142,15 @@ TEST_F(MathFixture, Euler) {
 	EXPECT_EQ(emat, mat);
 }
 
-TEST_F(RenderFixture, Ratio) {
-	BGRA bgra(255, 0, 0, 0);
-	float ratio = 0.5f;
-	BGRA tmpBGRA = bgra*ratio;
-
-	int wait;
-	cin >> wait;
-}
-//TEST_F(BlendTests, Eff) {
+//TEST_F(RenderFixture, Ratio) {
+//	BGRA bgra(255, 0, 0, 0);
+//	float ratio = 0.5f;
+//	BGRA tmpBGRA = bgra*ratio;
+//
+//	int wait;
+//	cin >> wait;
+//}
+//TEST_F(RenderFixture, Eff) {
 //	BGRA first(128, 128, 128, 128);
 //	BGRA second(255, 128, 255, 64);
 //

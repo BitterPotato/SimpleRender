@@ -42,6 +42,8 @@ public:
 	void testTriangleStrip();
 	void testCube();
 
+	void testBlend();
+
 private:
 	// members
 	Uniform& mUniform;

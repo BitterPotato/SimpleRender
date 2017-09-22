@@ -93,7 +93,7 @@ struct Info {
 		info->stencil = static_cast<int>((1 - t) * from->stencil + t*to->stencil);
 		return info;
 	}
-	~Info() noexcept {
+	~Info() {
 		if (bgra) {
 			delete bgra;
 			bgra = nullptr;

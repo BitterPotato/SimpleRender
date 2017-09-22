@@ -202,3 +202,39 @@ void SimpleDelegate::testCube() {
 	mRenderState.attachVertexData(GL_TRIANGLES, vertexData);
 	mPipeline->requestRender();
 }
+
+// Attention: Render order is important
+void SimpleDelegate::testBlend() {
+    int alpha = 153;
+
+    // back
+    BGRA* bgraA = new BGRA(216, 179, 79);
+    Info* infoA = new Info(bgraA);
+
+    BGRA* bgraB = new BGRA(216, 179, 79);
+    Info* infoB = new Info(bgraB);
+
+    BGRA* bgraC = new BGRA(216, 179, 79);
+    Info* infoC = new Info(bgraC);
+
+    // front
+    BGRA* bgraD = new BGRA(102, 137, 155, alpha);
+    Info* infoD = new Info(bgraD);
+
+    BGRA* bgraE = new BGRA(102, 137, 155, alpha);
+    Info* infoE = new Info(bgraE);
+
+    BGRA* bgraF = new BGRA(102, 137, 155, alpha);
+    Info* infoF = new Info(bgraF);
+
+    vertexData.push_back({ infoA, -0.6f, 0.0f, 0.5f});
+    vertexData.push_back({ infoB, 0.2f, -0.4f, 0.5f});
+    vertexData.push_back({ infoC, 0.2f, 0.4f, 0.5f});
+
+    vertexData.push_back({ infoD, 0.6f, 0.0f, -0.5f});
+    vertexData.push_back({ infoE, -0.2f, -0.4f, -0.5f});
+    vertexData.push_back({ infoF, -0.2f, 0.4f, -0.5f});
+
+    mRenderState.attachVertexData(GL_TRIANGLES, vertexData);
+    mPipeline->requestRender();
+}

@@ -48,6 +48,7 @@ namespace gl {
 
 		// 5. frag vertex
 		fragCache.runFrags(fragShader);
+		
 	}
 
 	void Pipeline::pipeTrans(FVertex& fVertex) const {

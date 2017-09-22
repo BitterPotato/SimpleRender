@@ -17,7 +17,13 @@ void FragCache::addFrag(Frag&& frag) {
 			mFragIndexes[frag.y][frag.x] = mFragData.size();
 #endif
 #ifdef BLEND
-			mFragData.push_back(std::move(frag));
+        Frag& ptr = frag;
+        Frag& dstFrag = mFragData[index];
+		BGRA* bgra = new BGRA();
+		blend(mBlendOption, *frag.info->bgra, *dstFrag.info->bgra, *bgra);
+
+		Info* info = new Info(bgra, frag.info->depth, frag.info->stencil);
+		mFragData.push_back(Frag(info, frag.x, frag.y));
 #endif
 #ifndef BLEND
 			mFragData.push_back(std::move(frag));
@@ -34,7 +40,7 @@ void FragCache::addFrag(Frag&& frag) {
 #endif
 
 }
-void FragCache::runFrags(const unique_ptr<FragShader>& fragShader) {
+void FragCache::runFrags(const unique_ptr<FragShader>& fragShader) const {
 	//std::for_each(mFragData.begin(), mFragData.end(), fs);
 	// access by reference to avoid copying
 #ifdef Z_BUFFERTEST
@@ -50,4 +56,12 @@ void FragCache::runFrags(const unique_ptr<FragShader>& fragShader) {
 		fragShader.shade(frag);
 	}
 #endif
+}
+
+// TODO: to be fixed
+void FragCache::pixelFrag(int x, int y, Frag& outFrag) const {
+    int index = mFragIndexes[y][x];
+    if (index == -1) {
+        outFrag = mFragData[index];
+    }
 }

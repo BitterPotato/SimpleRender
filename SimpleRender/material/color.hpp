@@ -9,7 +9,7 @@ class BGRA {
 public:
 	int b; int g;  int r; int a;
 
-	BGRA(int b = 0, int g = 0, int r = 0, int a = 0) {
+	BGRA(int b = 0, int g = 0, int r = 0, int a = LIMIT) {
 		this->b = b;
 		this->g = g;
 		this->r = r;
@@ -19,6 +19,9 @@ public:
 	}
 	BGRA(const BGRA& bgra) : b(bgra.b), g(bgra.g), r(bgra.r), a(bgra.a) {
 //		std::cout << "copy constructor";
+	}
+	~BGRA() {
+//		std::cout << "deconstructor";
 	}
 
 	inline friend BGRA* inter(const BGRA* from, const BGRA* to, const float t);

@@ -1,15 +1,15 @@
 #include "blend.hpp"
 
 inline float toFloat(int comp) {
-	return static_cast<float>(comp) / LIMIT;
+    return static_cast<float>(comp) / LIMIT;
 }
 
-BGRA* factorBGRA(const BLEND_FACTOR factor, const BLEND_FACTOR alphaFactor, const BGRA& src, const BGRA& dst) {
+BGRA* factorBGRA(const BLEND_FACTOR factor, const BLEND_FACTOR alphaFactor, const BGRA& src, const BGRA& dst, const BGRA& before) {
 	BGRA* tSrc;
 
 	switch (factor) {
 	case One:
-		tSrc = new BGRA(src);
+		tSrc = new BGRA(before);
 		break;
 	case Zero:
 		tSrc = new BGRA(0, 0, 0, 0);
@@ -17,42 +17,42 @@ BGRA* factorBGRA(const BLEND_FACTOR factor, const BLEND_FACTOR alphaFactor, cons
 	case SrcColor:
 		tSrc = new BGRA();
 
-		tSrc->b = toFloat(src.b)*src.b;
-		tSrc->g = toFloat(src.g)*src.g;
-		tSrc->r = toFloat(src.r)*src.r;
+		tSrc->b = toFloat(src.b)*before.b;
+		tSrc->g = toFloat(src.g)*before.g;
+		tSrc->r = toFloat(src.r)*before.r;
 		break;
 	case DstColor:
 		tSrc = new BGRA();
 
-		tSrc->b = toFloat(dst.b)*src.b;
-		tSrc->g = toFloat(dst.g)*src.g;
-		tSrc->r = toFloat(dst.r)*src.r;
+		tSrc->b = toFloat(dst.b)*before.b;
+		tSrc->g = toFloat(dst.g)*before.g;
+		tSrc->r = toFloat(dst.r)*before.r;
 		break;
 	case OneMinusSrcColor:
 		tSrc = new BGRA();
 
-		tSrc->b = (1 - toFloat(src.b))*src.b;
-		tSrc->g = (1 - toFloat(src.g))*src.g;
-		tSrc->r = (1 - toFloat(src.r))*src.r;
+		tSrc->b = (1 - toFloat(src.b))*before.b;
+		tSrc->g = (1 - toFloat(src.g))*before.g;
+		tSrc->r = (1 - toFloat(src.r))*before.r;
 		break;
 	case OneMinusDstColor:
 		tSrc = new BGRA();
 
-		tSrc->b = (1 - toFloat(dst.b))*src.b;
-		tSrc->g = (1 - toFloat(dst.g))*src.g;
-		tSrc->r = (1 - toFloat(dst.r))*src.r;
+		tSrc->b = (1 - toFloat(dst.b))*before.b;
+		tSrc->g = (1 - toFloat(dst.g))*before.g;
+		tSrc->r = (1 - toFloat(dst.r))*before.r;
 		break;
 	case SrcAlpha:
-		tSrc = new BGRA(src*toFloat(src.a));
+		tSrc = new BGRA(before*toFloat(src.a));
 		break;
 	case DstAlpha:
-		tSrc = new BGRA(src*toFloat(dst.a));
+		tSrc = new BGRA(before*toFloat(dst.a));
 		break;
 	case OneMinusSrcAlpha:
-		tSrc = new BGRA(src*(1 - toFloat(src.a)));
+		tSrc = new BGRA(before*(1 - toFloat(src.a)));
 		break;
 	case OneMinusDstAlpha:
-		tSrc = new BGRA(src*(1 - toFloat(dst.a)));
+		tSrc = new BGRA(before*(1 - toFloat(dst.a)));
 		break;
 	default:
 		tSrc = new BGRA(0, 0, 0, 0);
@@ -73,10 +73,9 @@ BGRA* factorBGRA(const BLEND_FACTOR factor, const BLEND_FACTOR alphaFactor, cons
 }
 
 void blend(const BlendOptions& options, const BGRA& src, const BGRA& dst, BGRA& output) {
+	unique_ptr<BGRA> tSrc = unique_ptr<BGRA>(factorBGRA(options.mSrcFactor, options.mSrcAlphaFactor, src, dst, src));
+	unique_ptr<BGRA> tDst = unique_ptr<BGRA>(factorBGRA(options.mDstFactor, options.mDstAlphaFactor, src, dst, dst));
 
-	unique_ptr<BGRA> tSrc = unique_ptr<BGRA>(factorBGRA(options.mSrcFactor, options.mSrcAlphaFactor, src, dst));
-	unique_ptr<BGRA> tDst = unique_ptr<BGRA>(factorBGRA(options.mDstFactor, options.mDstAlphaFactor, src, dst));
-	
 	switch (options.mOp) {
 	case Add:
 		output.b = tSrc->b + tDst->b;
