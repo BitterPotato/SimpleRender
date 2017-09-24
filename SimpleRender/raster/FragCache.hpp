@@ -1,17 +1,9 @@
 #ifndef FRAGCACHE_HPP
 #define FRAGCACHE_HPP
 
-#include "Frag.hpp"
-#include "../pipeline/frag_shader.hpp"
-#include "pipeline/blend.hpp"
-
-#include <vector>
-#include <algorithm>
-#include <iostream>
-#include <memory>
-
-using std::vector;
-using std::unique_ptr;
+#include "common/Frag.hpp"
+#include "pipeline/MyFragShader.hpp"
+#include "pipeline/BlendOptions.hpp"
 
 #define Z_BUFFERTEST
 #define Z_BUFFERWRITE
@@ -34,9 +26,9 @@ public:
 		std::cout << "FragCache: dispose\n";
 	}
 
-    void addFrag(Frag&& frag);
-    void runFrags(const unique_ptr<FragShader>& fragShader) const;
-    void pixelFrag(int x, int y, Frag& outFrag) const;
+    MY_COMP_FUNC_DECL void addFrag(Frag&& frag);
+    MY_COMP_FUNC_DECL void runFrags(const unique_ptr<FragShader>& fragShader) const;
+//    void pixelFrag(int x, int y, Frag& outFrag) const;
 private:
 	vector<Frag> mFragData;
 	vector<vector<int>> mFragIndexes;

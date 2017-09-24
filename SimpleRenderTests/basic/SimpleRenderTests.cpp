@@ -2,13 +2,15 @@
 //
 
 #include "gtest/gtest.h"
-#include "math/tvector_trans.hpp"
-#include "math/tmatrix_trans.hpp"
-#include "raster/Frag.hpp"
-#include "pipeline/blend.hpp"
+#include "math/TVector_Trans.hpp"
+#include "math/TMatrix_Trans.hpp"
+#include "common/Frag.hpp"
+#include "pipeline/BlendOptions.hpp"
+#include "common/Info.hpp"
 
 #include <iostream>
 #include <string>
+#include <common/FVertex.hpp>
 
 using std::cin;
 using std::cout;
@@ -142,19 +144,38 @@ TEST_F(MathFixture, Euler) {
 	EXPECT_EQ(emat, mat);
 }
 
+TEST_F(RenderFixture, RET) {
+	RGBA rgba(128, 128, 128, 0);
+	EXPECT_EQ(rgba[R], 128);
+}
+
+TEST_F(RenderFixture, Point) {
+	FPoint4D test = Macro_FPoint4D(1.0f, 0.0f, 0.0f);
+	FPoint4D testTwo = Macro_FPoint4D(0.0f, 0.0f, 0.0f);
+
+	EXPECT_EQ(test[3], testTwo[3]);
+}
+
+TEST_F(RenderFixture, FVertex) {
+	FVertex test(Macro_FPoint4D(0.75f, 0.75f, 0.0f), RGBA(255, 128, 64));
+	FVertex testTwo(Macro_FPoint4D(0.75f, 0.75f, 0.0f), RGBA(255, 128, 64));
+
+	EXPECT_EQ(test.point[3], testTwo.point[3]);
+}
+
 //TEST_F(RenderFixture, Ratio) {
-//	BGRA bgra(255, 0, 0, 0);
+//	RGBA rgba(255, 0, 0, 0);
 //	float ratio = 0.5f;
-//	BGRA tmpBGRA = bgra*ratio;
+//	RGBA tmpBGRA = rgba*ratio;
 //
 //	int wait;
 //	cin >> wait;
 //}
 //TEST_F(RenderFixture, Eff) {
-//	BGRA first(128, 128, 128, 128);
-//	BGRA second(255, 128, 255, 64);
+//	RGBA first(128, 128, 128, 128);
+//	RGBA second(255, 128, 255, 64);
 //
-//	BGRA output;
+//	RGBA output;
 //	BlendOptions options;
 //	blend(options, first, second, output);
 //}

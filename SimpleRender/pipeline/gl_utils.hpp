@@ -1,13 +1,13 @@
 #ifndef GL_UTILS_HPP
 #define GL_UTILS_HPP
 
-#include "../raster/Frag.hpp"
+#include "common/Frag.hpp"
 
 inline bool isInVisualBody(const FVertex& fVertex) {
-	float x = fVertex.x;
-	float y = fVertex.y;
-	float z = fVertex.z;
-	float w = fVertex.w;
+	float x = fVertex.point[X];
+	float y = fVertex.point[Y];
+	float z = fVertex.point[Z];
+	float w = fVertex.point[W];
 
 	return x >= -w && x <= w
 		&& y >= -w && y <= w
@@ -20,21 +20,21 @@ inline void dicideAssignTo(const float& t, float& val) {
 }
 
 static void computeInterSect(const FVertex& vertexIn, const FVertex& vertexOut, FVertex& outVertex) {
-	float ix = vertexIn.x;
-	float iy = vertexIn.y;
-	float iz = vertexIn.z;
-	float iw = vertexIn.w;
+	float ix = vertexIn.point[X];
+	float iy = vertexIn.point[Y];
+	float iz = vertexIn.point[Z];
+	float iw = vertexIn.point[W];
 
-	float ox = vertexOut.x;
-	float oy = vertexOut.y;
-	float oz = vertexOut.z;
-	float ow = vertexOut.w;
+	float ox = vertexOut.point[X];
+	float oy = vertexOut.point[Y];
+	float oz = vertexOut.point[Z];
+	float ow = vertexOut.point[W];
 
 	// line segment: vertexIn + t(VertexOut-vertexIn)
 	// t \in [0, 1]
 	float val = 1.0f;
 	float tx;
-	if (vertexOut.x > vertexIn.x) {
+	if (vertexOut.point[X] > vertexIn.point[X]) {
 		// will intersect with plane: x = iw + t(ow - iw)
 		// notice: divide zero will not cause exception
 		tx = (iw - ix) / ((ox - ow) - (ix - iw));
@@ -44,7 +44,7 @@ static void computeInterSect(const FVertex& vertexIn, const FVertex& vertexOut, 
 	}
 	dicideAssignTo(tx, val);
 	float ty;
-	if (vertexOut.y > vertexIn.y) {
+	if (vertexOut.point[Y] > vertexIn.point[Y]) {
 		// will intersect with plane: x = iw + t(ow - iw)
 		ty = (iw - iy) / ((oy - ow) - (iy - iw));
 	}
@@ -53,7 +53,7 @@ static void computeInterSect(const FVertex& vertexIn, const FVertex& vertexOut, 
 	}
 	dicideAssignTo(ty, val);
 	float tz;
-	if (vertexOut.z > vertexIn.z) {
+	if (vertexOut.point[Z] > vertexIn.point[Z]) {
 		// will intersect with plane: x = iw + t(ow - iw)
 		tz = (iw - iz) / ((oz - ow) - (iz - iw));
 	}

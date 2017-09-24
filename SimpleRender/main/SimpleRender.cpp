@@ -21,7 +21,7 @@ int main(void)
 	const int height = 800;
 	// TODO: the order between uniform and framebuffer storage is so weird
 	FrameBuffer frameBuffer;
-	Uniform uniform(width, height, &frameBuffer);
+	Form uniform(width, height, &frameBuffer);
 	frameBuffer.setBufferStorage(width, height);
 
 	SimpleDelegate simpleDelegate(uniform, frameBuffer, width, height);

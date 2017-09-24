@@ -1,16 +1,20 @@
-#ifndef POINT_HPP
-#define POINT_HPP
+//
+// Created by WJ Yang on 2017/9/24.
+//
 
+#ifndef SIMPLERENDER_POINT_HPP
+#define SIMPLERENDER_POINT_HPP
+
+#include <common/Point.hpp>
+#include <common/Vertex.hpp>
 #include "FragCache.hpp"
 
-inline void rasterPoint(const Vertex& vertex, const int size, FragCache& outFragCache) {
-	for (int i = -size; i <= size; i++) {
-		for (int j = -size; j < size; j++) {
-			BGRA* bgra = new BGRA(*vertex.info->bgra);
-			Info* info = new Info(bgra);
-			outFragCache.addFrag({ info , vertex.x + i, vertex.y + j});
-		}
-	}
+namespace Gl {
+	class Point {
+	public:
+		MY_SMALL_UTIL_DECL void rasterPoint(const Vertex &vertex, const int size, FragCache &outFragCache) ;
+
+	};
 }
 
-#endif
+#endif //SIMPLERENDER_POINT_HPP

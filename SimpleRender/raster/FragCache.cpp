@@ -4,26 +4,26 @@ void FragCache::addFrag(Frag&& frag) {
 	// do z-buffer test
 #ifdef Z_BUFFERTEST
 
-	int index = mFragIndexes[frag.y][frag.x];
+	int index = mFragIndexes[frag.point[Y]][frag.point[X]];
 	//try {
 	if (index == -1) {
 #ifdef Z_BUFFERWRITE
-		mFragIndexes[frag.y][frag.x] = mFragData.size();
+		mFragIndexes[frag.point[Y]][frag.point[X]] = mFragData.size();
 #endif
 		mFragData.push_back(std::move(frag));
 	} 
-	else if(index != -1 && frag.info->depth < mFragData[index].info->depth) {
+	else if(index != -1 && frag.info.depth < mFragData[index].info.depth) {
 #ifdef Z_BUFFERWRITE
-			mFragIndexes[frag.y][frag.x] = mFragData.size();
+			mFragIndexes[frag.point[Y]][frag.point[X]] = mFragData.size();
 #endif
 #ifdef BLEND
         Frag& ptr = frag;
         Frag& dstFrag = mFragData[index];
-		BGRA* bgra = new BGRA();
-		blend(mBlendOption, *frag.info->bgra, *dstFrag.info->bgra, *bgra);
+		RGBA rgba;
+		blend(mBlendOption, frag.info.rgba, dstFrag.info.rgba, rgba);
 
-		Info* info = new Info(bgra, frag.info->depth, frag.info->stencil);
-		mFragData.push_back(Frag(info, frag.x, frag.y));
+		Info info = Info(rgba, frag.info.depth, frag.info.stencil);
+		mFragData.push_back(Frag(frag.point, info));
 #endif
 #ifndef BLEND
 			mFragData.push_back(std::move(frag));
@@ -59,9 +59,9 @@ void FragCache::runFrags(const unique_ptr<FragShader>& fragShader) const {
 }
 
 // TODO: to be fixed
-void FragCache::pixelFrag(int x, int y, Frag& outFrag) const {
-    int index = mFragIndexes[y][x];
-    if (index == -1) {
-        outFrag = mFragData[index];
-    }
-}
+//void FragCache::pixelFrag(int x, int y, Frag& outFrag) const {
+//    int index = mFragIndexes[y][x];
+//    if (index == -1) {
+//        outFrag = mFragData[index];
+//    }
+//}
