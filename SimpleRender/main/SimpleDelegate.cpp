@@ -1,3 +1,4 @@
+#include <material/FITexture.hpp>
 #include "SimpleDelegate.hpp"
 
 void SimpleDelegate::clearColor() {

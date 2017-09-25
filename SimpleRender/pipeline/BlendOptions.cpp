@@ -1,82 +1,87 @@
 #include "BlendOptions.hpp"
 
-RGBA factorBGRA(const BLEND_FACTOR factor, const RGBA& src, const RGBA& dst, const RGBA& before) {
-
+void BlendOptions::blendCompo(const BLEND_FACTOR factor, const BLEND_FACTOR  alphaFactor, const RGBA& src, const RGBA& dst, const RGBA& before, RGBA& after) {
+	colorBlend(factor, src, dst, before, after);
+	alphaBlend(alphaFactor, src, dst, before, after);
 }
-RGBA colorBlend(const BLEND_FACTOR factor, const RGBA& src, const RGBA& dst, const RGBA& before) {
+void BlendOptions::alphaBlend(const BLEND_FACTOR alphaFactor, const RGBA& src, const RGBA& dst, const RGBA& before, RGBA& after) {
+	switch (alphaFactor) {
+		case SrcAlpha:
+			after[A] = before[A] * toFloat(src[A]);
+			break;
+		case OneMinusSrcAlpha:
+			after[A] = before[A]*(1 - toFloat(src[A]));
+			break;
+	}
+}
+void BlendOptions::colorBlend(const BLEND_FACTOR factor, const RGBA& src, const RGBA& dst, const RGBA& before, RGBA& after) {
 	switch (factor) {
 	case One:
-		return RGBA(before);
+		after = RGBA(before);
 	case Zero:
-		return RGBA(0, 0, 0, 0);
+		after = RGBA(0, 0, 0, 0);
 	case SrcColor:
-		return RGBA(toFloat(src[B])*before[B],
+		after = RGBA(toFloat(src[B])*before[B],
 					toFloat(src[G])*before[G],
 					toFloat(src[R])*before[R]);
 	case DstColor:
-		return RGBA(toFloat(dst[B])*before[B],
+		after = RGBA(toFloat(dst[B])*before[B],
 		toFloat(dst[G])*before[G],
 		toFloat(dst[R])*before[R]);
 	case OneMinusSrcColor:
-		return RGBA((1 - toFloat(src[B]))*before[B],
+		after = RGBA((1 - toFloat(src[B]))*before[B],
 		(1 - toFloat(src[G]))*before[G],
 		(1 - toFloat(src[R]))*before[R]);
 
 	case OneMinusDstColor:
-		return RGBA((1 - toFloat(dst[B]))*before[B],
+		after = RGBA((1 - toFloat(dst[B]))*before[B],
 		(1 - toFloat(dst[G]))*before[G],
 		(1 - toFloat(dst[R]))*before[R]);
 
 	case SrcAlpha:
-		return RGBA(before*toFloat(src[A]));
+		after = RGBA(before*toFloat(src[A]));
 	case DstAlpha:
-		return RGBA(before*toFloat(dst[A]));
+		after = RGBA(before*toFloat(dst[A]));
 	case OneMinusSrcAlpha:
-		return RGBA(before*(1 - toFloat(src[A])));
+		after = RGBA(before*(1 - toFloat(src[A])));
 	case OneMinusDstAlpha:
-		return RGBA(before*(1 - toFloat(dst[A])));
+		after = RGBA(before*(1 - toFloat(dst[A])));
 	default:
-		return RGBA(0, 0, 0, 0);
-	}
-
-	switch (alphaFactor) {
-	case SrcAlpha:
-		tSrc[A] = before[A] * toFloat(src[A]);
-		break;
-	case OneMinusSrcAlpha:
-		tSrc[A] = before[A]*(1 - toFloat(src[A]));
-		break;
+		after = RGBA(0, 0, 0, 0);
 	}
 }
 
+
 void blend(const BlendOptions& options, const RGBA& src, const RGBA& dst, RGBA& output) {
-	unique_ptr<RGBA> tSrc = unique_ptr<RGBA>(colorBlend(options.mSrcFactor, options.mSrcAlphaFactor, src, dst, src));
-	unique_ptr<RGBA> tDst = unique_ptr<RGBA>(colorBlend(options.mDstFactor, options.mDstAlphaFactor, src, dst, dst));
+	RGBA srcCompo, dstCompo;
+
+	BlendOptions::blendCompo(options.mSrcFactor, options.mSrcAlphaFactor, src, dst, src, srcCompo);
+	BlendOptions::blendCompo(options.mDstFactor, options.mDstAlphaFactor, src, dst, dst, dstCompo);
 
 	switch (options.mOp) {
 	case Add:
-		output[B] = tSrc[B] + tDst[B];
-		output[G] = tSrc[G] + tDst[G];
-		output[R] = tSrc[R] + tDst[R];
-		output[A] = tSrc[A] + tDst[A];
+		output[B] = srcCompo[B] + dstCompo[B];
+		output[G] = srcCompo[G] + dstCompo[G];
+		output[R] = srcCompo[R] + dstCompo[R];
+		output[A] = srcCompo[A] + dstCompo[A];
 		break;
 	case Sub:
-		output[B] = tSrc[B] - tDst[B];
-		output[G] = tSrc[G] - tDst[G];
-		output[R] = tSrc[R] - tDst[R];
-		output[A] = tSrc[A] - tDst[A];
+		output[B] = srcCompo[B] - dstCompo[B];
+		output[G] = srcCompo[G] - dstCompo[G];
+		output[R] = srcCompo[R] - dstCompo[R];
+		output[A] = srcCompo[A] - dstCompo[A];
 		break;
 	case Min:
-		output[B] = min( tSrc[B], tDst[B]);
-		output[G] = min( tSrc[G], tDst[G]);
-		output[R] = min( tSrc[R], tDst[R]);
-		output[A] = min( tSrc[A], tDst[A]);
+		output[B] = min( srcCompo[B], dstCompo[B]);
+		output[G] = min( srcCompo[G], dstCompo[G]);
+		output[R] = min( srcCompo[R], dstCompo[R]);
+		output[A] = min( srcCompo[A], dstCompo[A]);
 		break;
 	case Max:
-		output[B] = max(tSrc[B], tDst[B]);
-		output[G] = max(tSrc[G], tDst[G]);
-		output[R] = max(tSrc[R], tDst[R]);
-		output[A] = max(tSrc[A], tDst[A]);
+		output[B] = max(srcCompo[B], dstCompo[B]);
+		output[G] = max(srcCompo[G], dstCompo[G]);
+		output[R] = max(srcCompo[R], dstCompo[R]);
+		output[A] = max(srcCompo[A], dstCompo[A]);
 		break;
 	}
 }

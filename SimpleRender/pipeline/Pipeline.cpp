@@ -36,7 +36,7 @@
 		// 3.5 homogeneous && viewport transform
 		vector<Vertex> beforeRasterVertexData;
 		for (auto iter = afterClipVertexData.begin(); iter != afterClipVertexData.end(); iter++) {
-			Vertex vertex = Vertex();
+			Vertex vertex;
 			this->afterClip(*iter, vertex);
 			beforeRasterVertexData.push_back(vertex);
 		}
@@ -61,29 +61,29 @@
 		fVertex.point = outCoord4;
 	}
 
-	void Pipeline::clip(const GL_MODE& mode, const vector<FVertex>& vertexData, vector<FVertex>& outVertexData) const {
+	void Pipeline::clip(const GL_MODE& mode, const vector<FVertex>& vertexData, vector<FVertex>& outVertexData) {
 		switch (mode) {
 		case GL_POINTS:
 			for (auto iter = vertexData.begin(); iter != vertexData.end(); iter++) {
-				if (isInVisualBody(*iter))
+				if (isInVisualBody((*iter).point))
 					outVertexData.push_back(*iter);
 			}
 			break;
 		case GL_LINES:
 			for (auto iter = vertexData.begin(); iter != vertexData.end(); iter += 2) {
-				if (isInVisualBody(*iter) && isInVisualBody(*(iter + 1))) {
+				if (isInVisualBody((*iter).point) && isInVisualBody((*(iter + 1)).point)){
 					outVertexData.push_back(*iter);
 					outVertexData.push_back(*(iter + 1));
 				}
 				// TODO: verify when perspective
-				else if (isInVisualBody(*iter)) {
+				else if (isInVisualBody((*iter).point)) {
 					FVertex interVertex;
 					computeInterSect(*iter, *(iter + 1), interVertex);
 
 					outVertexData.push_back(*iter);
 					outVertexData.push_back(interVertex);
 				}
-				else if (isInVisualBody(*(iter + 1))) {
+				else if (isInVisualBody((*(iter + 1)).point)) {
 					FVertex interVertex;
 					computeInterSect(*(iter + 1), *iter, interVertex);
 
@@ -101,35 +101,35 @@
 				const FVertex& vertexB = *(iter + 1);
 				const FVertex& vertexC = *(iter + 2);
 
-				if (isInVisualBody(vertexA) && isInVisualBody(vertexB) && isInVisualBody(vertexC)) {
+				if (isInVisualBody(vertexA.point) && isInVisualBody(vertexB.point) && isInVisualBody(vertexC.point)) {
 					pushMore(outVertexData, vertexA, vertexB, vertexC);
 				}
-				else if (isInVisualBody(vertexA) + isInVisualBody(vertexB) + isInVisualBody(vertexC) == 2) {
+				else if (isInVisualBody(vertexA.point) + isInVisualBody(vertexB.point) + isInVisualBody(vertexC.point) == 2) {
 					FVertex interVertexThis;
 					FVertex interVertexThat;
 					// TODO: haven't considered the condition, that the triangle intersect with two planes
-					if (!isInVisualBody(vertexA)) {
+					if (!isInVisualBody(vertexA.point)) {
 						dealWithTwo(outVertexData, vertexA, vertexB, vertexC, false);
 					}
-					else if (!isInVisualBody(vertexB)) {
+					else if (!isInVisualBody(vertexB.point)) {
 						dealWithTwo(outVertexData, vertexB, vertexA, vertexC, true);
 					}
-					else if (!isInVisualBody(vertexC)) {
+					else if (!isInVisualBody(vertexC.point)) {
 						dealWithTwo(outVertexData, vertexC, vertexA, vertexB, false);
 					}
 				}
-				else if (isInVisualBody(vertexA) + isInVisualBody(vertexB) + isInVisualBody(vertexC) == 1) {
+				else if (isInVisualBody(vertexA.point) + isInVisualBody(vertexB.point) + isInVisualBody(vertexC.point) == 1) {
 					FVertex interVertexThis;
 					FVertex interVertexThat;
 
 					// TODO: haven't considered the condition, that the triangle intersect with two or three planes
-					if (isInVisualBody(vertexA)) {
+					if (isInVisualBody(vertexA.point)) {
 						dealWithOne(outVertexData, vertexA, vertexB, vertexC);
 					}
-					else if (isInVisualBody(vertexB)) {
+					else if (isInVisualBody(vertexB.point)) {
 						dealWithOne(outVertexData, vertexB, vertexC, vertexA);
 					}
-					else if (isInVisualBody(vertexC)) {
+					else if (isInVisualBody(vertexC.point)) {
 						dealWithOne(outVertexData, vertexC, vertexA, vertexB);
 					}
 				}

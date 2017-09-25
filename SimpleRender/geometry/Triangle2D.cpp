@@ -6,7 +6,8 @@
 #include "Triangle2D.hpp"
 
 namespace Geometry {
-    bool Triangle2D::computeBaryCoord(const Point2D &point, Bary &outBary) const {
+    template <typename T>
+    bool Triangle2D<T>::computeBaryCoord(const Point2D<T> &point, Bary &outBary) const {
         outBary[ALPHA] = computeAreaRatio(pB, pC, pA, point);
         if (isInTriangle(outBary[ALPHA])) {
             outBary[BETA] = computeAreaRatio(pA, pC, pB, point);
@@ -19,14 +20,16 @@ namespace Geometry {
         return false;
     }
 
-    void Triangle2D::asBoundingBox(Box2D &box) const {
+    template <typename T>
+    void Triangle2D<T>::asBoundingBox(Box2D<T> &box) const {
         box[LEFT] = min(pA[X], min(pB[X], pC[X]));
         box[TOP] = min(pA[Y], min(pB[Y], pC[Y]));
         box[RIGHT] = max(pA[X], max(pB[X], pC[X]));
         box[BOTTOM] = max(pA[Y], max(pB[Y], pC[Y]));
     }
 
-    void toPerspectiveCorrect(const float homoA, const float homoB, const float homoC, Bary &outBary) {
+    template <typename T>
+    void Triangle2D<T>::toPerspectiveCorrect(const float homoA, const float homoB, const float homoC, Bary &outBary) {
         float beta = outBary[BETA];
         float gamma = outBary[GAMMA];
 
@@ -36,22 +39,26 @@ namespace Geometry {
         outBary[ALPHA] = 1 - outBary[BETA] - outBary[GAMMA];
     }
 
-    float computeAreaRatio(const Point2D &point1, const Point2D &point2, const Point2D &pointSide, const Point2D &point) {
-        ivec2 vecSide1 = ivec2(point1[X] - pointSide[X], point1[Y] - pointSide[Y]);
-        ivec2 vecSide2 = ivec2(point2[X] - pointSide[X], point2[Y] - pointSide[Y]);
-        ivec2 vec1 = ivec2(point1[X] - point[X], point1[Y] - point[Y]);
-        ivec2 vec2 = ivec2(point2[X] - point[X], point2[Y] - point[Y]);
+    template<typename T>
+    float Triangle2D<T>::computeAreaRatio(const Point2D<T> &point1, const Point2D<T> &point2, const Point2D<T> &pointSide, const Point2D<T> &point) {
+        vec2<T> vecSide1(point1[X] - pointSide[X], point1[Y] - pointSide[Y]);
+        vec2<T> vecSide2(point2[X] - pointSide[X], point2[Y] - pointSide[Y]);
+        vec2<T> vec1(point1[X] - point[X], point1[Y] - point[Y]);
+        vec2<T> vec2(point2[X] - point[X], point2[Y] - point[Y]);
 
-        return static_cast<float>(math::det<int>(vec1, vec2)) / math::det<int>(vecSide1, vecSide2);
+        return static_cast<float>(math::det<T>(vec1, vec2)) / math::det<T>(vecSide1, vecSide2);
     }
 
-    bool isInTriangle(const float x) {
-        return x >= 0.0f && x <= 1.of;
+    template<typename T>
+    bool Triangle2D<T>::isInTriangle(const float x) {
+        return x >= 0.0f && x <= 1.0f;
     }
 
-    bool isOnTriangle(const Bary &bary) {
+    template<typename T>
+    bool Triangle2D<T>::isOnTriangle(const Bary &bary) {
         return (bary[ALPHA] >= 0 && bary[ALPHA] <= LINE_DET)
                || (bary[BETA] >= 0 && bary[BETA] <= LINE_DET)
                || (bary[GAMMA] >= 0 && bary[GAMMA] <= LINE_DET);
     }
+
 }

@@ -16,12 +16,12 @@ namespace Gl {
         switch (mode) {
             case GL_POINTS:
                 for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter++) {
-                    rasterPoint(*iter, POINT_SIZE, fragCache);
+                    Point::rasterPoint(*iter, POINT_SIZE, fragCache);
                 }
                 break;
             case GL_LINES:
                 for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter += 2) {
-                    rasterLine(*iter, *(iter + 1), LINE_WIDTH, fragCache);
+                    Line::rasterLine(*iter, *(iter + 1), LINE_WIDTH, fragCache);
                 }
                 break;
             case GL_TRIANGLES:

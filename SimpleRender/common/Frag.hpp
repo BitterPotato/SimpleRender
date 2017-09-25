@@ -11,7 +11,7 @@
 
 class Frag{
 public:
-    Frag(Point2D p = Point2D(), Info i = Info()) :
+    Frag(IPoint2D p = IPoint2D(), Info i = Info()) :
             point(p), info(i){
 #ifdef CONSTRUCT_INFO_ENABLE
         cout << "Frag: constructor" << endl;
@@ -35,11 +35,11 @@ public:
     }
 
     MY_OPERATOR_DECL Frag& operator=(Frag frag);
-    MY_OPERATOR_DECL Frag& operator=(Frag&& frag);
+    MY_OPERATOR_DECL Frag& operator=(Frag&& frag) noexcept ;
     MY_SFRIEND_FUNC_DECL void swap(Frag& first, Frag& second);
 
 //private:
-    Point2D point;
+    IPoint2D point;
     Info info;
 };
 

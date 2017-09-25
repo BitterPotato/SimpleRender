@@ -7,13 +7,15 @@
 #include "pipeline/RenderState.hpp"
 #include "format/parser.hpp"
 
+#include <tchar.h>
+
 
 const float POSITION_STEP = 0.2f;
 const float DEGREE_STEP = 2;
 
 class SimpleDelegate {
 public:
-    SimpleDelegate(Form &uniform, FrameBuffer &frameBuffer,
+    SimpleDelegate(shared_ptr<Form> uniform, FrameBuffer &frameBuffer,
                    const int width, const int height) :
             mUniform(uniform), mFrameBuffer(frameBuffer) {
         initRender(width, height);
@@ -42,7 +44,7 @@ public:
 
 private:
     // members
-    Form &mUniform;
+    shared_ptr<Form> mUniform;
     FrameBuffer &mFrameBuffer;
 
     vector<FVertex> vertexData;

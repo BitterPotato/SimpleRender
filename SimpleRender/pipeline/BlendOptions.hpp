@@ -37,10 +37,13 @@ private:
 	BLEND_FACTOR mSrcAlphaFactor = SrcAlpha;
 	BLEND_FACTOR mDstAlphaFactor = OneMinusSrcAlpha;
 
-	//TODO: how to over the alpha
-	MY_NFRIEND_FUNC_DECL RGBA& alphaBlend(const BLEND_FACTOR factor, const RGBA &src, const RGBA &dst,
-										 const RGBA &before);
-	MY_NFRIEND_FUNC_DECL RGBA colorBlend(const BLEND_FACTOR factor, const RGBA &src, const RGBA &dst,
-										 const RGBA &before);
+
+	MY_UTIL_DECL void blendCompo(const BLEND_FACTOR factor, const BLEND_FACTOR alphaFactor,
+										 const RGBA &src, const RGBA &dst,
+										  const RGBA &before, RGBA& after);
+	MY_UTIL_DECL void alphaBlend(const BLEND_FACTOR alphaFactor, const RGBA &src, const RGBA &dst,
+										 const RGBA &before, RGBA& after);
+	MY_UTIL_DECL void colorBlend(const BLEND_FACTOR factor, const RGBA &src, const RGBA &dst,
+										 const RGBA &before, RGBA& after);
 };
 #endif

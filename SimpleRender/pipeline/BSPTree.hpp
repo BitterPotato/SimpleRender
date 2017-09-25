@@ -1,62 +1,42 @@
 #ifndef BSP_HPP
 #define BSP_HPP
 
+#include <math/TVector_Trans.hpp>
+#include <math/TVector_Trans.inl>
 #include "RenderSetup.hpp"
-#include "common/Frag.hpp"
 #include "common/FVertex.hpp"
 #include "math/TVector_Trans.hpp"
+#include "geometry/Triangle3D.hpp"
 
 using math::cross;
 using math::dot;
 using math::asVec3;
+using Geometry::FTriangle3D;
 
-struct Triangle {
+class Triangle : public FTriangle3D {
+	friend class BSPTree;
 public:
-	// vertex index
-	int va, vb, vc;
-
-	fvec3 normal;
-	float remainder;
-	
-	Triangle(int va, int vb, int vc) {
+	using FTriangle3D::FTriangle3D;
+	Triangle(vector<FVertex>& vertexList, int va, int vb, int vc) :
+            FTriangle3D(asVec3(vertexList[va].point),
+                       asVec3(vertexList[vb].point),
+                       asVec3(vertexList[vc].point)) {
 		this->va = va;
 		this->vb = vb;
 		this->vc = vc;
 	}
-	Triangle(vector<FVertex>& vertexList, int va, int vb, int vc) {
-		this->va = va;
-		this->vb = vb;
-		this->vc = vc;
-
-		FVertex& a = vertexList[va];
-		FVertex& b = vertexList[vb];
-		FVertex& c = vertexList[vc];
-
-		fvec3 vecAB = fvec3(b.point[X] - a.point[X], b.point[Y] - a.point[Y], b.point[Z] - a.point[Z]);
-		fvec3 vecBC = fvec3(c.point[X] - b.point[X], c.point[Y] - b.point[Y], c.point[Z] - b.point[Z]);
-		fvec3 cordA = fvec3(a.point[X], a.point[Y], a.point[Z]);
-		normal = cross(vecAB, vecBC);
-		remainder = -dot(normal, cordA);
-	}
-	// -: from v to see tri, tri is anticlockwise
-	// 0: on tri
-	// +: from v to see tri, tri is clockwise
-	MY_SMALL_FUNC_DECL float distToTri(const fvec3& vec) const {
-		return dot(normal, vec) + remainder;
-	}
-	MY_SMALL_FUNC_DECL void intersectToTri(const FVertex& vThis, const FVertex& vThat, FVertex& interVertex) const {
-		fvec3 vecThis = asVec3(vThis);
-		fvec3 vecThat = asVec3(vThat);
-
-		float t = -(remainder + dot(vecThis, normal) / dot(normal, vecThat - vecThis));
-		
-		inter(vThis, vThat, t, interVertex);
+	MY_SMALL_FUNC_DECL void intersectToTri(const FVertex& vThis, const FVertex& vThat, FVertex& outVertex) const {
+		float ratio = FTriangle3D::intersectToTri(asVec3(vThis.point), asVec3(vThat.point));
+		inter(vThis, vThat, outVertex, ratio);
 	}
 	MY_NFRIEND_FUNC_DECL void pushBackTri(vector<FVertex>& vertexList, vector<FVertex>& outVertexList, const Triangle* tri) {
 		outVertexList.push_back(vertexList[tri->va]);
 		outVertexList.push_back(vertexList[tri->vb]);
 		outVertexList.push_back(vertexList[tri->vc]);
 	}
+private:
+	// vertex index
+	int va, vb, vc;
 };
 struct BSPNode {
 	BSPNode* plus;

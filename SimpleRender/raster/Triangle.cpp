@@ -5,7 +5,7 @@ void Triangle::rasterTriangle(const Vertex &vertexA, const Vertex &vertexB, cons
 
     // find bounding box
     Box2D box;
-    Triangle2D triangle(vertexA.point, vertexB.point, vertexC.point);
+    ITriangle2D triangle(vertexA.point, vertexB.point, vertexC.point);
     triangle.asBoundingBox(box);
 
     // tranverse, compute barycentric coordinate
@@ -38,7 +38,7 @@ Triangle::rasterTriangleWire(const Vertex &vertexA, const Vertex &vertexB, const
 
     // find bounding box
     Box2D box;
-    Triangle2D triangle(vertexA.point, vertexB.point, vertexC.point);
+    ITriangle2D triangle(vertexA.point, vertexB.point, vertexC.point);
     triangle.asBoundingBox(box);
 
     // tranverse, compute barycentric coordinate

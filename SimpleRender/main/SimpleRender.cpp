@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <platform/WinForm.hpp>
 
 using std::vector;
 using std::cout;
@@ -21,15 +22,15 @@ int main(void)
 	const int height = 800;
 	// TODO: the order between uniform and framebuffer storage is so weird
 	FrameBuffer frameBuffer;
-	Form uniform(width, height, &frameBuffer);
+	shared_ptr<Form> uniform = make_shared<WinForm>(width, height, &frameBuffer);
 	frameBuffer.setBufferStorage(width, height);
 
 	SimpleDelegate simpleDelegate(uniform, frameBuffer, width, height);
-	uniform.mKeyCallback = [&simpleDelegate](int* screen_keys) {simpleDelegate.keysCallback(screen_keys); };
+	uniform->mKeyCallback = [&simpleDelegate](int* screen_keys) {simpleDelegate.keysCallback(screen_keys); };
 	
 	simpleDelegate.testBlend();
 
-	uniform.runRender();
+	uniform->runRender();
 	
 
 	int wait;

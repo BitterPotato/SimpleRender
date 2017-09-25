@@ -16,12 +16,13 @@ const int BETA = 1;
 const int GAMMA = 2;
 
 namespace Geometry {
-    class Triangle2D : Shape2D {
+    template <typename T>
+    class Triangle2D : Shape2D<T> {
     public:
-        Triangle2D(const Point2D &a, const Point2D &b, const Point2D &c) :
+        Triangle2D(const Point2D<T> &a, const Point2D<T> &b, const Point2D<T> &c) :
                 pA(a), pB(b), pC(c) {}
 
-        MY_SMALL_FUNC_DECL void asBoundingBox(Box2D &box) const override;
+        MY_SMALL_FUNC_DECL void asBoundingBox(Box2D<T> &box) const override;
 
         /**
          * return point is in triangle or not
@@ -29,20 +30,22 @@ namespace Geometry {
          * @param outBary
          * @return
          */
-        MY_COMP_FUNC_DECL bool computeBaryCoord(const Point2D &point, Bary &outBary) const;
+        MY_COMP_FUNC_DECL bool computeBaryCoord(const Point2D<T> &point, Bary &outBary) const;
 
         MY_SMALL_UTIL_DECL bool isOnTriangle(const Bary &bary);
 
         MY_SMALL_UTIL_DECL void toPerspectiveCorrect(const float hA, const float hB, const float hC, Bary &outBary);
 
     private:
-        const Point2D &pA, pB, pC;
+        const Point2D<T> &pA, pB, pC;
 
         MY_SMALL_UTIL_DECL float
-        computeAreaRatio(const Point2D &point1, const Point2D &point2, const Point2D &pointSide, const Point2D &point);
+        computeAreaRatio(const Point2D<T> &point1, const Point2D<T> &point2, const Point2D<T> &pointSide, const Point2D<T> &point);
 
         MY_SMALL_UTIL_DECL bool isInTriangle(const float x);
     };
+
+    using ITriangle2D = Triangle2D<int>;
 }
 
 

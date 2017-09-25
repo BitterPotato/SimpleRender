@@ -4,7 +4,7 @@
 #include "FrameBuffer.hpp"
 
 #include <windows.h>
-#include <winuser.h>
+//#include <winuser.h>
 #include <tchar.h>
 
 //typedef void(*f_keys) (int*);

@@ -16,23 +16,23 @@ public:
 	TMatrixN() {
 
 	}
-	inline TMatrixN(const TMatrixN& matrixN) {
+	TMatrixN(const TMatrixN& matrixN) {
 		assign(matrixN);
 	}
-	inline auto& operator[](int n) {
+	MY_OPERATOR_DECL auto& operator[](int n) {
 		return data[n];
 	}
-	inline const auto& operator[](int n) const {
+	MY_OPERATOR_DECL const auto& operator[](int n) const {
 		return data[n];
 	}
-	inline auto row(int n) const {
+	MY_OPERATOR_DECL auto row(int n) const {
 		row_type result;
 		for (int i = 0; i < w; i++) {
 			result[i] = data[i][n];
 		}
 		return result;
 	}
-	inline bool operator==(const TMatrixN& matrixN) const {
+	MY_OPERATOR_DECL bool operator==(const TMatrixN& matrixN) const {
 		for (int i = 0; i < w; i++)
 			for (int j = 0; j < h; j++)
 				if (data[i][j] != matrixN[i][j])
@@ -41,11 +41,11 @@ public:
 	}
 protected:
 	col_type data[w];
-	inline void assign(const TMatrixN& matrixN) {
+	MY_SMALL_FUNC_DECL void assign(const TMatrixN& matrixN) {
 		for (int i = 0; i < w; i++)
 			data[i] = matrixN[i];
 	}
-	inline void assign(const T val) {
+	MY_SMALL_FUNC_DECL void assign(const T val) {
 		for (int i = 0; i < w; i++)
 			for (int j = 0; j < h; j++)
 				data[i][j] = val;
@@ -53,7 +53,7 @@ protected:
 };
 
 template <typename T, const int w, const int h>
-inline auto operator*(const TMatrixN<T, w, h>& matrixN, const TVectorN<T, w>& vecN) {
+auto operator*(const TMatrixN<T, w, h>& matrixN, const TVectorN<T, w>& vecN) {
 	TVectorN<T, w> ret;
 	for (int j = 0; j < h; j++) {
 		ret[j] = dot(matrixN.row(j), vecN);
@@ -61,7 +61,7 @@ inline auto operator*(const TMatrixN<T, w, h>& matrixN, const TVectorN<T, w>& ve
 	return ret;
 }
 template <typename T, const int w, const int h, const int l>
-inline auto operator*(const TMatrixN<T, w, h>& matrixThis, const TMatrixN<T, l, w>& matrixThat) {
+auto operator*(const TMatrixN<T, w, h>& matrixThis, const TMatrixN<T, l, w>& matrixThat) {
 	TMatrixN<T, h, l> result;
 	for (int i = 0; i < l; i++)
 		for (int j = 0; j < h; j++)

@@ -10,7 +10,7 @@
 #include <geometry/Triangle2D.hpp>
 #include <common/Vertex.hpp>
 
-using Geometry::Triangle2D;
+using Geometry::ITriangle2D;
 
 namespace Gl {
 	class Triangle {

@@ -9,14 +9,18 @@
 
 class Info {
 public:
-    Info(RGBA b = RGBA(), float depth = 0.0f, int stencil = 0);
-    Info(const Info& info);
-    Info(Info&& info) noexcept;
+    Info(RGBA b = RGBA(), float d = 0.0f, int s = 0) :
+            rgba(b), depth(d), stencil(s){
+#ifdef CONSTRUCT_INFO_ENABLE
+        cout << "Info: constructor" << endl;
+#endif
+    }
+//    Info(const Info& info);
+//    Info(Info&& info) noexcept;
     ~Info();
 
     MY_OPERATOR_DECL Info& operator=(const Info& info);
-    MY_OPERATOR_DECL Info& operator=(Info info);
-    MY_OPERATOR_DECL Info& operator=(Info&& info);
+//    MY_OPERATOR_DECL Info& operator=(Info&& info) noexcept;
     MY_OPERATOR_DECL Info& operator*(const float ratio);
     MY_OPERATOR_DECL Info operator*(const float ratio) const;
     MY_OPERATOR_DECL Info& operator*=(const float ratio);

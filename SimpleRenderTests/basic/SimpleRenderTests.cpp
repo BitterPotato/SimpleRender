@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <common/FVertex.hpp>
+#include <common/Vertex.hpp>
 
 using std::cin;
 using std::cout;
@@ -161,6 +162,12 @@ TEST_F(RenderFixture, FVertex) {
 	FVertex testTwo(Macro_FPoint4D(0.75f, 0.75f, 0.0f), RGBA(255, 128, 64));
 
 	EXPECT_EQ(test.point[3], testTwo.point[3]);
+}
+
+TEST_F(RenderFixture, Vertex) {
+	Vertex vertex;
+
+	EXPECT_EQ(vertex.point[X], 0);
 }
 
 //TEST_F(RenderFixture, Ratio) {

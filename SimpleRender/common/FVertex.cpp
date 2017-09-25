@@ -20,7 +20,7 @@ void swap(FVertex& first, FVertex& second) // nothrow
     swap(first.rgba, second.rgba);
     swap(first.tex, second.tex);
 }
-bool inter(const FVertex& from, const FVertex& to, const float t, FVertex& out) {
+bool inter(const FVertex& from, const FVertex& to, FVertex& out, const float t) {
     if (t < 0 || t > 1)
         return false;
 

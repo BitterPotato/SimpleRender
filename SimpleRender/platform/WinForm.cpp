@@ -122,7 +122,7 @@ int WinForm::screen_close(void) const{
     return 0;
 }
 
-LRESULT screen_events(HWND hWnd, UINT msg,
+LRESULT WinForm::screen_events(HWND hWnd, UINT msg,
                       WPARAM wParam, LPARAM lParam) const {
     switch (msg) {
         case WM_CLOSE: screen_exit = 1; break;

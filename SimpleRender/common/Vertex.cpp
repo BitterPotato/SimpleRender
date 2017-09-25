@@ -34,6 +34,6 @@ void inter(const TexCoord& first, const TexCoord& second, const TexCoord& third,
     float v = first[V]*ratio[0] + second[V]*ratio[1] + third[V]*ratio[2];
 }
 
-~Vertex() {
+Vertex::~Vertex() {
 
 }

@@ -9,7 +9,6 @@
 #include "RenderSetup.hpp"
 #include "math/TVector_Trans.hpp"
 #include "math/TMatrix_Trans.hpp"
-#include "common/Frag.hpp"
 #include "material/Texture.hpp"
 
 

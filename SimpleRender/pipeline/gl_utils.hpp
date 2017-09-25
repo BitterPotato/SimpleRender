@@ -1,40 +1,29 @@
 #ifndef GL_UTILS_HPP
 #define GL_UTILS_HPP
 
-#include "common/Frag.hpp"
+#include "common/FVertex.hpp"
 
-inline bool isInVisualBody(const FVertex& fVertex) {
-	float x = fVertex.point[X];
-	float y = fVertex.point[Y];
-	float z = fVertex.point[Z];
-	float w = fVertex.point[W];
-
-	return x >= -w && x <= w
-		&& y >= -w && y <= w
-		&& z >= -w && z <= w;
-}
-
-inline void dicideAssignTo(const float& t, float& val) {
+MY_SMALL_FUNC_DECL void dicideAssignTo(const float& t, float& val) {
 	if (t >= 0.0f && t <= 1.0f && t < val)
 		val = t;
 }
 
-static void computeInterSect(const FVertex& vertexIn, const FVertex& vertexOut, FVertex& outVertex) {
-	float ix = vertexIn.point[X];
-	float iy = vertexIn.point[Y];
-	float iz = vertexIn.point[Z];
-	float iw = vertexIn.point[W];
+MY_STORAGE_FUNC_DECL float computeInterRatio(const FPoint4D& inPoint, const FPoint4D& outPoint) {
+	float ix = inPoint[X];
+	float iy = inPoint[Y];
+	float iz = inPoint[Z];
+	float iw = inPoint[W];
 
-	float ox = vertexOut.point[X];
-	float oy = vertexOut.point[Y];
-	float oz = vertexOut.point[Z];
-	float ow = vertexOut.point[W];
+	float ox = outPoint[X];
+	float oy = outPoint[Y];
+	float oz = outPoint[Z];
+	float ow = outPoint[W];
 
-	// line segment: vertexIn + t(VertexOut-vertexIn)
+	// line segment: inPoint + t(VertexOut-inPoint)
 	// t \in [0, 1]
 	float val = 1.0f;
 	float tx;
-	if (vertexOut.point[X] > vertexIn.point[X]) {
+	if (outPoint[X] > inPoint[X]) {
 		// will intersect with plane: x = iw + t(ow - iw)
 		// notice: divide zero will not cause exception
 		tx = (iw - ix) / ((ox - ow) - (ix - iw));
@@ -44,7 +33,7 @@ static void computeInterSect(const FVertex& vertexIn, const FVertex& vertexOut, 
 	}
 	dicideAssignTo(tx, val);
 	float ty;
-	if (vertexOut.point[Y] > vertexIn.point[Y]) {
+	if (outPoint[Y] > inPoint[Y]) {
 		// will intersect with plane: x = iw + t(ow - iw)
 		ty = (iw - iy) / ((oy - ow) - (iy - iw));
 	}
@@ -53,7 +42,7 @@ static void computeInterSect(const FVertex& vertexIn, const FVertex& vertexOut, 
 	}
 	dicideAssignTo(ty, val);
 	float tz;
-	if (vertexOut.point[Z] > vertexIn.point[Z]) {
+	if (outPoint[Z] > inPoint[Z]) {
 		// will intersect with plane: x = iw + t(ow - iw)
 		tz = (iw - iz) / ((oz - ow) - (iz - iw));
 	}
@@ -62,8 +51,12 @@ static void computeInterSect(const FVertex& vertexIn, const FVertex& vertexOut, 
 	}
 	dicideAssignTo(tz, val);
 
-	inter(vertexIn, vertexOut, val, outVertex);
+    return val;
 }
 
+MY_STORAGE_FUNC_DECL void computeInterSect(const FVertex& inVertex, const FVertex& outVertex, FVertex& sectVertex) {
+    float ratio = computeInterRatio(inVertex.point, outVertex.point);
+    inter(inVertex, outVertex, sectVertex, ratio);
+}
 
 #endif

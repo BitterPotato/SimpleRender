@@ -28,7 +28,7 @@ namespace Gl {
                 error -= ySege;
             }
             // TODO color interpolate
-            outFragCache.addFrag(Frag(Point2D(curX, curY), lineBP.info));
+            outFragCache.addFrag(Frag(IPoint2D(curX, curY), lineBP.info));
         }
     }
 
@@ -44,7 +44,7 @@ namespace Gl {
                 error -= xSege;
             }
             // TODO color interpolate
-            outFragCache.addFrag(Frag(Point2D(curX, curY), lineBP.info));
+            outFragCache.addFrag(Frag(IPoint2D(curX, curY), lineBP.info));
         }
     }
 
@@ -63,7 +63,7 @@ namespace Gl {
                 lineBigY = lineEnd.point[Y];
             }
             for (int curY = lineSmallY; curY <= lineBigY; curY++) {
-                fragCache.addFrag(Frag(Point2D(lineX, curY), lineBegin.info));
+                fragCache.addFrag(Frag(IPoint2D(lineX, curY), lineBegin.info));
             }
             return;
         }
@@ -144,9 +144,9 @@ namespace Gl {
             RGBA interBGRA = RGBA(ipart(curB), ipart(curG), ipart(curR), ipart(curA));
             Info interInfo = Info(interBGRA);
             if (steep)
-                fragCache.addFrag(Frag(Point2D(curY, curX), interInfo));
+                fragCache.addFrag(Frag(IPoint2D(curY, curX), interInfo));
             else
-                fragCache.addFrag(Frag(Point2D(curX, curY), interInfo));
+                fragCache.addFrag(Frag(IPoint2D(curX, curY), interInfo));
         }
     }
 
@@ -179,8 +179,8 @@ namespace Gl {
         if (steep)
             myswap(&xpxl1, &ypxl1);
 
-        fragCache.addFrag(Frag(Point2D(xpxl1, ypxl1), lineBegin.info * (rfpart(yend) * xgap)));
-        fragCache.addFrag(Frag(Point2D(xpxl1, ypxl1 + 1), lineBegin.info * (fpart(yend) * xgap)));
+        fragCache.addFrag(Frag(IPoint2D(xpxl1, ypxl1), lineBegin.info * (rfpart(yend) * xgap)));
+        fragCache.addFrag(Frag(IPoint2D(xpxl1, ypxl1 + 1), lineBegin.info * (fpart(yend) * xgap)));
         if (steep)
             myswap(&xpxl1, &ypxl1);
 
@@ -194,8 +194,8 @@ namespace Gl {
         // TODO: begin and end
         if (steep)
             myswap(&xpxl1, &ypxl1);
-        fragCache.addFrag(Frag(Point2D(xpxl2, ypxl2), lineBegin.info * (rfpart(yend) * xgap)));
-        fragCache.addFrag(Frag(Point2D(xpxl2, ypxl2 + 1), lineBegin.info * (fpart(yend) * xgap)));
+        fragCache.addFrag(Frag(IPoint2D(xpxl2, ypxl2), lineBegin.info * (rfpart(yend) * xgap)));
+        fragCache.addFrag(Frag(IPoint2D(xpxl2, ypxl2 + 1), lineBegin.info * (fpart(yend) * xgap)));
         if (steep)
             myswap(&xpxl1, &ypxl1);
 
@@ -204,11 +204,11 @@ namespace Gl {
         for (int x = xpxl1 + 1; x < xpxl2; x++) {
             // 点的颜色值按照比例分配给它的上下两个点
             if (steep) {
-                fragCache.addFrag(Frag(Point2D(ipart(intery), x), lineBegin.info * (rfpart(intery))));
-                fragCache.addFrag(Frag(Point2D(ipart(intery) + 1, x), lineBegin.info * (fpart(intery))));
+                fragCache.addFrag(Frag(IPoint2D(ipart(intery), x), lineBegin.info * (rfpart(intery))));
+                fragCache.addFrag(Frag(IPoint2D(ipart(intery) + 1, x), lineBegin.info * (fpart(intery))));
             } else {
-                fragCache.addFrag(Frag(Point2D(x, ipart(intery)), lineBegin.info * (rfpart(intery))));
-                fragCache.addFrag(Frag(Point2D(x, ipart(intery) + 1), lineBegin.info * (fpart(intery))));
+                fragCache.addFrag(Frag(IPoint2D(x, ipart(intery)), lineBegin.info * (rfpart(intery))));
+                fragCache.addFrag(Frag(IPoint2D(x, ipart(intery) + 1), lineBegin.info * (fpart(intery))));
             }
 
             intery += gradient;

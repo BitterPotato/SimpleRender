@@ -12,8 +12,7 @@
 // input
 class FVertex {
 public:
-
-    FVertex(FPoint4D p, RGBA r = RGBA(), TexCoord t = TexCoord()) :
+    FVertex(FPoint4D p = FPoint4D(), RGBA r = RGBA(), TexCoord t = TexCoord()) :
             point(p), rgba(r), tex(t){}
     FVertex(const FVertex& fVertex) :
             point(fVertex.point), rgba(fVertex.rgba), tex(fVertex.tex){}
@@ -23,7 +22,7 @@ public:
 
     // friend func: to use swap outsides
     MY_SFRIEND_FUNC_DECL void swap(FVertex& first, FVertex& second);
-    MY_NFRIEND_FUNC_DECL bool inter(const FVertex& from, const FVertex& to, const float t, FVertex& out);
+    MY_NFRIEND_FUNC_DECL bool inter(const FVertex& from, const FVertex& to, FVertex& out, const float t);
 
 //private:
     FPoint4D point;

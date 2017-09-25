@@ -7,7 +7,8 @@
 
 #include <math/TVector.hpp>
 
-using Box2D = ivec4;
+template <typename T>
+using Box2D = TVectorN<T, 4>;
 /**
  * TOP has small Y
  */
@@ -17,9 +18,10 @@ const int BOTTOM = 2;
 const int RIGHT = 3;
 
 namespace Geometry {
+    template<typename T>
     class Shape2D {
     public:
-        virtual void asBoundingBox(Box2D& box) const = 0;
+        virtual void asBoundingBox(Box2D<T>& box) const = 0;
     };
 }
 

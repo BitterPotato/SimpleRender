@@ -29,39 +29,40 @@ public:
 		data[2] = z;
 		data[3] = w;
 	}
-	inline TVectorN(const TVectorN& vecN) {
+	MY_OPERATOR_DECL  TVectorN(const TVectorN& vecN) {
 		assign(vecN);
 	}
-	inline TVectorN operator-(const TVectorN& vecN) const {
+	MY_OPERATOR_DECL TVectorN operator-(const TVectorN& vecN) const {
 		TVectorN res;
 		for (int i = 0; i < len; i++)
 			res[i] = data[i] - vecN[i];
 		return res;
 	}
-	inline TVectorN operator/(const T& ratio) const {
+	MY_OPERATOR_DECL TVectorN operator/(const T& ratio) const {
 		TVectorN res;
 		for (int i = 0; i < len; i++)
 			res[i] = data[i] / ratio;
 		return res;
 	}
 	// TODO: deep in the difference
-	inline T& operator[](int n) {
+	MY_OPERATOR_DECL T& operator[](int n) {
 		return data[n];
 	}
-	inline const T& operator[](int n) const {
+	MY_OPERATOR_DECL const T& operator[](int n) const {
 		return data[n];
 	}
-	inline TVectorN& operator=(const TVectorN& vecN) {
+	MY_OPERATOR_DECL TVectorN& operator=(const TVectorN& vecN) {
 		assign(vecN);
 		return *this;
 	}
-	inline bool operator==(const TVectorN& vecN) const {
+	MY_OPERATOR_DECL bool operator==(const TVectorN& vecN) const {
 		for (int i = 0; i < len; i++) {
 			if (data[i] != vecN[i])
 				return false;
 		}
 		return true;
 	}
+
     MY_NFRIEND_FUNC_DECL TVectorN inter(const TVectorN &from, const TVectorN &to, const float t) {
         TVectorN ret;
         for(int i=0; i < len; i++) {
@@ -69,17 +70,29 @@ public:
         }
         return ret;
     }
+	MY_NFRIEND_FUNC_DECL void inter(const TVectorN &from, const TVectorN &to, TVectorN& out, const float t) {
+		for(int i=0; i < len; i++) {
+			out.data[i] = (1-t)*from.data[i] + t*to.data[i];
+		}
+	}
 	~TVectorN() {
 		//cout << "TVector: dispose" << endl;
 	}
 protected:
 	T data[len];
-	inline void assign(const TVectorN& vecN)
+	MY_SMALL_FUNC_DECL void assign(const TVectorN& vecN)
 	{
 		for (int i = 0; i < len; i++)
 			data[i] = vecN[i];
 	}
 };
+
+template <typename T>
+using vec2 = TVectorN<T, 2>;
+template <typename T>
+using vec3 = TVectorN<T, 3>;
+template <typename T>
+using vec4 = TVectorN<T, 4>;
 
 using ivec2 = TVectorN<int, 2>;
 using fvec2 = TVectorN<float, 2>;

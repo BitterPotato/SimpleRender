@@ -22,6 +22,7 @@
 using math::homogeneous;
 
 using std::vector;
+using Gl::Raster;
 
 class Pipeline {
 public:
@@ -43,13 +44,13 @@ private:
 	MY_SMALL_FUNC_DECL void pipeTrans(FVertex& fVertex) const;
 
 	// TODO: form structure
-	void pushMore(vector<FVertex>& vertexData, const FVertex& vertexA, const FVertex& vertexB, const FVertex& vertexC) const {
+    MY_UTIL_DECL void pushMore(vector<FVertex>& vertexData, const FVertex& vertexA, const FVertex& vertexB, const FVertex& vertexC) {
 		vertexData.push_back(vertexA);
 		vertexData.push_back(vertexB);
 		vertexData.push_back(vertexC);
 	}
 
-	void dealWithTwo(vector<FVertex>& outVertexData, const FVertex& vertexOut, const FVertex& vertexFirst, const FVertex& vertexSecond, const bool reverse) const {
+    MY_UTIL_DECL void dealWithTwo(vector<FVertex>& outVertexData, const FVertex& vertexOut, const FVertex& vertexFirst, const FVertex& vertexSecond, const bool reverse) {
 		FVertex interVertexThis, interVertexThat;
 		computeInterSect(vertexFirst, vertexOut, interVertexThis);
 		computeInterSect(vertexSecond, vertexOut, interVertexThat);
@@ -60,7 +61,7 @@ private:
 		else
 			pushMore(outVertexData, interVertexThis, interVertexThat, vertexSecond);
 	}
-	void dealWithOne(vector<FVertex>& outVertexData, const FVertex& vertexIn, const FVertex& vertexFirst, const FVertex& vertexSecond) const {
+    MY_UTIL_DECL void dealWithOne(vector<FVertex>& outVertexData, const FVertex& vertexIn, const FVertex& vertexFirst, const FVertex& vertexSecond) {
 		FVertex interVertexThis, interVertexThat;
 		computeInterSect(vertexIn, vertexFirst, interVertexThis);
 		computeInterSect(vertexIn, vertexSecond, interVertexThat);
@@ -69,7 +70,7 @@ private:
 	}
 
 	// clip, may increase or decrease vertexes
-	MY_UTIL_DECL void clip(const GL_MODE& mode, const vector<FVertex>& vertexData, vector<FVertex>& outVertexData) const;
+	MY_UTIL_DECL void clip(const GL_MODE& mode, const vector<FVertex>& vertexData, vector<FVertex>& outVertexData) ;
 
 	MY_SMALL_FUNC_DECL void afterClip(const FVertex& fVertex, Vertex& outVertex) const;
 

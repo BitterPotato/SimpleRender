@@ -27,10 +27,10 @@ public:
 //		std::cout << "deconstructor";
 	}
 
-	inline int& operator[](int n) {
+	MY_OPERATOR_DECL int& operator[](int n) {
 		return data[n];
 	}
-	inline const int& operator[](int n) const {
+	MY_OPERATOR_DECL const int& operator[](int n) const {
 		return data[n];
 	}
 

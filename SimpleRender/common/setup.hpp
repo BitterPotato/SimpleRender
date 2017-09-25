@@ -34,6 +34,7 @@ using std::string;
 using std::vector;
 using std::unique_ptr;
 using std::shared_ptr;
+using std::make_shared;
 using std::abs;
 using std::tan;
 using std::sin;
@@ -43,10 +44,24 @@ using std::logic_error;
 using std::function;
 
 template<typename T>
-inline void myswap(T* a, T* b) {
+MY_SMALL_FUNC_DECL void myswap(T* a, T* b) {
     T temp = *a;
     *a = *b;
     *b = temp;
 }
+
+/**
+ * copy from winuser.h
+ */
+#define VK_LEFT           0x25
+#define VK_UP             0x26
+#define VK_RIGHT          0x27
+#define VK_DOWN           0x28
+#define VK_F1             0x70
+#define VK_F2             0x71
+#define VK_F3             0x72
+#define VK_F4             0x73
+#define VK_F5             0x74
+#define VK_F6             0x75
 
 #endif //SIMPLERENDER_SETUP_HPP
