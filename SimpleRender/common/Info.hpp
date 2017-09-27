@@ -17,8 +17,14 @@ public:
         cout << "Info: constructor" << endl;
 #endif
     }
-//    Info(const Info& info);
-//    Info(Info&& info) noexcept;
+//    Info(const Info& info) {
+//        rgba = info.rgba;
+//        depth = info.depth;
+//        stencil = info.stencil;
+//    }
+//    Info(Info&& info) noexcept {
+//        cout << "move constructor";
+//    }
     ~Info();
 
     MY_OPERATOR_DECL Info& operator=(const Info& info) {

@@ -29,7 +29,7 @@ public:
 		std::cout << "FragCache: dispose\n";
 	}
 
-    MY_COMP_FUNC_DECL void addFrag(Frag&& frag);
+    MY_COMP_FUNC_DECL void addFrag(const Frag& frag);
     MY_COMP_FUNC_DECL void runFrags(const unique_ptr<FragShader>& fragShader) const;
 //    void pixelFrag(int x, int y, Frag& outFrag) const;
 private:
@@ -40,10 +40,10 @@ private:
     // TODO: modified by RenderState
 
 // normal
-//  BlendOptions mBlendOption;
+  BlendOptions mBlendOption;
 
 //  soft additive
-	BlendOptions mBlendOption = BlendOptions(OneMinusDstColor, One);
+//	BlendOptions mBlendOption = BlendOptions(OneMinusDstColor, One);
 
 // Multiply
 //	BlendOptions mBlendOption = BlendOptions(DstColor, Zero);

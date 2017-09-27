@@ -4,6 +4,8 @@
 #include "gtest/gtest.h"
 #include "math/TVector_Trans.hpp"
 #include "math/TMatrix_Trans.hpp"
+#include "math/TMatrix_Rotate.hpp"
+
 #include "common/Frag.hpp"
 #include "pipeline/BlendOptions.hpp"
 #include "common/Info.hpp"
@@ -178,11 +180,13 @@ TEST_F(RenderFixture, Vertex) {
 //	int wait;
 //	cin >> wait;
 //}
-//TEST_F(RenderFixture, Eff) {
-//	RGBA first(128, 128, 128, 128);
-//	RGBA second(255, 128, 255, 64);
-//
-//	RGBA output;
-//	BlendOptions options;
-//	blend(options, first, second, output);
-//}
+TEST_F(RenderFixture, Eff) {
+	RGBA first(128, 128, 128, 128);
+	RGBA second(255, 128, 255, 64);
+
+	RGBA output;
+	BlendOptions options;
+	blend(options, first, second, output);
+
+	int r = output[R];
+}

@@ -175,7 +175,7 @@ void SimpleDelegate::testCube() {
     Parser scfParser;
     scfParser.scfParse("media/cube.scj", vertexData);
     unique_ptr<Texture> texture(new FITexture("media/test.jpg"));
-    mRenderState.triggerCameraCircleMove(UP_MOVE, 3 * POSITION_STEP);
+//    mRenderState.triggerCameraCircleMove(UP_MOVE, 3 * POSITION_STEP);
 
     // TODO: change near plane seems don't have any effect
     //mPipeline->confProjection(perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -10.0f));

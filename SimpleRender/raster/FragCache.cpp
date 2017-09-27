@@ -5,7 +5,7 @@
 #include "common/Info.hpp"
 #include "pipeline/FragShader.hpp"
 
-void FragCache::addFrag(Frag&& frag) {
+void FragCache::addFrag(const Frag& frag) {
 	// do z-buffer test
 #ifdef Z_BUFFERTEST
 
@@ -22,7 +22,6 @@ void FragCache::addFrag(Frag&& frag) {
 			mFragIndexes[frag.point[Y]][frag.point[X]] = mFragData.size();
 #endif
 #ifdef BLEND
-        Frag& ptr = frag;
         Frag& dstFrag = mFragData[index];
 		RGBA rgba;
 		blend(mBlendOption, frag.info.rgba, dstFrag.info.rgba, rgba);

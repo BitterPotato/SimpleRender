@@ -18,34 +18,44 @@ void BlendOptions::colorBlend(const BLEND_FACTOR factor, const RGBA& src, const 
 	switch (factor) {
 	case One:
 		after = RGBA(before);
+		break;
 	case Zero:
 		after = RGBA(0, 0, 0, 0);
+		break;
 	case SrcColor:
 		after = RGBA(RGBA::toFloat(src[B])*before[B],
 					RGBA::toFloat(src[G])*before[G],
 					RGBA::toFloat(src[R])*before[R]);
+		break;
 	case DstColor:
 		after = RGBA(RGBA::toFloat(dst[B])*before[B],
 		RGBA::toFloat(dst[G])*before[G],
 		RGBA::toFloat(dst[R])*before[R]);
+		break;
 	case OneMinusSrcColor:
 		after = RGBA((1 - RGBA::toFloat(src[B]))*before[B],
 		(1 - RGBA::toFloat(src[G]))*before[G],
 		(1 - RGBA::toFloat(src[R]))*before[R]);
+		break;
 
 	case OneMinusDstColor:
 		after = RGBA((1 - RGBA::toFloat(dst[B]))*before[B],
 		(1 - RGBA::toFloat(dst[G]))*before[G],
 		(1 - RGBA::toFloat(dst[R]))*before[R]);
+		break;
 
 	case SrcAlpha:
 		after = RGBA(before*RGBA::toFloat(src[A]));
+		break;
 	case DstAlpha:
 		after = RGBA(before*RGBA::toFloat(dst[A]));
+		break;
 	case OneMinusSrcAlpha:
 		after = RGBA(before*(1 - RGBA::toFloat(src[A])));
+		break;
 	case OneMinusDstAlpha:
 		after = RGBA(before*(1 - RGBA::toFloat(dst[A])));
+		break;
 	default:
 		after = RGBA(0, 0, 0, 0);
 	}
