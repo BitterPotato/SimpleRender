@@ -1,14 +1,17 @@
 #ifndef BASIC_HPP
 #define BASIC_HPP
 
-MY_SMALL_FUNC_DECL int ipart(float x);
+#include "common/setup.hpp"
 
-MY_SMALL_FUNC_DECL float fpart(float x);
+namespace math {
+    MY_SMALL_NAME_FUNC_DECL int ipart(float x);
 
-MY_SMALL_FUNC_DECL float rfpart(float x);
+    MY_SMALL_NAME_FUNC_DECL float fpart(float x);
 
-MY_SMALL_FUNC_DECL int mround(float x);
+    MY_SMALL_NAME_FUNC_DECL float rfpart(float x);
 
+    MY_SMALL_NAME_FUNC_DECL int mround(float x);
+}
 #include "Basic.inl"
 
 #endif

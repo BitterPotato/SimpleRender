@@ -3,7 +3,7 @@
 
 #include "common/FVertex.hpp"
 
-MY_SMALL_FUNC_DECL void dicideAssignTo(const float& t, float& val) {
+MY_SMALL_STORAGE_DECL void dicideAssignTo(const float& t, float& val) {
 	if (t >= 0.0f && t <= 1.0f && t < val)
 		val = t;
 }

@@ -2,6 +2,7 @@
 #define TMATRIX_ROTATE_INL
 
 #include "TMatrix_Rotate.hpp"
+#include "TMatrix_Trans.hpp"
 
 namespace math {
     // should be called by input type: float

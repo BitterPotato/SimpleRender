@@ -3,6 +3,18 @@
 //
 
 #include "Parser.hpp"
+#include "material/Rgba.hpp"
+#include "math/TVector.hpp"
+#include "common/Point.hpp"
+#include "common/FVertex.hpp"
+
+#include <fstream>
+#include <sstream>
+#include <stdio.h>
+
+using std::getline;
+using std::ifstream;
+using std::istringstream;
 
 
 void Parser::scfParse(const string& path, vector<FVertex>& outVertexData) {
@@ -10,7 +22,7 @@ void Parser::scfParse(const string& path, vector<FVertex>& outVertexData) {
     constMap["l"] = "0.2";
     constMap["m"] = "128";
     vector<FVertex> tmpVertexData;
-    vector<TexCoord> tmpTexData;
+    vector<fvec2> tmpTexData;
 
     ifstream infile(path);
     string line;
@@ -40,7 +52,7 @@ void Parser::scfParse(const string& path, vector<FVertex>& outVertexData) {
                 else if (name == 't') {
                     float u, v;
                     sscanf(line.c_str(), "[t] %f %f", &u, &v);
-                    tmpTexData.push_back(TexCoord(u, v));
+                    tmpTexData.push_back(fvec2(u, v));
                 }
                 else if (name == 'f') {
                     int i1, i2, i3;

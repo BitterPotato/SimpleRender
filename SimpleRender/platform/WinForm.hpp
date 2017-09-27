@@ -7,6 +7,10 @@
 
 #include "Form.hpp"
 
+#include <windows.h>
+//#include <winuser.h>
+#include <tchar.h>
+
 class WinForm : public Form{
 public:
     WinForm(int width, int height, FrameBuffer* framebuffer);
@@ -16,8 +20,8 @@ private:
     MY_COMP_FUNC_DECL int screen_init(int w, int h, const TCHAR *title) const;
     // 关闭屏幕
     MY_COMP_FUNC_DECL int screen_close(void) const;
-    MY_COMP_FUNC_DECL LRESULT screen_events(HWND hWnd, UINT msg,
-                                   WPARAM wParam, LPARAM lParam) const;
+    MY_UTIL_DECL LRESULT screen_events(HWND hWnd, UINT msg,
+                                   WPARAM wParam, LPARAM lParam) ;
     // 处理消息
     MY_COMP_FUNC_DECL void screen_dispatch(void) const;
     // 显示FrameBuffer

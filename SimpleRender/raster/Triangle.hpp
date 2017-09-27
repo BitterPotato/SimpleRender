@@ -1,16 +1,11 @@
 #ifndef TRIANGLE_HPP
 #define TRIANGLE_HPP
 
-#include "FragCache.hpp"
-#include "math/TVector_Trans.hpp"
-#include "material/Texture.hpp"
+#include "common/setup.hpp"
 
-#include <algorithm>
-#include <geometry/Shape2D.hpp>
-#include <geometry/Triangle2D.hpp>
-#include <common/Vertex.hpp>
-
-using Geometry::ITriangle2D;
+class Texture;
+class FragCache;
+class Vertex;
 
 namespace Gl {
 	class Triangle {

@@ -1,7 +1,9 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
-#include "common/Frag.hpp"
+#include "common/setup.hpp"
+
+class RGBA;
 
 class FrameBuffer {
 public:
@@ -13,4 +15,6 @@ private:
 	unsigned char * fbuffer = nullptr;
 	int width; int height;
 };
+
+#include "FrameBuffer.inl"
 #endif

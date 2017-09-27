@@ -1,9 +1,12 @@
 #ifndef FRAGCACHE_HPP
 #define FRAGCACHE_HPP
 
-#include "common/Frag.hpp"
-#include "pipeline/MyFragShader.hpp"
+#include "common/setup.hpp"
+
 #include "pipeline/BlendOptions.hpp"
+
+class Frag;
+class FragShader;
 
 #define Z_BUFFERTEST
 #define Z_BUFFERWRITE

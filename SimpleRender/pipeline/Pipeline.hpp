@@ -3,26 +3,15 @@
 
 //#define CLIP_ENABLE
 
-#include "MyVertexShader.hpp"
-#include "MyFragShader.hpp"
-#include "raster/Raster.hpp"
-#include "material/Texture.hpp"
-#include "platform/FrameBuffer.hpp"
-#include "math/TMatrix_Trans.hpp"
-#include "math/TVector_Trans.hpp"
+#include "common/setup.hpp"
+
+class Vertex;
+class FVertex;
+
 #include "RenderState.hpp"
+#include "VertexShader.hpp"
+#include "FragShader.hpp"
 #include "gl_utils.hpp"
-
-#include <vector>
-#include <exception>
-#include <stdexcept>
-#include <cmath>
-#include <memory>
-
-using math::homogeneous;
-
-using std::vector;
-using Gl::Raster;
 
 class Pipeline {
 public:
@@ -75,5 +64,7 @@ private:
 	MY_SMALL_FUNC_DECL void afterClip(const FVertex& fVertex, Vertex& outVertex) const;
 
 };
+
+#include "Pipeline.inl"
 
 #endif

@@ -1,23 +1,24 @@
 #ifndef SIMPLE_DELEGATE_HPP
 #define SIMPLE_DELEGATE_HPP
 
-#include "platform/Form.hpp"
-#include "platform/FrameBuffer.hpp"
-#include "pipeline/Pipeline.hpp"
+#include "common/setup.hpp"
 #include "pipeline/RenderState.hpp"
-#include "format/parser.hpp"
+// TODO: stl vector cannot get together with forward declaration also
+#include "common/FVertex.hpp"
+#include "pipeline/Pipeline.hpp"
 
-#include <tchar.h>
-
+class Form;
+class FrameBuffer;
+class Pipeline;
 
 const float POSITION_STEP = 0.2f;
 const float DEGREE_STEP = 2;
 
 class SimpleDelegate {
 public:
-    SimpleDelegate(shared_ptr<Form> uniform, FrameBuffer &frameBuffer,
+    SimpleDelegate(FrameBuffer &frameBuffer,
                    const int width, const int height) :
-            mUniform(uniform), mFrameBuffer(frameBuffer) {
+            mFrameBuffer(frameBuffer) {
         initRender(width, height);
     }
 
@@ -44,7 +45,6 @@ public:
 
 private:
     // members
-    shared_ptr<Form> mUniform;
     FrameBuffer &mFrameBuffer;
 
     vector<FVertex> vertexData;

@@ -1,4 +1,5 @@
 #include "RenderState.hpp"
+#include "common/FVertex.hpp"
 
 void RenderState::triggerCameraFlatMove(const CAMERA_MOVE move, const float degree) {
 	switch (move)

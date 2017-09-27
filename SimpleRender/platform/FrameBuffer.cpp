@@ -1,18 +1,7 @@
 #include "FrameBuffer.hpp"
 
-#include <cstdlib>
-#include <cstring>
+#include "material/Rgba.hpp"
 
-void FrameBuffer::linkForm(void* ptr) {
-	fbuffer = (unsigned char*)ptr;
-}
-void FrameBuffer::setBufferStorage(const int width, const int height) {
-	//if (fbuffer)
-	//	free(fbuffer);
-	this->width = width;
-	this->height = height;
-	std::memset(fbuffer, 0, width*height * 4);
-}
 void FrameBuffer::setBufferPixel(const int x, const int y, const RGBA & rgba) {
 	if (x < width && y < height) {
 		int startIndex = (y*width + x) * 4;

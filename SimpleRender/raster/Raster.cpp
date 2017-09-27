@@ -4,6 +4,10 @@
 
 #include "Raster.hpp"
 
+#include "Point.hpp"
+#include "Line.hpp"
+#include "Triangle.hpp"
+
 namespace Gl {
     void Raster::rasterUniverTriangle(const GL_PATTERN& pattern, const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const unique_ptr<Texture>& texture, FragCache& fragCache) {
         if (pattern == GL_NORMAL)

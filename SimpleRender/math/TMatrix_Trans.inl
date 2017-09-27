@@ -25,7 +25,7 @@ namespace math {
     // -------------------- not universal --------------------
     template<typename T>
     auto asMat3(const TMatrix4<T> mat4) {
-        return TMatrix3<T>(asVec3(static_cast<TVectorN<T, 3>>(mat4[0])), asVec3(static_cast<TVectorN<T, 3>>(mat4[1])), asVec3(static_cast<TVectorN<T, 3>>(mat4[2])));
+        return TMatrix3<T>(asVec3(static_cast<TVectorN<T, 4>>(mat4[0])), asVec3(static_cast<TVectorN<T, 4>>(mat4[1])), asVec3(static_cast<TVectorN<T, 4>>(mat4[2])));
     }
 
     template<typename T>

@@ -2,15 +2,6 @@
 #define TMATRIX_GL_HPP
 
 #include "TMatrix.hpp"
-#include "TMatrix_Trans.hpp"
-
-using math::normalize;
-using math::cross;
-using math::asVec4_exp;
-using math::transpose;
-using math::translate;
-using math::scale3T;
-using math::scale4T;
 
 namespace math {
 	template<typename T>

@@ -1,5 +1,10 @@
 #include "FragCache.hpp"
 
+#include "common/Point.hpp"
+#include "common/Frag.hpp"
+#include "common/Info.hpp"
+#include "pipeline/FragShader.hpp"
+
 void FragCache::addFrag(Frag&& frag) {
 	// do z-buffer test
 #ifdef Z_BUFFERTEST

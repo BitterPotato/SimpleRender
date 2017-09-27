@@ -1,20 +1,24 @@
 #ifndef BASIC_INL
 #define BASIC_INL
 
-int ipart(float x) {
-	return static_cast<int>(x);
-}
+#include "Basic.hpp"
 
-float fpart(float x) {
-	return x - static_cast<float>(ipart(x));
-}
+namespace math {
+    int ipart(float x) {
+        return static_cast<int>(x);
+    }
 
-float rfpart(float x) {
-	return 1.0f - fpart(x);
-}
+    float fpart(float x) {
+        return x - static_cast<float>(ipart(x));
+    }
 
-int mround(float x) {
-	return ipart(x + 0.5f);
+    float rfpart(float x) {
+        return 1.0f - fpart(x);
+    }
+
+    int mround(float x) {
+        return ipart(x + 0.5f);
+    }
 }
 
 #endif

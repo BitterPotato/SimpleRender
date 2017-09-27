@@ -9,6 +9,8 @@
 
 template <typename T>
 using Box2D = TVectorN<T, 4>;
+using IBox2D = TVectorN<int, 4>;
+
 /**
  * TOP has small Y
  */

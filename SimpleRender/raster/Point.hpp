@@ -2,12 +2,13 @@
 // Created by WJ Yang on 2017/9/24.
 //
 
-#ifndef SIMPLERENDER_POINT_HPP
-#define SIMPLERENDER_POINT_HPP
+#ifndef SIMPLERENDER_RASTER_POINT_HPP
+#define SIMPLERENDER_RASTER_POINT_HPP
 
-#include <common/Point.hpp>
-#include <common/Vertex.hpp>
-#include "FragCache.hpp"
+#include "common/setup.hpp"
+
+class Vertex;
+class FragCache;
 
 namespace Gl {
 	class Point {
@@ -17,4 +18,6 @@ namespace Gl {
 	};
 }
 
-#endif //SIMPLERENDER_POINT_HPP
+#include "Point.inl"
+
+#endif //SIMPLERENDER_RASTER_POINT_HPP

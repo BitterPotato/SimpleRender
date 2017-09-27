@@ -3,15 +3,14 @@
 //
 
 #include "WinForm.hpp"
-
-#include "Form.hpp"
+#include "FrameBuffer.hpp"
 
 //=====================================================================
 // Win32 窗口及图形绘制：为 device 提供一个 DibSection 的 FB
 //=====================================================================
-int screen_exit = 0;
+static int screen_exit = 0;
 int screen_mx = 0, screen_my = 0, screen_mb = 0;
-int screen_keys[512];	// 当前键盘按下状态
+static int screen_keys[512];	// 当前键盘按下状态
 static HWND screen_handle = NULL;		// 主窗口 HWND
 static HDC screen_dc = NULL;			// 配套的 HDC
 static HBITMAP screen_hb = NULL;		// DIB
@@ -50,7 +49,8 @@ void WinForm::runRender() const{
 
 // 初始化窗口并设置标题
 int WinForm::screen_init(int w, int h, const TCHAR *title) const {
-    WNDCLASS wc = { CS_HREDRAW || CS_VREDRAW, (WNDPROC)screen_events, 0, 0, 0,
+    // TODO: fix
+    WNDCLASS wc = { CS_BYTEALIGNCLIENT, (WNDPROC)screen_events, 0, 0, 0,
                     NULL, NULL, NULL, NULL, _T("SCREEN3.1415926") };
     BITMAPINFO bi = { { sizeof(BITMAPINFOHEADER), w, -h, 1, 32, BI_RGB,
                               w * h * 4, 0, 0, 0, 0 } };
@@ -123,7 +123,7 @@ int WinForm::screen_close(void) const{
 }
 
 LRESULT WinForm::screen_events(HWND hWnd, UINT msg,
-                      WPARAM wParam, LPARAM lParam) const {
+                      WPARAM wParam, LPARAM lParam) {
     switch (msg) {
         case WM_CLOSE: screen_exit = 1; break;
         case WM_KEYDOWN: screen_keys[wParam & 511] = 1; break;

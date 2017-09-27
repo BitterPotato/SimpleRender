@@ -2,8 +2,8 @@
 // Created by WJ Yang on 2017/9/22.
 //
 
-#ifndef SIMPLERENDER_POINT_HPP
-#define SIMPLERENDER_POINT_HPP
+#ifndef SIMPLERENDER_COMMON_POINT_HPP
+#define SIMPLERENDER_COMMON_POINT_HPP
 
 #include "math/TVector.hpp"
 
@@ -32,11 +32,15 @@ const int U = 0;
 const int V = 1;
 
 
-MY_SMALL_FUNC_DECL bool isInVisualBody(const FPoint4D& point);
+MY_SMALL_STORAGE_DECL bool isInVisualBody(const FPoint4D& point) {
+    return point[X] >= -point[W] && point[X] <= point[W]
+           && point[Y] >= -point[W] && point[Y] <= point[W]
+           && point[Z] >= -point[W] && point[Z] <= point[W];
+}
 
 // use define as default parameter
 // code smell
 /*if construct by the form like: Macro_FPoint4D test(0.0f, 1.0f， 0.0f), then will assert fail*/
 #define Macro_FPoint4D(x, y, z) FPoint4D(x, y, z, 1.0f)
 
-#endif //SIMPLERENDER_POINT_HPP
+#endif //SIMPLERENDER_COMMON_POINT_HPP

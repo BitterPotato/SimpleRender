@@ -1,4 +1,6 @@
 #include "FITexture.hpp"
+#include "third/FreeImage.h"
+#include "material/Rgba.hpp"
 
 FITexture::FITexture(const char* img) {
     FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(img);

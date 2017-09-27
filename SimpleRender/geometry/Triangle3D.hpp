@@ -39,6 +39,6 @@ namespace Geometry {
     using FTriangle3D = Triangle3D<float>;
 }
 
-
+#include "Triangle3D.inl"
 
 #endif //SIMPLERENDER_TRIANGLE3D_HPP

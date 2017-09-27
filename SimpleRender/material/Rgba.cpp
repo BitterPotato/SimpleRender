@@ -44,7 +44,7 @@ HSV toHSV(const RGBA& rgba) {
     else
         s = static_cast<float>(diffV) / maxV;
 
-    v = toFloat(maxV);
+    v = RGBA::toFloat(maxV);
 
     return HSV(h, s, v);
 }

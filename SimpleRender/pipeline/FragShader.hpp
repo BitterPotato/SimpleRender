@@ -5,15 +5,13 @@
 #ifndef SIMPLERENDER_FRAGSHADER_HPP_HPP
 #define SIMPLERENDER_FRAGSHADER_HPP_HPP
 
-#include "platform/FrameBuffer.hpp"
+#include "common/setup.hpp"
+
+class Frag;
 
 class FragShader {
 public:
-    FragShader(FrameBuffer& framebuffer) : mFrameBuffer(framebuffer){}
     MY_COMP_FUNC_DECL virtual void shade(const Frag& frag) const = 0;
-
-protected:
-    FrameBuffer& mFrameBuffer;
 };
 
 #endif //SIMPLERENDER_FRAGSHADER_HPP_HPP

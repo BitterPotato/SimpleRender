@@ -4,18 +4,17 @@
 
 #include "Line.hpp"
 
-#ifndef LINE_HPP
-#define LINE_HPP
+#include "common/Point.hpp"
+#include "common/Vertex.hpp"
+#include "FragCache.hpp"
+#include "math/Basic.hpp"
+#include "common/Frag.hpp"
+
+using math::ipart;
+using math::fpart;
+using math::rfpart;
 
 namespace Gl {
-    void Line::rasterLine(const Vertex &lineBegin, const Vertex &lineEnd, const int width, FragCache &outFragCache) {
-#if defined(LINE_Bresenham)
-        rasterLineBB(lineBegin, lineEnd, width, outFragCache);
-#elif defined(LINE_WuXiaolin)
-        rasterLineW(lineBegin, lineEnd, width, outFragCache);
-#endif
-    }
-
     void
     Line::rasterErrorXBased(const Vertex &lineBP, const Vertex &lineEP, float errorUnit, FragCache &outFragCache) {
         int ySege = lineBP.point[Y] > lineEP.point[Y] ? -1 : 1;
@@ -215,4 +214,3 @@ namespace Gl {
         }
     }
 }
-#endif

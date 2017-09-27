@@ -1,5 +1,10 @@
-#include <material/FITexture.hpp>
 #include "SimpleDelegate.hpp"
+
+#include "material/FITexture.hpp"
+#include "format/parser.hpp"
+#include "platform/FrameBuffer.hpp"
+#include "pipeline/MyFragShader.hpp"
+#include "pipeline/MyVertexShader.hpp"
 
 void SimpleDelegate::clearColor() {
     mFrameBuffer.clearColor({0, 0, 0});

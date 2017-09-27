@@ -5,7 +5,9 @@
 #ifndef SIMPLERENDER_SHAPE_HPP
 #define SIMPLERENDER_SHAPE_HPP
 
-#include "common/FVertex.hpp"
+#include "common/setup.hpp"
+
+class FVertex;
 
 namespace Mesh {
     class Shape {

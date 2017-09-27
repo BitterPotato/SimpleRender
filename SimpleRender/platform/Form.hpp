@@ -1,11 +1,9 @@
 #ifndef UNIFORM_HPP
 #define UNIFORM_HPP
 
-#include "FrameBuffer.hpp"
+#include "common/setup.hpp"
 
-#include <windows.h>
-//#include <winuser.h>
-#include <tchar.h>
+class FrameBuffer;
 
 //typedef void(*f_keys) (int*);
 

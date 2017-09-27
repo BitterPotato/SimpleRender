@@ -1,8 +1,7 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
-
-#include "material/Rgba.hpp"
+class RGBA;
 
 class Texture {
 public:

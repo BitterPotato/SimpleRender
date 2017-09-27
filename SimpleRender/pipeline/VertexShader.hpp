@@ -5,7 +5,9 @@
 #ifndef SIMPLERENDER_VERTEXSHADER_HPP
 #define SIMPLERENDER_VERTEXSHADER_HPP
 
-#include "common/FVertex.hpp"
+#include "common/setup.hpp"
+
+class FVertex;
 
 class VertexShader {
 public:

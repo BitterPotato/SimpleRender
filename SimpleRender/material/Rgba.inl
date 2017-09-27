@@ -4,9 +4,7 @@
 #include "Rgba.hpp"
 #include "math/Basic.hpp"
 
-float toFloat(int comp) {
-    return static_cast<float>(comp) / LIMIT;
-}
+using math::mround;
 
 RGBA inter(const RGBA& from, const RGBA& to, const float t) {
 	RGBA rgba;

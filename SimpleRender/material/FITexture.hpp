@@ -2,7 +2,8 @@
 #define FITexture_HPP
 
 #include "Texture.hpp"
-#include "third/FreeImage.h"
+
+class FIBITMAP;
 
 class FITexture : public Texture {
 public:

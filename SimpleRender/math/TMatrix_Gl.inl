@@ -2,6 +2,7 @@
 #define TMATRIX_GL_INL
 
 #include "TMatrix_Gl.hpp"
+#include "TMatrix_Trans.hpp"
 
 namespace math {
 

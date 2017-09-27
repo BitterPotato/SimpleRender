@@ -5,13 +5,12 @@
 #ifndef SIMPLERENDER_RASTER_HPP
 #define SIMPLERENDER_RASTER_HPP
 
+#include "common/setup.hpp"
 #include "pipeline/RenderSetup.hpp"
-#include "Point.hpp"
-#include "Line.hpp"
-#include "Triangle.hpp"
-#include "common/Frag.hpp"
-#include "material/Texture.hpp"
-#include "FragCache.hpp"
+
+class Vertex;
+class FragCache;
+class Texture;
 
 #define LINE_WIDTH 1
 #define POINT_SIZE 10

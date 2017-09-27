@@ -3,14 +3,20 @@
 
 //#define BSP_ENABLE
 
+#ifdef BSP_ENABLE
 #include "BSPTree.hpp"
-#include "MyVertexShader.hpp"
-#include "MyFragShader.hpp"
+#endif
+
+#include "VertexShader.hpp"
+#include "FragShader.hpp"
 #include "RenderSetup.hpp"
 #include "math/TVector_Trans.hpp"
-#include "math/TMatrix_Trans.hpp"
-#include "material/Texture.hpp"
+#include "math/TMatrix_GL.hpp"
+#include "math/TMatrix_Rotate.hpp"
 
+// TODO: why smart pointers cannot get together with forward declaration
+//class Texture;
+#include "material/Texture.hpp"
 
 using math::frontviewMatrix;
 using math::perspectiveMatrix;
@@ -20,7 +26,6 @@ using math::asMat4;
 using math::radians;
 using math::translate;
 using math::viewportMatrixReflectY;
-
 
 #define TRIANGLE_POINTS 3
 #define LINE_POINTS 2

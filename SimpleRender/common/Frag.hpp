@@ -5,13 +5,13 @@
 #ifndef SIMPLERENDER_FRAG_HPP
 #define SIMPLERENDER_FRAG_HPP
 
-
-#include "Info.hpp"
-#include "Point.hpp"
+#include "setup.hpp"
+#include "math/TVector.hpp"
+#include "common/Info.hpp"
 
 class Frag{
 public:
-    Frag(IPoint2D p = IPoint2D(), Info i = Info()) :
+    Frag(ivec2 p = ivec2(), Info i = Info()) :
             point(p), info(i){
 #ifdef CONSTRUCT_INFO_ENABLE
         cout << "Frag: constructor" << endl;
@@ -34,12 +34,29 @@ public:
 #endif
     }
 
-    MY_OPERATOR_DECL Frag& operator=(Frag frag);
-    MY_OPERATOR_DECL Frag& operator=(Frag&& frag) noexcept ;
-    MY_SFRIEND_FUNC_DECL void swap(Frag& first, Frag& second);
+    MY_OPERATOR_DECL Frag& operator=(Frag frag) {
+        swap(*this, frag);
+        return *this;
+    }
+    MY_OPERATOR_DECL Frag& operator=(Frag&& frag) noexcept {
+        if (&frag != this) {
+            point = frag.point;
+            info = frag.info;
+        }
+        return *this;
+    }
+    MY_SFRIEND_FUNC_DECL void swap(Frag& first, Frag& second) {
+        // enable ADL (not necessary in our case, but good practice)
+        using std::swap;
+
+        // by swapping the members of two objects,
+        // the two objects are effectively swapped
+        swap(first.point, second.point);
+        swap(first.info, second.info);
+    }
 
 //private:
-    IPoint2D point;
+    ivec2 point;
     Info info;
 };
 

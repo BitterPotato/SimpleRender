@@ -5,9 +5,10 @@
 #ifndef SIMPLERENDER_LINE_HPP
 #define SIMPLERENDER_LINE_HPP
 
-#include <common/Vertex.hpp>
-#include "FragCache.hpp"
-#include "math/Basic.hpp"
+#include "common/setup.hpp"
+
+class Vertex;
+class FragCache;
 
 #define LINE_Bresenham
 //#define LINE_WuXiaolin
@@ -34,5 +35,6 @@ namespace Gl {
     };
 }
 
+#include "Line.inl"
 
 #endif //SIMPLERENDER_LINE_HPP

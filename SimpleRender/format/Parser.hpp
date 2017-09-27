@@ -5,19 +5,13 @@
 #ifndef SIMPLERENDER_PARSER_HPP
 #define SIMPLERENDER_PARSER_HPP
 
-#include "common/FVertex.hpp"
+#include "common/setup.hpp"
+
+class FVertex;
 
 #include <map>
-#include <fstream>
-#include <sstream>
-#include <cstdio>
-#include <stdio.h>
 
 using std::map;
-using std::getline;
-using std::ifstream;
-using std::istringstream;
-//using std::sscanf;
 
 typedef map<string, string> MapType;
 

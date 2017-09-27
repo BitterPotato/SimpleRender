@@ -8,18 +8,7 @@ FVertex& FVertex::operator=(FVertex fVertex) {
     swap(*this, fVertex);
     return *this;
 }
-// friend func: to use swap outsides
-void swap(FVertex& first, FVertex& second) // nothrow
-{
-    // enable ADL (not necessary in our case, but good practice)
-    using std::swap;
 
-    // by swapping the members of two objects,
-    // the two objects are effectively swapped
-    swap(first.point, second.point);
-    swap(first.rgba, second.rgba);
-    swap(first.tex, second.tex);
-}
 bool inter(const FVertex& from, const FVertex& to, FVertex& out, const float t) {
     if (t < 0 || t > 1)
         return false;

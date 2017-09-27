@@ -1,16 +1,15 @@
 #ifndef BSP_HPP
 #define BSP_HPP
 
-#include <math/TVector_Trans.hpp>
-#include <math/TVector_Trans.inl>
+#include "common/setup.hpp"
+
+#include "geometry/Triangle3D.hpp"
 #include "RenderSetup.hpp"
 #include "common/FVertex.hpp"
 #include "math/TVector_Trans.hpp"
-#include "geometry/Triangle3D.hpp"
 
-using math::cross;
-using math::dot;
-using math::asVec3;
+class Vertex;
+
 using Geometry::FTriangle3D;
 
 class Triangle : public FTriangle3D {

@@ -8,7 +8,9 @@
 #define MY_OPERATOR_DECL inline
 #define MY_COMP_FUNC_DECL
 #define MY_SMALL_FUNC_DECL inline
+#define MY_SMALL_NAME_FUNC_DECL inline
 #define MY_SMALL_UTIL_DECL inline static
+#define MY_SMALL_STORAGE_DECL static inline
 #define MY_UTIL_DECL static
 #define MY_STORAGE_FUNC_DECL static
 #define MY_NFRIEND_FUNC_DECL friend
@@ -24,6 +26,7 @@
 #include <exception>
 #include <stdexcept>
 #include <functional>
+#include <cstring>
 
 using std::cout;
 using std::cin;
@@ -42,9 +45,10 @@ using std::cos;
 using std::sqrt;
 using std::logic_error;
 using std::function;
+using std::memset;
 
 template<typename T>
-MY_SMALL_FUNC_DECL void myswap(T* a, T* b) {
+MY_SMALL_STORAGE_DECL void myswap(T* a, T* b) {
     T temp = *a;
     *a = *b;
     *b = temp;

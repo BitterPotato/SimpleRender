@@ -7,7 +7,7 @@
 
 #define LINE_DET 0.01f
 
-#include <common/Point.hpp>
+#include "math/TVector.hpp"
 #include "Shape2D.hpp"
 
 using Bary = fvec3;
@@ -19,7 +19,7 @@ namespace Geometry {
     template <typename T>
     class Triangle2D : Shape2D<T> {
     public:
-        Triangle2D(const Point2D<T> &a, const Point2D<T> &b, const Point2D<T> &c) :
+        Triangle2D(const TVectorN<T, 2> &a, const TVectorN<T, 2> &b, const TVectorN<T, 2> &c) :
                 pA(a), pB(b), pC(c) {}
 
         MY_SMALL_FUNC_DECL void asBoundingBox(Box2D<T> &box) const override;
@@ -30,17 +30,17 @@ namespace Geometry {
          * @param outBary
          * @return
          */
-        MY_COMP_FUNC_DECL bool computeBaryCoord(const Point2D<T> &point, Bary &outBary) const;
+        MY_COMP_FUNC_DECL bool computeBaryCoord(const TVectorN<T, 2> &point, Bary &outBary) const;
 
         MY_SMALL_UTIL_DECL bool isOnTriangle(const Bary &bary);
 
         MY_SMALL_UTIL_DECL void toPerspectiveCorrect(const float hA, const float hB, const float hC, Bary &outBary);
 
     private:
-        const Point2D<T> &pA, pB, pC;
+        const TVectorN<T, 2> &pA, pB, pC;
 
         MY_SMALL_UTIL_DECL float
-        computeAreaRatio(const Point2D<T> &point1, const Point2D<T> &point2, const Point2D<T> &pointSide, const Point2D<T> &point);
+        computeAreaRatio(const TVectorN<T, 2> &point1, const TVectorN<T, 2> &point2, const TVectorN<T, 2> &pointSide, const TVectorN<T, 2> &point);
 
         MY_SMALL_UTIL_DECL bool isInTriangle(const float x);
     };
@@ -48,5 +48,6 @@ namespace Geometry {
     using ITriangle2D = Triangle2D<int>;
 }
 
+#include "Triangle2D.inl"
 
 #endif //SIMPLERENDER_TRIANGLE_HPP

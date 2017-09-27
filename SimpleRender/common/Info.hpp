@@ -2,9 +2,11 @@
 // Created by WJ Yang on 2017/9/22.
 //
 
-#ifndef SIMPLERENDER_INFO_H
-#define SIMPLERENDER_INFO_H
+#ifndef SIMPLERENDER_INFO_HPP
+#define SIMPLERENDER_INFO_HPP
 
+#include "setup.hpp"
+#include "math/TVector.hpp"
 #include "material/Rgba.hpp"
 
 class Info {
@@ -19,13 +21,38 @@ public:
 //    Info(Info&& info) noexcept;
     ~Info();
 
-    MY_OPERATOR_DECL Info& operator=(const Info& info);
+    MY_OPERATOR_DECL Info& operator=(const Info& info) {
+        assign(info);
+        return *this;
+    }
 //    MY_OPERATOR_DECL Info& operator=(Info&& info) noexcept;
-    MY_OPERATOR_DECL Info& operator*(const float ratio);
-    MY_OPERATOR_DECL Info operator*(const float ratio) const;
-    MY_OPERATOR_DECL Info& operator*=(const float ratio);
+    MY_OPERATOR_DECL Info& operator*(const float ratio) {
+        scale(ratio);
+        return *this;
+    }
+    // TODO: test move
+    MY_OPERATOR_DECL Info operator*(const float ratio) const {
+        Info info = Info(*this);
+        info.scale(ratio);
+        return info;
+    }
+    MY_OPERATOR_DECL Info& operator*=(const float ratio) {
+        scale(ratio);
+        return *this;
+    }
 
-    MY_SFRIEND_FUNC_DECL void swap(Info& first, Info& second);
+    MY_SFRIEND_FUNC_DECL void swap(Info& first, Info& second) {
+        // enable ADL (not necessary in our case, but good practice)
+        using std::swap;
+
+        // by swapping the members of two objects,
+        // the two objects are effectively swapped
+        // attention: the input parameter aren't pointers, if RGBA implements
+        // the swap function, then it will delivery
+        swap(first.rgba, second.rgba);
+        swap(first.depth, second.depth);
+        swap(first.stencil, second.stencil);
+    }
     // assert: move
     MY_SFRIEND_FUNC_DECL Info inter(const Info& from, const Info& to, const float t);
     MY_SFRIEND_FUNC_DECL void interDepth(const Info& first, const Info& second, const Info& third, Info& out, const fvec3& ratio);
@@ -46,5 +73,6 @@ private:
 //    static tuple<int, int, int, int, float, int> typeinfo = make_tuple(1, 1, 1, 1, 1.0f, 1);
 };
 
+#include "Info.inl"
 
 #endif //SIMPLERENDER_INFO_H

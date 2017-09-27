@@ -6,6 +6,7 @@
 #define SIMPLERENDER_SPHERE_HPP
 
 #include "Shape.hpp"
+#include "math/TVector.hpp"
 
 #define TESS_MODE1
 
