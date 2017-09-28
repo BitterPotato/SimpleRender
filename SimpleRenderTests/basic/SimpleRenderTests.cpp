@@ -34,6 +34,14 @@ using math::asMat4;
 
 class MathFixture : public ::testing::Test {};
 class RenderFixture : public ::testing::Test {};
+class BlendFixture : public ::testing::Test {
+protected:
+	RGBA first = RGBA(153, 153, 153, 153);
+	RGBA second = RGBA(102, 102, 102, 102);
+
+	RGBA output;
+
+};
 
 TEST_F(MathFixture, Dot)
 {
@@ -180,13 +188,70 @@ TEST_F(RenderFixture, Vertex) {
 //	int wait;
 //	cin >> wait;
 //}
-TEST_F(RenderFixture, Eff) {
-	RGBA first(128, 128, 128, 128);
-	RGBA second(255, 128, 255, 64);
+TEST_F(BlendFixture, Eff0) {
+    RGBA test1 = RGBA(33, 16, 43, 255);
+    RGBA test2 = RGBA(40, 19, 51, 255);
 
-	RGBA output;
+    BlendOptions options;
+    blend(options, test1, test2, output);
+    EXPECT_EQ(RGBA(33, 16, 43, 255), output);
+}
+TEST_F(BlendFixture, Eff1) {
 	BlendOptions options;
 	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(133, 133, 133, 131), output);
+}
+TEST_F(BlendFixture, Eff2) {
+	BlendOptions options = BlendOptions(OneMinusDstColor, One);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(193, 193, 193, 131), output);
+}
+TEST_F(BlendFixture, Eff3) {
+	BlendOptions options = BlendOptions(DstColor, Zero);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(61, 61, 61, 131), output);
+}
+TEST_F(BlendFixture, Eff4) {
+	BlendOptions options = BlendOptions(DstColor, SrcColor);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(122, 122, 122, 131), output);
+}
+TEST_F(BlendFixture, Eff5) {
+	BlendOptions options = BlendOptions(One, One, Min);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(102, 102, 102, 40), output);
+}
+TEST_F(BlendFixture, Eff6) {
+	BlendOptions options = BlendOptions(One, One, Max);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(153, 153, 153, 91), output);
+}
 
-	int r = output[R];
+TEST_F(BlendFixture, Eff7) {
+	BlendOptions options = BlendOptions(OneMinusDstColor, One, Max);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(102, 102, 102, 91), output);
+}
+TEST_F(BlendFixture, Eff8) {
+	BlendOptions options = BlendOptions(One, OneMinusSrcColor, Max);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(153, 153, 153, 91), output);
+}
+TEST_F(BlendFixture, Eff9) {
+	BlendOptions options = BlendOptions(One, One);
+	blend(options, first, second, output);
+	EXPECT_EQ(RGBA(255, 255, 255, 131), output);
+}
+TEST_F(BlendFixture, HSV) {
+	RGBA rgba1(133, 133, 133, 131);
+	HSV hsv1 = toHSV(rgba1);
+	EXPECT_EQ(HSV(0, 0, 0.52), hsv1);
+
+	RGBA rgba2(240, 60, 130, 131);
+	HSV hsv2 = toHSV(rgba2);
+	EXPECT_EQ(HSV(337, 0.75, 0.94), hsv2);
+
+	RGBA rgba3(50, 140, 80, 131);
+	HSV hsv3 = toHSV(rgba3);
+	EXPECT_EQ(HSV(140, 0.64, 0.55), hsv3);
 }

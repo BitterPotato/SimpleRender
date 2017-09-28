@@ -11,7 +11,7 @@ namespace Gl {
     void Point::rasterPoint(const Vertex &vertex, const int size, FragCache &outFragCache) {
         for (int i = -size; i <= size; i++) {
             for (int j = -size; j < size; j++) {
-                outFragCache.addFrag(Frag(ivec2(vertex.point[X] + i, vertex.point[Y] + j), vertex.info));
+                outFragCache.addFrag(Frag(IPoint2D(vertex.point[X] + i, vertex.point[Y] + j), vertex.info));
             }
         }
     }

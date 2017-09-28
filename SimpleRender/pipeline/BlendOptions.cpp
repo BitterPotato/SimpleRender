@@ -1,5 +1,7 @@
 #include "BlendOptions.hpp"
 
+#define validCompo(x) x = max(0, min(255, x))
+
 void BlendOptions::blendCompo(const BLEND_FACTOR factor, const BLEND_FACTOR  alphaFactor, const RGBA& src, const RGBA& dst, const RGBA& before, RGBA& after) {
 	colorBlend(factor, src, dst, before, after);
 	alphaBlend(alphaFactor, src, dst, before, after);
@@ -23,25 +25,25 @@ void BlendOptions::colorBlend(const BLEND_FACTOR factor, const RGBA& src, const 
 		after = RGBA(0, 0, 0, 0);
 		break;
 	case SrcColor:
-		after = RGBA(RGBA::toFloat(src[B])*before[B],
+		after = RGBA(RGBA::toFloat(src[R])*before[R],
 					RGBA::toFloat(src[G])*before[G],
-					RGBA::toFloat(src[R])*before[R]);
+					RGBA::toFloat(src[B])*before[B]);
 		break;
 	case DstColor:
-		after = RGBA(RGBA::toFloat(dst[B])*before[B],
+		after = RGBA(RGBA::toFloat(dst[R])*before[R],
 		RGBA::toFloat(dst[G])*before[G],
-		RGBA::toFloat(dst[R])*before[R]);
+		RGBA::toFloat(dst[B])*before[B]);
 		break;
 	case OneMinusSrcColor:
-		after = RGBA((1 - RGBA::toFloat(src[B]))*before[B],
+		after = RGBA((1 - RGBA::toFloat(src[R]))*before[R],
 		(1 - RGBA::toFloat(src[G]))*before[G],
-		(1 - RGBA::toFloat(src[R]))*before[R]);
+		(1 - RGBA::toFloat(src[B]))*before[B]);
 		break;
 
 	case OneMinusDstColor:
-		after = RGBA((1 - RGBA::toFloat(dst[B]))*before[B],
+		after = RGBA((1 - RGBA::toFloat(dst[R]))*before[R],
 		(1 - RGBA::toFloat(dst[G]))*before[G],
-		(1 - RGBA::toFloat(dst[R]))*before[R]);
+		(1 - RGBA::toFloat(dst[B]))*before[B]);
 		break;
 
 	case SrcAlpha:
@@ -65,6 +67,7 @@ void BlendOptions::colorBlend(const BLEND_FACTOR factor, const RGBA& src, const 
 void blend(const BlendOptions& options, const RGBA& src, const RGBA& dst, RGBA& output) {
 	RGBA srcCompo, dstCompo;
 
+	// TODO: loss of precision
 	BlendOptions::blendCompo(options.mSrcFactor, options.mSrcAlphaFactor, src, dst, src, srcCompo);
 	BlendOptions::blendCompo(options.mDstFactor, options.mDstAlphaFactor, src, dst, dst, dstCompo);
 
@@ -94,4 +97,10 @@ void blend(const BlendOptions& options, const RGBA& src, const RGBA& dst, RGBA& 
 		output[A] = max(srcCompo[A], dstCompo[A]);
 		break;
 	}
+
+	// valid
+	validCompo(output[B]);
+	validCompo(output[G]);
+	validCompo(output[R]);
+	validCompo(output[A]);
 }

@@ -140,8 +140,8 @@ namespace Gl {
             curR += rDeltaError;
             curA += aDeltaError;
 
-            RGBA interBGRA = RGBA(ipart(curB), ipart(curG), ipart(curR), ipart(curA));
-            Info interInfo = Info(interBGRA);
+            RGBA interRGBA = RGBA(ipart(curR), ipart(curG), ipart(curB), ipart(curA));
+            Info interInfo = Info(interRGBA);
             if (steep)
                 fragCache.addFrag(Frag(IPoint2D(curY, curX), interInfo));
             else

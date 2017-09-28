@@ -46,7 +46,7 @@ void Parser::scfParse(const string& path, vector<FVertex>& outVertexData) {
                     int b, g, r;
                     sscanf(line.c_str(), "[v] %f %f %f | %d %d %d", &x, &y, &z, &b, &g, &r);
 
-                    RGBA rgba(b, g, r);
+                    RGBA rgba(r, g, b);
                     tmpVertexData.push_back(FVertex(Macro_FPoint4D(x, y, z), rgba));
                 }
                 else if (name == 't') {

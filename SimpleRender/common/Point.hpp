@@ -11,14 +11,14 @@ template <typename T>
 using Point2D = TVectorN<T, 2>;
 template <typename T>
 using Point3D = TVectorN<T, 3>;
-template <typename T>
-using Point4D = TVectorN<T, 4>;
+//template <typename T>
+//using Point4D = TVectorN<T, 4>;
 
 using IPoint2D = ivec2;
-using FPoint2D = fvec2;
-using IPoint3D = ivec3;
-using FPoint3D = fvec3;
-using IPoint4D = ivec4;
+//using FPoint2D = fvec2;
+//using IPoint3D = ivec3;
+//using FPoint3D = fvec3;
+//using IPoint4D = ivec4;
 using FPoint4D = fvec4;
 
 const int X = 0;

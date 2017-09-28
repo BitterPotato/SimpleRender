@@ -15,7 +15,7 @@ const int CAPACITY = 4;
 
 class RGBA : public TVectorN<int, 4> {
 public:
-	RGBA(int bb = 0, int gg = 0, int rr = 0, int aa = LIMIT) {
+	RGBA(int rr = 0, int gg = 0, int bb = 0, int aa = LIMIT) {
 		data[R] = rr;
 		data[G] = gg;
 		data[B] = bb;

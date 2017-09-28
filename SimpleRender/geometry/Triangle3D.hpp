@@ -18,9 +18,9 @@ namespace Geometry {
     public:
         Triangle3D(const Point3D<T>& a, const Point3D<T>& b, const Point3D<T>& c) :
                 pA(a), pB(b), pC(c) {
-            fvec3 vecAB = fvec3(b[X] - a[X], b[Y] - a[Y], b[Z] - a[Z]);
-            fvec3 vecBC = fvec3(c[X] - b[X], c[Y] - b[Y], c[Z] - b[Z]);
-            fvec3 cordA = fvec3(a[X], a[Y], a[Z]);
+            vec3<T> vecAB = vec3<T>(b[X] - a[X], b[Y] - a[Y], b[Z] - a[Z]);
+            vec3<T> vecBC = vec3<T>(c[X] - b[X], c[Y] - b[Y], c[Z] - b[Z]);
+            vec3<T> cordA = vec3<T>(a[X], a[Y], a[Z]);
             normal = cross(vecAB, vecBC);
             remainder = -dot(normal, cordA);
         }

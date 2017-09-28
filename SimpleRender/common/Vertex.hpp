@@ -12,7 +12,7 @@
 // after viewport
 class Vertex {
 public:
-    Vertex(ivec2 p = ivec2(), Info i = Info(), fvec2 t = fvec2(), float h = 0.0f) :
+    Vertex(IPoint2D p = IPoint2D(), Info i = Info(), TexCoord t = TexCoord(), float h = 0.0f) :
             point(p), info(i), tex(t), homo(h){}
 //    Vertex(const Vertex& vertex) :
 //            point(vertex.point), info(vertex.info), tex(vertex.tex), homo(vertex.homo) {}
@@ -41,12 +41,12 @@ public:
         swap(first.tex, second.tex);
         swap(first.homo, second.homo);
     }
-    MY_SMALL_UTIL_DECL void inter(const fvec2& first, const fvec2& second, const fvec2& third, fvec2& out, const fvec3& ratio) ;
+    MY_SMALL_UTIL_DECL void inter(const TexCoord& first, const TexCoord& second, const TexCoord& third, TexCoord& out, const fvec3& ratio) ;
 
 //    private:
-    ivec2 point;
+    IPoint2D point;
     Info info;
-    fvec2 tex;
+    TexCoord tex;
     // save the homogeneous divide value
     float homo;
 };

@@ -12,15 +12,16 @@ void FragCache::addFrag(const Frag& frag) {
 	int index = mFragIndexes[frag.point[Y]][frag.point[X]];
 	//try {
 	if (index == -1) {
-#ifdef Z_BUFFERWRITE
 		mFragIndexes[frag.point[Y]][frag.point[X]] = mFragData.size();
-#endif
-		mFragData.push_back(std::move(frag));
-	} 
-	else if(index != -1 && frag.info.depth < mFragData[index].info.depth) {
+		mFragData.push_back(frag);
+	}
 #ifdef Z_BUFFERWRITE
-			mFragIndexes[frag.point[Y]][frag.point[X]] = mFragData.size();
+	else if(index != -1 && frag.info.depth < mFragData[index].info.depth) {
 #endif
+#ifndef Z_BUFFERWRITE
+	else if(index != -1 ) {
+#endif
+			mFragIndexes[frag.point[Y]][frag.point[X]] = mFragData.size();
 #ifdef BLEND
         Frag& dstFrag = mFragData[index];
 		RGBA rgba;
@@ -30,7 +31,7 @@ void FragCache::addFrag(const Frag& frag) {
 		mFragData.push_back(Frag(frag.point, info));
 #endif
 #ifndef BLEND
-			mFragData.push_back(std::move(frag));
+			mFragData.push_back(frag);
 #endif
 		}
 	//}

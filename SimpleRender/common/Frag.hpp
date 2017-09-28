@@ -8,10 +8,11 @@
 #include "setup.hpp"
 #include "math/TVector.hpp"
 #include "common/Info.hpp"
+#include "Point.hpp"
 
 class Frag{
 public:
-    Frag(ivec2 p = ivec2(), Info i = Info()) :
+    Frag(IPoint2D p = IPoint2D(), Info i = Info()) :
             point(p), info(i){
 #ifdef CONSTRUCT_INFO_ENABLE
         cout << "Frag: constructor" << endl;
@@ -56,7 +57,7 @@ public:
     }
 
 //private:
-    ivec2 point;
+    IPoint2D point;
     Info info;
 };
 

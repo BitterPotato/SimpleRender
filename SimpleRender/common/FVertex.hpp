@@ -12,7 +12,7 @@
 // input
 class FVertex {
 public:
-    FVertex(FPoint4D p = FPoint4D(), RGBA r = RGBA(), fvec2 t = fvec2()) :
+    FVertex(FPoint4D p = FPoint4D(), RGBA r = RGBA(), TexCoord t = TexCoord()) :
             point(p), rgba(r), tex(t){}
     FVertex(const FVertex& fVertex) :
             point(fVertex.point), rgba(fVertex.rgba), tex(fVertex.tex){}
@@ -36,7 +36,7 @@ public:
 //private:
     FPoint4D point;
     RGBA rgba ;
-    fvec2 tex;
+    TexCoord tex;
 };
 
 #endif //SIMPLERENDER_FVERTEX_HPP

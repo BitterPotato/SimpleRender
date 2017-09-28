@@ -68,4 +68,6 @@ MY_SMALL_STORAGE_DECL void myswap(T* a, T* b) {
 #define VK_F5             0x74
 #define VK_F6             0x75
 
+const float epsilon = 0.01;
+
 #endif //SIMPLERENDER_SETUP_HPP

@@ -189,9 +189,9 @@ void SimpleDelegate::testBlend() {
     int alpha = 153;
 
     // back
-    RGBA rgbaB(216, 179, 79);
+    RGBA rgbaB(79, 179, 216);
     // front
-    RGBA rgbaF(102, 137, 155, alpha);
+    RGBA rgbaF(155, 137, 102, alpha);
 
     vertexData.push_back(FVertex(Macro_FPoint4D(-0.6f, 0.0f, 0.5f), rgbaB));
     vertexData.push_back(FVertex(Macro_FPoint4D(0.2f, -0.4f, 0.5f), rgbaB));

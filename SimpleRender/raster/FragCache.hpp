@@ -50,12 +50,12 @@ private:
 // 2x Multiply
 //	BlendOptions mBlendOption = BlendOptions(DstColor, SrcColor);
 // Darken
-//	BlendOptions mBlendOption = BlendOptions(Min, One, One);
+//	BlendOptions mBlendOption = BlendOptions(One, One, Min);
 // Lighten
-//	BlendOptions mBlendOption = BlendOptions(Max, One, One);
+//	BlendOptions mBlendOption = BlendOptions(One, One, Max);
 // Screen
-//	BlendOptions mBlendOption = BlendOptions(Max, OneMinusDstColor, One);
-//	BlendOptions mBlendOption = BlendOptions(Max, One, OneMinusSrcColor);
+//	BlendOptions mBlendOption = BlendOptions(OneMinusDstColor, One, Max);
+//	BlendOptions mBlendOption = BlendOptions(One, OneMinusSrcColor, Max);
 // Linear Dodge
 //	BlendOptions mBlendOption = BlendOptions(One, One);
 

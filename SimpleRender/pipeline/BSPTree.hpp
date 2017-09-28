@@ -86,7 +86,6 @@ public:
     MY_COMP_FUNC_DECL void transferTo(const fvec3& cameraPosi, vector<FVertex>& outTriList) const;
 
 private:
-	const float epsilon = 0.01;
 
 	BSPNodeP root;
 	vector<FVertex>& vertexList;

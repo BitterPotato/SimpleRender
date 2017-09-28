@@ -23,7 +23,7 @@ RGBA inter(const RGBA& first, const RGBA& second, const RGBA& third, RGBA& outRg
 
 
 RGBA operator*(const RGBA& rgba, const float ratio) {
-	return { mround(rgba[B]*ratio), mround(rgba[G]*ratio), mround(rgba[R]*ratio), mround(rgba[A]*ratio) };
+	return RGBA( mround(rgba[R]*ratio), mround(rgba[G]*ratio), mround(rgba[B]*ratio), mround(rgba[A]*ratio) );
 }
 
 

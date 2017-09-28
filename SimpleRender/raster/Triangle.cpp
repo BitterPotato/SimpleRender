@@ -27,7 +27,7 @@ namespace Gl {
                     if (texture != nullptr) {
                         triangle.toPerspectiveCorrect(vertexA.homo, vertexB.homo, vertexC.homo, bary);
 
-                        fvec2 interUV;
+                        TexCoord interUV;
                         Vertex::inter(vertexA.tex, vertexB.tex, vertexC.tex, interUV, bary);
 
                         texture->getUVPixelColor(interUV[U], interUV[V], info.rgba);
