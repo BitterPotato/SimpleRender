@@ -87,7 +87,7 @@ public:
 
 private:
 
-	BSPNodeP root;
+	BSPNodeP root = nullptr;
 	vector<FVertex>& vertexList;
 
     MY_COMP_FUNC_DECL void subTransferTo(const BSPNodeP node, const fvec3& cameraPosi, vector<FVertex>& outTriList) const;

@@ -8,9 +8,9 @@
 class Frag;
 class FragShader;
 
-#define Z_BUFFERTEST
-#define Z_BUFFERWRITE
-#define BLEND
+//#define Z_BUFFERTEST
+//#define Z_BUFFERWRITE
+//#define BLEND
 
 class FragCache {
 public:

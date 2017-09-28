@@ -41,26 +41,19 @@ void FragCache::addFrag(const Frag& frag) {
 #endif
 #ifndef Z_BUFFERTEST
 	mFragData.push_back(frag);
-	// mFragIndexes of no use
+	mFragIndexes[frag.point[Y]][frag.point[X]] = mFragData.size();
 #endif
 
 }
 void FragCache::runFrags(const unique_ptr<FragShader>& fragShader) const {
 	//std::for_each(mFragData.begin(), mFragData.end(), fs);
 	// access by reference to avoid copying
-#ifdef Z_BUFFERTEST
 	for (const auto indexVec : mFragIndexes) {
 		for (const int index : indexVec) {
 			if(index != -1)
 				fragShader->shade(mFragData[index]);
 		}
 	}
-#endif
-#ifndef Z_BUFFERTEST
-	for (const Frag& frag : mFragData) {
-		fragShader.shade(frag);
-	}
-#endif
 }
 
 // TODO: to be fixed

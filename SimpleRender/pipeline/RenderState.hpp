@@ -1,7 +1,7 @@
 #ifndef RENDER_STATE_HPP
 #define RENDER_STATE_HPP
 
-//#define BSP_ENABLE
+#define BSP_ENABLE
 
 #ifdef BSP_ENABLE
 #include "BSPTree.hpp"
@@ -64,7 +64,10 @@ public:
 	}
 	~RenderState() {
 #ifdef BSP_ENABLE
-		delete mBSPTree;
+        if(mBSPTree) {
+			delete mBSPTree;
+			mBSPTree = nullptr;
+		}
 #endif
 #ifndef BSP_ENABLE
 		// do nothing

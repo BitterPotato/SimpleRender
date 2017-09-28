@@ -32,7 +32,8 @@ float BSPTree::dist(const Triangle *tri, const int v) const {
     return abs(dis) < epsilon ? 0.0f : dis;
 }
 
-void BSPTree::addBSPNodeWrapper(BSPNodeP *node, Triangle *tri) {
+// pointer of pointer
+void BSPTree::addBSPNodeWrapper(BSPNodeP* node, Triangle *tri) {
     if (*node == nullptr) {
         *node = new BSPNode(tri);
     } else {
@@ -46,9 +47,9 @@ void BSPTree::addBSPNode(BSPNodeP node, Triangle *tri) {
     float fc = dist(node->tri, tri->vc);
 
     if (fa <= 0 && fb <= 0 && fc <= 0) {
-        addBSPNodeWrapper(&node->minus, tri);
+        addBSPNodeWrapper(&(node->minus), tri);
     } else if (fa >= 0 && fb >= 0 && fc >= 0) {
-        addBSPNodeWrapper(&node->plus, tri);
+        addBSPNodeWrapper(&(node->plus), tri);
     }
         // smell but right here
     else if (fa == 0 || fb == 0 || fc == 0) {
@@ -78,11 +79,11 @@ void BSPTree::addBSPNode(BSPNodeP node, Triangle *tri) {
         Triangle *cDb = new Triangle(vertexList, tri->vc, indexVD, tri->vb);
 
         if (fa <= 0) {
-            addBSPNodeWrapper(&node->minus, aDc);
-            addBSPNodeWrapper(&node->plus, cDb);
+            addBSPNodeWrapper(&(node->minus), aDc);
+            addBSPNodeWrapper(&(node->plus), cDb);
         } else {
-            addBSPNodeWrapper(&node->plus, aDc);
-            addBSPNodeWrapper(&node->minus, cDb);
+            addBSPNodeWrapper(&(node->plus), aDc);
+            addBSPNodeWrapper(&(node->minus), cDb);
         }
         delete tri;
     } else {
@@ -113,13 +114,13 @@ void BSPTree::addBSPNode(BSPNodeP node, Triangle *tri) {
         Triangle *ABc = new Triangle(vertexList, indexVA, indexVB, tri->vc);
 
         if (fc <= 0) {
-            addBSPNodeWrapper(&node->minus, ABc);
-            addBSPNodeWrapper(&node->plus, bBA);
-            addBSPNodeWrapper(&node->plus, abA);
+            addBSPNodeWrapper(&(node->minus), ABc);
+            addBSPNodeWrapper(&(node->plus), bBA);
+            addBSPNodeWrapper(&(node->plus), abA);
         } else {
-            addBSPNodeWrapper(&node->plus, ABc);
-            addBSPNodeWrapper(&node->minus, bBA);
-            addBSPNodeWrapper(&node->minus, abA);
+            addBSPNodeWrapper(&(node->plus), ABc);
+            addBSPNodeWrapper(&(node->minus), bBA);
+            addBSPNodeWrapper(&(node->minus), abA);
         }
         delete tri;
     }
