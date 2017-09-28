@@ -14,6 +14,7 @@
 #include <string>
 #include <common/FVertex.hpp>
 #include <common/Vertex.hpp>
+#include "mesh/Container.hpp"
 
 using std::cin;
 using std::cout;
@@ -180,6 +181,28 @@ TEST_F(RenderFixture, Vertex) {
 	EXPECT_EQ(vertex.point[X], 0);
 }
 
+TEST_F(RenderFixture, Container) {
+	// ==== init/ build part ====
+	Vertex vertexA, vertexB, vertexC;
+
+	using Mesh::Triangle;
+	using Mesh::TriangleContainer;
+	using Mesh::push_back_vertex_tri;
+	VertexContainer vertexContainer;
+	TriangleContainer triangleContainer;
+	push_back_vertex_tri(triangleContainer, vertexContainer,
+	vertexA, vertexB, vertexC);
+
+	// ==== for BSP ====
+	// 1. new index set
+	// 2. use original vertex
+
+	// construct
+	
+	Vertex cutVertex;
+	int index = vertexContainer.push_back(cutVertex);
+
+}
 //TEST_F(RenderFixture, Ratio) {
 //	RGBA rgba(255, 0, 0, 0);
 //	float ratio = 0.5f;
