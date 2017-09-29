@@ -70,4 +70,7 @@ MY_SMALL_STORAGE_DECL void myswap(T* a, T* b) {
 
 const float epsilon = 0.01;
 
+const int LINE_COUNT = 2;
+const int TRI_COUNT = 3;
+
 #endif //SIMPLERENDER_SETUP_HPP

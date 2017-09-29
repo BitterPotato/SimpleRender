@@ -76,40 +76,42 @@ void RenderState::triggerCameraRotate(const CAMERA_ROTATE rotate, const float ra
 
 }
 
-bool RenderState::checkDataAndRet(const GL_MODE& mode, const vector<FVertex>& vertexData) const {
-	switch (mode) {
-	case GL_LINES:
-		if (vertexData.size() % LINE_POINTS != 0) {
-//			throw logic_error("not enough points for triangles");
+bool RenderState::checkData(const GL_MODE mode, const int dataSize) const {
+	if(dataSize == 0)
+		return false;
+
+	switch(mode) {
+		case GL_POINTS:
+			return true;
+		case GL_LINES:
+			return dataSize % LINE_COUNT == 0;
+		case GL_TRIANGLES:
+			return dataSize % TRI_COUNT == 0;
+		case GL_TRIANGLES_STRIP:
+			return dataSize >= TRI_COUNT;
+		default:
 			return false;
-		}
-		break;
-	case GL_TRIANGLES:
-		if (vertexData.size() % TRIANGLE_POINTS != 0) {
-//			throw logic_error("not enough points for triangles");
-			return false;
-		}
 	}
-	return true;
 }
 
 // turn over the control
-void RenderState::attachVertexData(const GL_MODE& mode, vector<FVertex>& outVertexData) {
+void RenderState::attachVertexData(const GL_MODE& mode, FVertexContainer& outVertexData) {
 	this->mMode = mode;
+    this->fVertexContainerPtr = make_shared<FVertexContainer >(outVertexData);
 
-	if (!checkDataAndRet(mMode, outVertexData)) {
-		isDataValid = false;
-		return;
-	}
-	isDataValid = true;
-
+	if(isDataValid = checkData(mode, fVertexContainerPtr->size())) {
 #ifdef BSP_ENABLE
-	// trigger construct BSP
-	// may modify the outVertexData
-	mBSPTree = new BSPTree(mMode, outVertexData);
+		if(supportBSP(mode))
+			// when BSPTree is constructed, fVertexData in the RenderState can be disposed
+			mBSPTree = new BSPTree(mMode, *fVertexContainerPtr);
+		else {
+			Mesh::createIndexContainer(mode, outVertexData.size(), indexContainer);
+		}
 #endif
-#ifndef BSP_ENABLE 
-	// TODO: maybe wrong usage
-	this->vertexDataPtr = unique_ptr<vector<FVertex>>(&outVertexData);
+#ifndef BSP_ENABLE
+		Mesh::createIndexContainer(mode, outVertexData.size(), indexContainer);
 #endif
+	}
+
+
 }

@@ -1,7 +1,7 @@
 #ifndef RENDER_STATE_HPP
 #define RENDER_STATE_HPP
 
-#define BSP_ENABLE
+//#define BSP_ENABLE
 
 #ifdef BSP_ENABLE
 #include "BSPTree.hpp"
@@ -17,6 +17,7 @@
 // TODO: why smart pointers cannot get together with forward declaration
 //class Texture;
 #include "material/Texture.hpp"
+#include "mesh/Container.hpp"
 
 using math::frontviewMatrix;
 using math::perspectiveMatrix;
@@ -26,9 +27,6 @@ using math::asMat4;
 using math::radians;
 using math::translate;
 using math::viewportMatrixReflectY;
-
-#define TRIANGLE_POINTS 3
-#define LINE_POINTS 2
 
 class RenderState {
 	friend class SimpleDelegate;
@@ -52,9 +50,13 @@ public:
 #ifdef BSP_ENABLE
 	BSPTree* mBSPTree;
 #endif
-#ifndef BSP_ENABLE
-	unique_ptr<vector<FVertex>> vertexDataPtr;
-#endif
+//#ifndef BSP_ENABLE
+	IndexContainer indexContainer;
+//#endif
+//#ifndef BSP_ENABLE
+// add one reference count to the vertex data(so they won't be disposed)
+	shared_ptr<FVertexContainer> fVertexContainerPtr;
+//#endif
 	
 	RenderState() {
 		mTransformMatrix = asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER));
@@ -94,9 +96,7 @@ public:
 		mFragShader.reset(fragShader.release());
 	}
 
-	MY_COMP_FUNC_DECL bool checkDataAndRet(const GL_MODE& mode, const vector<FVertex>& vertexData) const;
-
-	MY_COMP_FUNC_DECL void attachVertexData(const GL_MODE& Mode, vector<FVertex>& outVertexData);
+	MY_COMP_FUNC_DECL void attachVertexData(const GL_MODE& Mode, FVertexContainer& outVertexData);
 private:
 	const string EULER_ORDER = "xyz";
 
@@ -108,6 +108,11 @@ private:
 
 	// thing rotate
 	int pitch = 0, yaw = 0, roll = 0;
-	
+
+    MY_SMALL_FUNC_DECL bool supportBSP(const GL_MODE mode) const {
+        return mode == GL_TRIANGLES || mode == GL_TRIANGLES_STRIP;
+    }
+
+    MY_COMP_FUNC_DECL bool checkData(const GL_MODE mode, const int dataSize) const ;
 };
 #endif

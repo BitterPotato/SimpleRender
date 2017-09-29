@@ -112,7 +112,7 @@ void SimpleDelegate::testCircleAn(int width, int height, FrameBuffer &fb) {
 
 void SimpleDelegate::testPoint() {
     RGBA rgbaB(255, 128, 64);
-
+    FVertexContainer vertexData = FVertexContainer();
     vertexData.push_back(FVertex(Macro_FPoint4D(0.75f, 0.75f, 0.0f), RGBA(255, 128, 64)));
 
     mRenderState.attachVertexData(GL_POINTS, vertexData);
@@ -121,6 +121,7 @@ void SimpleDelegate::testPoint() {
 
 
 void SimpleDelegate::testLine() {
+    FVertexContainer vertexData = FVertexContainer();
     //RGBA rgbaB( 255, 255, 0 );
     //
     //vertexData.push_back({ infoB, -0.75f, -0.75f });
@@ -144,6 +145,7 @@ void SimpleDelegate::testLine() {
 }
 
 void SimpleDelegate::testTriangle() {
+    FVertexContainer vertexData = FVertexContainer();
     // clip one vertex
     //vertexData.push_back({ infoA, -0.0f, -2.0f });
     //vertexData.push_back({ infoB, -0.75f, 0.5f });
@@ -161,6 +163,7 @@ void SimpleDelegate::testTriangle() {
 }
 
 void SimpleDelegate::testTriangleStrip() {
+    FVertexContainer vertexData = FVertexContainer();
     vertexData.push_back(FVertex(Macro_FPoint4D(0.0f, -0.75f, 0.0f), RGBA(255, 0, 0)));
     vertexData.push_back(FVertex(Macro_FPoint4D(-0.75f, 0.5f, 0.0f), RGBA(0, 255, 0)));
     vertexData.push_back(FVertex(Macro_FPoint4D(0.25f, -0.25f, 0.0f), RGBA(0, 0, 255)));
@@ -172,6 +175,7 @@ void SimpleDelegate::testTriangleStrip() {
 }
 
 void SimpleDelegate::testCube() {
+    FVertexContainer vertexData = FVertexContainer();
     Parser scfParser;
     scfParser.scfParse("media/cube.scj", vertexData);
     unique_ptr<Texture> texture(new FITexture("media/test.jpg"));
@@ -186,6 +190,7 @@ void SimpleDelegate::testCube() {
 
 // Attention: Render order is important
 void SimpleDelegate::testBlend() {
+    FVertexContainer vertexData = FVertexContainer();
     int alpha = 153;
 
     // back

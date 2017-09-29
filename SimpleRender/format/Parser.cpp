@@ -12,12 +12,13 @@
 #include <sstream>
 #include <stdio.h>
 
+
 using std::getline;
 using std::ifstream;
 using std::istringstream;
 
 
-void Parser::scfParse(const string& path, vector<FVertex>& outVertexData) {
+void Parser::scfParse(const string& path, FVertexContainer& outVertexData) {
     MapType constMap;
     constMap["l"] = "0.2";
     constMap["m"] = "128";

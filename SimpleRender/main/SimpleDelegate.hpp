@@ -6,6 +6,7 @@
 // TODO: stl vector cannot get together with forward declaration also
 #include "common/FVertex.hpp"
 #include "pipeline/Pipeline.hpp"
+#include "mesh/Container.hpp"
 
 class Form;
 class FrameBuffer;
@@ -46,8 +47,6 @@ public:
 private:
     // members
     FrameBuffer &mFrameBuffer;
-
-    vector<FVertex> vertexData;
     RenderState mRenderState;
     unique_ptr<Pipeline> mPipeline;
 

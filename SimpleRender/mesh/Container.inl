@@ -7,7 +7,17 @@ auto Container<T, C>::begin() {
 }
 
 template<typename T, typename C>
-auto Container<T, C>::end() {https://stackoverflow.com/questions/11275444/c-template-typename-iterator
+auto Container<T, C>::end() {
+    return mRoom.end();
+}
+
+template<typename T, typename C>
+const auto Container<T, C>::begin() const {
+    return mRoom.begin();
+}
+
+template<typename T, typename C>
+const auto Container<T, C>::end() const {
     return mRoom.end();
 }
 
@@ -26,15 +36,26 @@ void Container<T, C>::replace(It it, T item) {
 
 // return the iterator pointer to element after it
 template<typename T, typename C>
-auto Container<T, C>::remove(It it) {
-    return mRoom.erase(*it);
+auto Container<T, C>::erase(It it) {
+    return mRoom.erase(it);
+}
+
+// return the iterator pointer to element after last
+template<typename T, typename C>
+auto Container<T, C>::erase(It first, int len) {
+    return mRoom.erase(first, next(first, len-1));
+}
+
+template<typename T, typename C>
+void Container<T, C>::clear() {
+    mRoom.clear();
 }
 
 // return the iterator pointer to item
 template<typename T, typename C>
 auto Container<T, C>::insert(It it, const T& item) {
     // insert item before it
-    mRoom.insert(it, item);
+    return mRoom.insert(it, item);
 }
 
 template<typename T, typename C>
@@ -42,4 +63,8 @@ int Container<T, C>::size() const noexcept {
     return mRoom.size();
 };
 
+template<typename T, typename C>
+const T& Container<T, C>::operator[](int n) const {
+    return mRoom[n];
+}
 #endif

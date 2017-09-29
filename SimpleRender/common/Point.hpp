@@ -17,7 +17,7 @@ using Point3D = TVectorN<T, 3>;
 using IPoint2D = ivec2;
 //using FPoint2D = fvec2;
 //using IPoint3D = ivec3;
-//using FPoint3D = fvec3;
+using FPoint3D = fvec3;
 //using IPoint4D = ivec4;
 using FPoint4D = fvec4;
 

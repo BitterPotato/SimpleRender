@@ -177,8 +177,9 @@ TEST_F(RenderFixture, FVertex) {
 
 TEST_F(RenderFixture, Vertex) {
 	Vertex vertex;
+	vertex.info.stencil = vertex.info.stencil + 2;
 
-	EXPECT_EQ(vertex.point[X], 0);
+	EXPECT_EQ(vertex.info.stencil, 2);
 }
 
 TEST_F(RenderFixture, Container) {
@@ -186,10 +187,9 @@ TEST_F(RenderFixture, Container) {
 	Vertex vertexA, vertexB, vertexC;
 
 	using Mesh::Triangle;
-	using Mesh::TriangleContainer;
 	using Mesh::push_back_vertex_tri;
 	VertexContainer vertexContainer;
-	TriangleContainer triangleContainer;
+	IndexContainer triangleContainer;
 	push_back_vertex_tri(triangleContainer, vertexContainer,
 	vertexA, vertexB, vertexC);
 
@@ -198,7 +198,7 @@ TEST_F(RenderFixture, Container) {
 	// 2. use original vertex
 
 	// construct
-	
+
 	Vertex cutVertex;
 	int index = vertexContainer.push_back(cutVertex);
 

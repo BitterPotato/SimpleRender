@@ -1,35 +1,31 @@
 #include "BSPTree.hpp"
 
-void BSPTree::transferTo(const fvec3 &cameraPosi, vector<FVertex> &outTriList) const {
+void BSPTree::transferTo(const fvec3 &cameraPosi, IndexContainer& outTriList) const {
     subTransferTo(root, cameraPosi, outTriList);
 }
 
-void BSPTree::subTransferTo(const BSPNodeP node, const fvec3 &cameraPosi, vector<FVertex> &outTriList) const {
+void BSPTree::subTransferTo(const BSPNodeP node, const fvec3 &cameraPosi, IndexContainer& outTriList) const {
     if (!node)
         return;
 
     // TODO: why in this order
-    if (node->tri->distToTri(cameraPosi) > 0) {
+    if (distToTri(node->tri, cameraPosi) > 0) {
         subTransferTo(node->minus, cameraPosi, outTriList);
-        pushBackTri(vertexList, outTriList, node->tri);
+        Mesh::push_back_tri(outTriList, *node->tri);
         subTransferTo(node->plus, cameraPosi, outTriList);
     } else {
         subTransferTo(node->plus, cameraPosi, outTriList);
-        pushBackTri(vertexList, outTriList, node->tri);
+        Mesh::push_back_tri(outTriList, *node->tri);
         subTransferTo(node->minus, cameraPosi, outTriList);
     }
 }
 
+
 void BSPTree::addTri(const int vertexA, const int vertexB, const int vertexC) {
     // init Triangle
-    Triangle *tri = new Triangle(vertexList, vertexA, vertexB, vertexC);
+    Triangle *tri = new Triangle(vertexA, vertexB, vertexC);
 
     addBSPNodeWrapper(&root, tri);
-}
-
-float BSPTree::dist(const Triangle *tri, const int v) const {
-    float dis = tri->distToTri(asVec3(vertexList[v].point));
-    return abs(dis) < epsilon ? 0.0f : dis;
 }
 
 // pointer of pointer
@@ -42,9 +38,9 @@ void BSPTree::addBSPNodeWrapper(BSPNodeP* node, Triangle *tri) {
 }
 
 void BSPTree::addBSPNode(BSPNodeP node, Triangle *tri) {
-    float fa = dist(node->tri, tri->va);
-    float fb = dist(node->tri, tri->vb);
-    float fc = dist(node->tri, tri->vc);
+    float fa = distToTriWrapper(node->tri, asVec3(vertexList[tri->indexA].point));
+    float fb = distToTriWrapper(node->tri, asVec3(vertexList[tri->indexB].point));
+    float fc = distToTriWrapper(node->tri, asVec3(vertexList[tri->indexC].point));
 
     if (fa <= 0 && fb <= 0 && fc <= 0) {
         addBSPNodeWrapper(&(node->minus), tri);
@@ -58,25 +54,24 @@ void BSPTree::addBSPNode(BSPNodeP node, Triangle *tri) {
         // convert to vc on tri
         if (fa == 0) {
             myswap(&fa, &fc);
-            myswap(&tri->va, &tri->vc);
+            myswap(&tri->indexA, &tri->indexC);
             myswap(&fa, &fb);
-            myswap(&tri->va, &tri->vb);
+            myswap(&tri->indexA, &tri->indexB);
         }
         if (fb == 0) {
             myswap(&fb, &fc);
-            myswap(&tri->vb, &tri->vc);
+            myswap(&tri->indexB, &tri->indexC);
             myswap(&fa, &fb);
-            myswap(&tri->va, &tri->vb);
+            myswap(&tri->indexA, &tri->indexB);
         }
 
         FVertex vD;
-        int indexVD = vertexList.size();
-        node->tri->intersectToTri(vertexList[tri->va].point, vertexList[tri->vb].point, vD);
+        intersectToTriWrapper(node->tri, vertexList[tri->indexA], vertexList[tri->indexB], vD);
 
-        vertexList.push_back(vD);
+        int indexVD = vertexList.push_back(vD);
 
-        Triangle *aDc = new Triangle(vertexList, tri->va, indexVD, tri->vc);
-        Triangle *cDb = new Triangle(vertexList, tri->vc, indexVD, tri->vb);
+        Triangle *aDc = new Triangle(tri->indexA, indexVD, tri->indexC);
+        Triangle *cDb = new Triangle(tri->indexC, indexVD, tri->indexB);
 
         if (fa <= 0) {
             addBSPNodeWrapper(&(node->minus), aDc);
@@ -92,26 +87,27 @@ void BSPTree::addBSPNode(BSPNodeP node, Triangle *tri) {
         // convert to vc on one side, va & vb on the other
         if (fa * fc >= 0) {
             myswap(&fb, &fc);
-            myswap(&tri->vb, &tri->vc);
+            myswap(&tri->indexB, &tri->indexC);
             myswap(&fa, &fb);
-            myswap(&tri->va, &tri->vb);
+            myswap(&tri->indexA, &tri->indexB);
         }
         if (fb * fc >= 0) {
             myswap(&fa, &fc);
-            myswap(&tri->va, &tri->vc);
+            myswap(&tri->indexA, &tri->indexC);
             myswap(&fa, &fb);
-            myswap(&tri->va, &tri->vb);
+            myswap(&tri->indexA, &tri->indexB);
         }
 
         FVertex vA, vB;
-        int indexVA = vertexList.size();
-        int indexVB = indexVA + 1;
-        node->tri->intersectToTri(vertexList[tri->va], vertexList[tri->vc], vA);
-        node->tri->intersectToTri(vertexList[tri->vb], vertexList[tri->vc], vB);
+        intersectToTriWrapper(node->tri, vertexList[tri->indexA], vertexList[tri->indexC], vA);
+        intersectToTriWrapper(node->tri, vertexList[tri->indexB], vertexList[tri->indexC], vB);
 
-        Triangle *abA = new Triangle(vertexList, tri->va, tri->vb, indexVA);
-        Triangle *bBA = new Triangle(vertexList, tri->vb, indexVB, indexVA);
-        Triangle *ABc = new Triangle(vertexList, indexVA, indexVB, tri->vc);
+        int indexVA = vertexList.push_back(vA);
+        int indexVB = vertexList.push_back(vB);
+
+        Triangle *abA = new Triangle(tri->indexA, tri->indexB, indexVA);
+        Triangle *bBA = new Triangle(tri->indexB, indexVB, indexVA);
+        Triangle *ABc = new Triangle(indexVA, indexVB, tri->indexC);
 
         if (fc <= 0) {
             addBSPNodeWrapper(&(node->minus), ABc);

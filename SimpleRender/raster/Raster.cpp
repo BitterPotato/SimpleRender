@@ -16,7 +16,7 @@ namespace Gl {
             Triangle::rasterTriangleWire(vertexA, vertexB, vertexC, fragCache);
     }
 
-    void Raster::raster(const GL_MODE& mode, const GL_PATTERN& pattern, const vector<Vertex>& vecVertex, const unique_ptr<Texture>& texture, FragCache& fragCache) {
+    void Raster::raster(const GL_MODE& mode, const GL_PATTERN& pattern, const VertexContainer& vecVertex, const unique_ptr<Texture>& texture, FragCache& fragCache) {
         switch (mode) {
             case GL_POINTS:
                 for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter++) {

@@ -6,139 +6,199 @@
 #include "common/Frag.hpp"
 
 using Gl::Raster;
+using Mesh::Triangle;
 
-	void Pipeline::useProgram(const unique_ptr<VertexShader>& vertexShader, const unique_ptr<FragShader>& fragShader) {
-		if (!mRenderState.isDataValid)
-			return;
 
-		// get camera position and run bsp
+void Pipeline::useProgram(const unique_ptr<VertexShader> &vertexShader, const unique_ptr<FragShader> &fragShader) {
+    if (!mRenderState.isDataValid)
+        return;
+
+    // keep the lifetime of Vertex Data
+    auto& mode = mRenderState.mMode;
+    auto &fVertexData = *mRenderState.fVertexContainerPtr;
+    auto &indexContainer = mRenderState.indexContainer;
+
+    // get camera position and run bsp
 #ifdef BSP_ENABLE
-		vector<FVertex> vertexData;
-		// get view point
-		mRenderState.mBSPTree->transferTo(mRenderState.getCameraPosition(), vertexData);
-#endif
-#ifndef BSP_ENABLE
-		const auto vertexData = *mRenderState.vertexDataPtr;
+    // get view point
+    mRenderState.mBSPTree->transferTo(mRenderState.getCameraPosition(), indexContainer);
 #endif
 
-		vector<FVertex> beforeClipVertexData;
-		for (auto iter = vertexData.begin(); iter != vertexData.end(); iter++) {
-			// 1. vertex shader
-			FVertex afterVS;
-			vertexShader->shade(*iter, afterVS);
+    // before clip
+    for (auto iter = fVertexData.begin(); iter != fVertexData.end(); iter++) {
+        // 1. vertex shader
+        FVertex &curFVertex = *iter;
+        vertexShader->shade(curFVertex, curFVertex);
 
-			// 2. pipeline deal（model - lookat - projection transform）
-			this->pipeTrans(afterVS);
-			beforeClipVertexData.push_back(afterVS);
-		}
-		// 3. clip 
+        // 2. pipeline deal（model - lookat - projection transform）
+        this->pipeTrans(curFVertex);
+    }
+
+    // 3. clip
 #ifdef CLIP_ENABLE
-		vector<FVertex> afterClipVertexData;
-		this->clip(mMode, beforeClipVertexData, afterClipVertexData);
-#endif
-#ifndef CLIP_ENABLE
-		vector<FVertex>& afterClipVertexData = beforeClipVertexData;
+    this->clip(mode, fVertexData, indexContainer);
 #endif
 
-		// 3.5 homogeneous && viewport transform
-		vector<Vertex> beforeRasterVertexData;
-		for (auto iter = afterClipVertexData.begin(); iter != afterClipVertexData.end(); iter++) {
-			Vertex vertex;
-			this->afterClip(*iter, vertex);
-			beforeRasterVertexData.push_back(vertex);
-		}
+    // 3.5 homogeneous && viewport transform
+    VertexContainer vertexContainer;
+    for (auto iter = fVertexData.begin(); iter != fVertexData.end(); iter++) {
+        Vertex vertex;
+        this->afterClip(*iter, vertex);
+        vertexContainer.push_back(vertex);
+    }
 
-		// 4. raster
-		FragCache fragCache(mRenderState.width, mRenderState.height);
-		Raster::raster(mRenderState.mMode, mRenderState.mPattern, beforeRasterVertexData, mRenderState.mTexture, fragCache);
+    // 4. raster
+    FragCache fragCache(mRenderState.width, mRenderState.height);
+    Raster::raster(mRenderState.mMode, mRenderState.mPattern, vertexContainer, mRenderState.mTexture, fragCache);
 
-		// 5. frag vertex
-		fragCache.runFrags(fragShader);
-	}
+    // 5. frag vertex
+    fragCache.runFrags(fragShader);
+}
 
-	void Pipeline::clip(const GL_MODE& mode, const vector<FVertex>& vertexData, vector<FVertex>& outVertexData) {
-		switch (mode) {
-		case GL_POINTS:
-			for (auto iter = vertexData.begin(); iter != vertexData.end(); iter++) {
-				if (isInVisualBody((*iter).point))
-					outVertexData.push_back(*iter);
-			}
-			break;
-		case GL_LINES:
-			for (auto iter = vertexData.begin(); iter != vertexData.end(); iter += 2) {
-				if (isInVisualBody((*iter).point) && isInVisualBody((*(iter + 1)).point)){
-					outVertexData.push_back(*iter);
-					outVertexData.push_back(*(iter + 1));
-				}
-				// TODO: verify when perspective
-				else if (isInVisualBody((*iter).point)) {
-					FVertex interVertex;
-					computeInterSect(*iter, *(iter + 1), interVertex);
+void clipPoints(FVertexContainer &fVertexData, IndexContainer &indexContainer) {
+    for (auto iter = fVertexData.begin(); iter != fVertexData.end(); ) {
+        if (!isInVisualBody((*iter).point))
+            iter = fVertexData.erase(iter);
+        else
+            iter++;
+    }
+}
 
-					outVertexData.push_back(*iter);
-					outVertexData.push_back(interVertex);
-				}
-				else if (isInVisualBody((*(iter + 1)).point)) {
-					FVertex interVertex;
-					computeInterSect(*(iter + 1), *iter, interVertex);
+void clipLines(FVertexContainer &fVertexData, IndexContainer &indexContainer) {
+    using std::next;
 
-					outVertexData.push_back(*(iter + 1));
-					outVertexData.push_back(interVertex);
-				}
-				else {
-					// TODO: the line segment the two vertexes compose may pass through the visual body 
-				}
-			}
-			break;
-		case GL_TRIANGLES:
-			for (auto iter = vertexData.begin(); iter != vertexData.end(); iter += 3) {
-				const FVertex& vertexA = *iter;
-				const FVertex& vertexB = *(iter + 1);
-				const FVertex& vertexC = *(iter + 2);
+    for (auto iter = indexContainer.begin(); iter != indexContainer.end();) {
+        int& indexA = *iter;
+        int& indexB = *(next(iter));
+        const FVertex &vertexA = fVertexData[indexA];
+        const FVertex &vertexB = fVertexData[indexB];
 
-				if (isInVisualBody(vertexA.point) && isInVisualBody(vertexB.point) && isInVisualBody(vertexC.point)) {
-					pushMore(outVertexData, vertexA, vertexB, vertexC);
-				}
-				else if (isInVisualBody(vertexA.point) + isInVisualBody(vertexB.point) + isInVisualBody(vertexC.point) == 2) {
-					FVertex interVertexThis;
-					FVertex interVertexThat;
-					// TODO: haven't considered the condition, that the triangle intersect with two planes
-					if (!isInVisualBody(vertexA.point)) {
-						dealWithTwo(outVertexData, vertexA, vertexB, vertexC, false);
-					}
-					else if (!isInVisualBody(vertexB.point)) {
-						dealWithTwo(outVertexData, vertexB, vertexA, vertexC, true);
-					}
-					else if (!isInVisualBody(vertexC.point)) {
-						dealWithTwo(outVertexData, vertexC, vertexA, vertexB, false);
-					}
-				}
-				else if (isInVisualBody(vertexA.point) + isInVisualBody(vertexB.point) + isInVisualBody(vertexC.point) == 1) {
-					FVertex interVertexThis;
-					FVertex interVertexThat;
+        if (isInVisualBody(vertexA.point) && isInVisualBody(vertexB.point)) {
+            // do nothing
+            iter = next(iter, 2);
+        }
+            // TODO: verify when perspective
+        else if (isInVisualBody(vertexA.point)) {
+            FVertex interVertex;
+            computeInterSect(vertexA, vertexB, interVertex);
+            int interIndex = fVertexData.push_back(interVertex);
 
-					// TODO: haven't considered the condition, that the triangle intersect with two or three planes
-					if (isInVisualBody(vertexA.point)) {
-						dealWithOne(outVertexData, vertexA, vertexB, vertexC);
-					}
-					else if (isInVisualBody(vertexB.point)) {
-						dealWithOne(outVertexData, vertexB, vertexC, vertexA);
-					}
-					else if (isInVisualBody(vertexC.point)) {
-						dealWithOne(outVertexData, vertexC, vertexA, vertexB);
-					}
-				}
-				else {
-					// TODO: the triangle the three vertexes compose may pass through the visual body 
-				}
-			}
-			break;
-			//case GL_TRIANGLES_STRIP:
-			//	auto iter = vecVertex.begin();
-			//	iter += 2;
-			//	for (; iter != vecVertex.end(); iter++) {
-			//		rasterUniverTriangle(pattern, *(iter - 2), *(iter - 1), *iter, texture, fragCache);
-			//	}
-			//	break;
-		}
-	}
+            indexB = interIndex;
+
+            iter = next(iter, 2);
+        } else if (isInVisualBody(vertexB.point)) {
+            FVertex interVertex;
+            computeInterSect(vertexB, vertexA, interVertex);
+            int interIndex = fVertexData.push_back(interVertex);
+
+            indexA = interIndex;
+
+            iter = next(iter, 2);
+        } else {
+            // TODO: the line segment the two vertexes compose may pass through the visual body
+
+            // remove two point indexes
+            iter = indexContainer.erase(iter, 2);
+        }
+    }
+}
+
+void clipTriangles(FVertexContainer &fVertexData, IndexContainer &indexContainer) {
+    using std::next;
+    for (auto iter = indexContainer.begin(); iter != indexContainer.end();) {
+        int *indexAp = &((*iter));
+        int *indexBp = &(*next(iter));
+        int *indexCp = &(*next(iter, 2));
+        const FVertex* vertexAP = &fVertexData[*indexAp];
+        const FVertex* vertexBP = &fVertexData[*indexBp];
+        const FVertex* vertexCP = &fVertexData[*indexCp];
+
+        if (isInVisualBody(vertexAP->point) && isInVisualBody(vertexBP->point) && isInVisualBody(vertexCP->point)) {
+            iter = next(iter, 3);
+            // do nothing
+        } else if (
+                isInVisualBody(vertexAP->point) + isInVisualBody(vertexBP->point) + isInVisualBody(vertexCP->point) ==
+                2) {
+            FVertex interVertexThis;
+            FVertex interVertexThat;
+            if (!isInVisualBody(vertexBP->point)) {
+                myswap(indexBp, indexAp);
+                // swap pointer of pointer
+                myswap(&vertexBP, &vertexAP);
+                myswap(indexBp, indexCp);
+                myswap(&vertexBP, &vertexCP);
+            } else if (!isInVisualBody(vertexCP->point)) {
+                myswap(indexCp, indexAp);
+                myswap(&vertexCP, &vertexAP);
+                myswap(indexCp, indexBp);
+                myswap(&vertexCP, &vertexBP);
+            }
+
+            computeInterSect(*vertexBP, *vertexAP, interVertexThis);
+            computeInterSect(*vertexCP, *vertexAP, interVertexThat);
+
+            int indexThis = fVertexData.push_back(interVertexThis);
+            int indexThat = fVertexData.push_back(interVertexThat);
+
+            // erase ad move the iter to the next position
+            iter = indexContainer.erase(iter, 3);
+
+            iter = indexContainer.insert(iter, indexThis);
+            iter = indexContainer.insert(iter, *indexBp);
+            iter = indexContainer.insert(iter, *indexCp);
+            iter = indexContainer.insert(iter, indexThis);
+            iter = indexContainer.insert(iter, *indexCp);
+            iter = indexContainer.insert(iter, indexThat);
+        } else if (
+                isInVisualBody(vertexAP->point) + isInVisualBody(vertexBP->point) + isInVisualBody(vertexCP->point) ==
+                1) {
+            FVertex interVertexThis;
+            FVertex interVertexThat;
+
+            // assume vertexA is in visual body
+            if (isInVisualBody(vertexBP->point)) {
+                myswap(indexBp, indexAp);
+                myswap(&vertexBP, &vertexAP);
+                myswap(indexBp, indexCp);
+                myswap(&vertexBP, &vertexCP);
+            } else if (isInVisualBody(vertexCP->point)) {
+                myswap(indexCp, indexAp);
+                myswap(&vertexCP, &vertexAP);
+                myswap(indexCp, indexBp);
+                myswap(&vertexCP, &vertexBP);
+            }
+
+            computeInterSect(*vertexAP, *vertexBP, interVertexThis);
+            computeInterSect(*vertexAP, *vertexCP, interVertexThat);
+
+            int indexThis = fVertexData.push_back(interVertexThis);
+            int indexThat = fVertexData.push_back(interVertexThat);
+
+            iter = indexContainer.erase(iter, 3);
+
+            iter = indexContainer.insert(iter, *indexAp);
+            iter = indexContainer.insert(iter, indexThis);
+            iter = indexContainer.insert(iter, indexThat);
+        } else {
+            // TODO: the triangle the three vertexes compose may pass through the visual body
+            iter = indexContainer.erase(iter, 3);
+        }
+    }
+}
+
+void Pipeline::clip(const GL_MODE &mode, FVertexContainer &fVertexData, IndexContainer &indexContainer) {
+    switch (mode) {
+        case GL_POINTS:
+            clipPoints(fVertexData, indexContainer);
+            break;
+        case GL_LINES:
+            clipLines(fVertexData, indexContainer);
+            break;
+        case GL_TRIANGLES:
+        case GL_TRIANGLES_STRIP:
+            clipTriangles(fVertexData, indexContainer);
+            break;
+        default:
+            break;
+    }
+}
