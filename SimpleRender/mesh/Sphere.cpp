@@ -1,51 +1,100 @@
 //
-// Created by WJ Yang on 2017/9/23.
+// Created by WJ Yang on ZXY7/9/Z3.
 //
 
 #include "Sphere.hpp"
+#include "math/TVector_Trans.hpp"
+
+#define TESS_COUNT 5
+
+using math::asVec4_homo;
+using math::asVec3;
+using math::normalize;
 
 namespace Mesh {
-    // TODO: 如何使用索引方式一次性画好
-    void Sphere::tessellate(vector<FVertex> &outVertexData) const {
-        fvec3 vertexXp = fvec3(center[0] + radius, center[1], center[2]);
-        fvec3 vertexXn = fvec3(center[0] - radius, center[1], center[2]);
-        fvec3 vertexYp = fvec3(center[0], center[1] + radius, center[2]);
-        fvec3 vertexYn = fvec3(center[0], center[1] - radius, center[2]);
-        fvec3 vertexZp = fvec3(center[0], center[1], center[2] + radius);
-        fvec3 vertexZn = fvec3(center[0], center[1], center[2] - radius);
+    void Sphere::tessellate(FVertexContainer &outVertexData, IndexContainer& indexContainer) const {
+        FPoint3D pointXp = FPoint3D(center.point[X] + radius, center.point[Y], center.point[Z]);
+        FPoint3D pointXn = FPoint3D(center.point[X] - radius, center.point[Y], center.point[Z]);
+        FPoint3D pointYp = FPoint3D(center.point[X], center.point[Y] + radius, center.point[Z]);
+        FPoint3D pointYn = FPoint3D(center.point[X], center.point[Y] - radius, center.point[Z]);
+        FPoint3D pointZp = FPoint3D(center.point[X], center.point[Y], center.point[Z] + radius);
+        FPoint3D pointZn = FPoint3D(center.point[X], center.point[Y], center.point[Z] - radius);
+
+        int indexXp = outVertexData.push_back(toFVertex(pointXp));
+        int indexXn = outVertexData.push_back(toFVertex(pointXn));
+        int indexYp = outVertexData.push_back(toFVertex(pointYp));
+        int indexYn = outVertexData.push_back(toFVertex(pointYn));
+        int indexZp = outVertexData.push_back(toFVertex(pointZp));
+        int indexZn = outVertexData.push_back(toFVertex(pointZn));
 
         // 逆时针向外为正
-        subTessellate(vertexXp, vertexYp, vertexZp, outVertexData);
-        subTessellate(vertexZn, vertexYp, vertexXp, outVertexData);
-        subTessellate(vertexXn, vertexYp, vertexZn, outVertexData);
-        subTessellate(vertexZp, vertexYp, vertexXn, outVertexData);
+        subTessellate(pointXp, pointYp, pointZp, indexXp, indexYp, indexZp, outVertexData, indexContainer, TESS_COUNT);
+        subTessellate(pointZn, pointYp, pointXp, indexZn, indexYp, indexXp, outVertexData, indexContainer, TESS_COUNT);
+        subTessellate(pointXn, pointYp, pointZn, indexXn, indexYp, indexZn, outVertexData, indexContainer, TESS_COUNT);
+        subTessellate(pointZp, pointYp, pointXn, indexZp, indexYp, indexXn, outVertexData, indexContainer, TESS_COUNT);
 
-        subTessellate(vertexZp, vertexYn, vertexXp, outVertexData);
-        subTessellate(vertexXp, vertexYn, vertexZn, outVertexData);
-        subTessellate(vertexZn, vertexYn, vertexXn, outVertexData);
-        subTessellate(vertexXn, vertexYn, vertexZp, outVertexData);
-
+        subTessellate(pointZp, pointYn, pointXp, indexZp, indexYn, indexXp, outVertexData, indexContainer, TESS_COUNT);
+        subTessellate(pointXp, pointYn, pointZn, indexXp, indexYn, indexZn, outVertexData, indexContainer, TESS_COUNT);
+        subTessellate(pointZn, pointYn, pointXn, indexZn, indexYn, indexXn, outVertexData, indexContainer, TESS_COUNT);
+        subTessellate(pointXn, pointYn, pointZp, indexXn, indexYn, indexZp, outVertexData, indexContainer, TESS_COUNT);
     }
 
-    void Sphere::callPush(const fvec3 &vertexA, const fvec3 &vertexB, const fvec3 &vertexC,
-                  const fvec3 &vertexAB, const fvec3 &vertexBC, const fvec3 &vertexCA,
-                  vector<FVertex> &outVertexData) const {
-        // TODO: refactor vector<FVertex> vertex Index : vertex Interpolate wrap them together
-
+    FVertex Sphere::toFVertex(const FPoint3D& point) const {
+        FVertex fVertex = center;
+        fVertex.point = asVec4_homo(point);
+        return fVertex;
     }
 
-    void Sphere::middleof(const fvec3 &vertexThis, const fvec3 &vertexThat, fvec3 &outVertex) const {
-
+    void Sphere::middleof(const FPoint3D &pointThis, const FPoint3D &pointThat, FPoint3D &outPoint) const {
+        fvec3 vecThis = pointThis - asVec3(center.point);
+        fvec3 vecThat = pointThat - asVec3(center.point);
+        fvec3 outVec = normalize(vecThis/2.0f+ vecThat/2.0f)*radius;
+        outPoint =  asVec3(center.point) + outVec;
     }
 
-    // 对于每个八分之一球体，分成pow(4, t+1)个
-    void Sphere::subTessellate(const fvec3 &vertexA, const fvec3 &vertexB, const fvec3 &vertexC,
-                       vector<FVertex> &outVertexData) const {
-        fvec3 vertexAB, vertexBC, vertexCA;
-        middleof(vertexA, vertexB, vertexAB);
-        middleof(vertexB, vertexC, vertexBC);
-        middleof(vertexC, vertexA, vertexCA);
+    // 对于每个八分之一球体，分成pow(4, t+Y)个
+//    void Sphere::subTessellate(const FPoint3D &pointA, const FPoint3D &pointB, const FPoint3D &pointC,
+//                       FVertexContainer& outputVertexData, IndexContainer& indexContainerPtr) const {
+//        FPoint3D pointAB, pointBC, pointCA;
+//        middleof(pointA, pointB, pointAB);
+//        middleof(pointB, pointC, pointBC);
+//        middleof(pointC, pointA, pointCA);
+//
+//        int indexA = outputVertexData.push_back(toFVertex(pointA));
+//        int indexB = outputVertexData.push_back(toFVertex(pointB));
+//        int indexC = outputVertexData.push_back(toFVertex(pointC));
+//        int indexAB = outputVertexData.push_back(toFVertex(pointAB));
+//        int indexBC = outputVertexData.push_back(toFVertex(pointBC));
+//        int indexCA = outputVertexData.push_back(toFVertex(pointCA));
+//
+//        push_back_tri(indexContainerPtr, indexA, indexAB, indexCA);
+//        push_back_tri(indexContainerPtr, indexCA, indexAB, indexBC);
+//        push_back_tri(indexContainerPtr, indexBC, indexAB, indexB);
+//        push_back_tri(indexContainerPtr, indexCA, indexBC, indexC);
+//    }
+    void Sphere::subTessellate(const FPoint3D &pointA, const FPoint3D &pointB, const FPoint3D &pointC,
+                               const int indexA, const int indexB, const int indexC,
+                               FVertexContainer& outputVertexData, IndexContainer& indexContainer, int n) const {
+        FPoint3D pointAB, pointBC, pointCA;
+        middleof(pointA, pointB, pointAB);
+        middleof(pointB, pointC, pointBC);
+        middleof(pointC, pointA, pointCA);
 
-        callPush(vertexA, vertexB, vertexC, vertexAB, vertexBC, vertexCA, outVertexData);
+        int indexAB = outputVertexData.push_back(toFVertex(pointAB));
+        int indexBC = outputVertexData.push_back(toFVertex(pointBC));
+        int indexCA = outputVertexData.push_back(toFVertex(pointCA));
+
+        if (n == 0) {
+            push_back_tri(indexContainer, indexA, indexAB, indexCA);
+            push_back_tri(indexContainer, indexCA, indexAB, indexBC);
+            push_back_tri(indexContainer, indexBC, indexAB, indexB);
+            push_back_tri(indexContainer, indexCA, indexBC, indexC);
+        } else {
+            subTessellate(pointA, pointAB, pointCA, indexA, indexAB, indexCA, outputVertexData, indexContainer, n - 1);
+            subTessellate(pointCA, pointAB, pointBC, indexCA, indexAB, indexBC, outputVertexData, indexContainer,
+                          n - 1);
+            subTessellate(pointBC, pointAB, pointB, indexBC, indexAB, indexB, outputVertexData, indexContainer, n - 1);
+            subTessellate(pointCA, pointBC, pointC, indexCA, indexBC, indexC, outputVertexData, indexContainer, n - 1);
+        }
     }
 }

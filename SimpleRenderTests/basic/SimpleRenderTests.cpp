@@ -203,6 +203,17 @@ TEST_F(RenderFixture, Container) {
 	int index = vertexContainer.push_back(cutVertex);
 
 }
+
+TEST_F(MathFixture, Move) {
+    FPoint3D left_bottom_back(3.0f, 3.0f, 3.0f);
+    float edge = 1.0f;
+//	function<void (int& pos)> func = [edge](float& pos){pos = pos + edge;};
+//    FPoint3D afterPoint = math::move(left_bottom_back, Z, func);
+//    EXPECT_FLOAT_EQ(left_bottom_back[Z], afterPoint[Z]});
+}
+TEST_F(RenderFixture, Cache) {
+
+}
 //TEST_F(RenderFixture, Ratio) {
 //	RGBA rgba(255, 0, 0, 0);
 //	float ratio = 0.5f;

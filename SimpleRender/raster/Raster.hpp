@@ -24,7 +24,7 @@ namespace Gl {
                                                FragCache &fragCache);
 
         MY_UTIL_DECL void raster(const GL_MODE &mode, const GL_PATTERN &pattern, const VertexContainer& vecVertex,
-                                 const unique_ptr<Texture> &texture, FragCache &fragCache);
+                                 const IndexContainer& indexContainer, const unique_ptr<Texture> &texture, FragCache &fragCache);
     };
 }
 

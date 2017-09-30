@@ -1,3 +1,4 @@
+#include <mesh/Sphere.hpp>
 #include "SimpleDelegate.hpp"
 
 #include "material/FITexture.hpp"
@@ -5,6 +6,7 @@
 #include "platform/FrameBuffer.hpp"
 #include "pipeline/MyFragShader.hpp"
 #include "pipeline/MyVertexShader.hpp"
+#include "mesh/Cube.hpp"
 
 void SimpleDelegate::clearColor() {
     mFrameBuffer.clearColor({0, 0, 0});
@@ -113,15 +115,19 @@ void SimpleDelegate::testCircleAn(int width, int height, FrameBuffer &fb) {
 void SimpleDelegate::testPoint() {
     RGBA rgbaB(255, 128, 64);
     FVertexContainer vertexData = FVertexContainer();
-    vertexData.push_back(FVertex(Macro_FPoint4D(0.75f, 0.75f, 0.0f), RGBA(255, 128, 64)));
+    IndexContainer indexContainer = IndexContainer();
 
-    mRenderState.attachVertexData(GL_POINTS, vertexData);
+    vertexData.push_back(FVertex(Macro_FPoint4D(0.75f, 0.75f, 0.0f), RGBA(255, 128, 64)));
+    Mesh::createIndexContainer(GL_POINTS, vertexData.size(), indexContainer);
+    mRenderState.attachVertexData(GL_POINTS, vertexData, indexContainer);
     mPipeline->requestRender();
 }
 
 
 void SimpleDelegate::testLine() {
     FVertexContainer vertexData = FVertexContainer();
+    IndexContainer indexContainer = IndexContainer();
+
     //RGBA rgbaB( 255, 255, 0 );
     //
     //vertexData.push_back({ infoB, -0.75f, -0.75f });
@@ -140,12 +146,15 @@ void SimpleDelegate::testLine() {
     //fmat4 persp1 = perspectiveMatrix(radians(45.0f), 1.0f, -0.1f, -3.0f);
     //fmat4 persp2 = perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -100.0f);
     //mPipeline->confProjection(persp2);
-    mRenderState.attachVertexData(GL_LINES, vertexData);
+    Mesh::createIndexContainer(GL_LINES, vertexData.size(), indexContainer);
+    mRenderState.attachVertexData(GL_LINES, vertexData, indexContainer);
     mPipeline->requestRender();
 }
 
 void SimpleDelegate::testTriangle() {
     FVertexContainer vertexData = FVertexContainer();
+    IndexContainer indexContainer = IndexContainer();
+
     // clip one vertex
     //vertexData.push_back({ infoA, -0.0f, -2.0f });
     //vertexData.push_back({ infoB, -0.75f, 0.5f });
@@ -158,24 +167,30 @@ void SimpleDelegate::testTriangle() {
     vertexData.push_back(FVertex(Macro_FPoint4D(-0.75f, 0.5f, 0.0f), RGBA(0, 255, 0)));
     vertexData.push_back(FVertex(Macro_FPoint4D(0.25f, -0.25f, 0.0f), RGBA(0, 0, 255)));
 
-    mRenderState.attachVertexData(GL_TRIANGLES, vertexData);
+    Mesh::createIndexContainer(GL_TRIANGLES, vertexData.size(), indexContainer);
+    mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);
     mPipeline->requestRender();
 }
 
 void SimpleDelegate::testTriangleStrip() {
     FVertexContainer vertexData = FVertexContainer();
+    IndexContainer indexContainer = IndexContainer();
+
     vertexData.push_back(FVertex(Macro_FPoint4D(0.0f, -0.75f, 0.0f), RGBA(255, 0, 0)));
     vertexData.push_back(FVertex(Macro_FPoint4D(-0.75f, 0.5f, 0.0f), RGBA(0, 255, 0)));
     vertexData.push_back(FVertex(Macro_FPoint4D(0.25f, -0.25f, 0.0f), RGBA(0, 0, 255)));
     vertexData.push_back(FVertex(Macro_FPoint4D(0.875f, -0.375f, 0.0f), RGBA(255, 255, 255)));
 
     mRenderState.mPattern = GL_WIREFRAME;
-    mRenderState.attachVertexData(GL_TRIANGLES, vertexData);
+    Mesh::createIndexContainer(GL_TRIANGLES, vertexData.size(), indexContainer);
+    mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);
     mPipeline->requestRender();
 }
 
 void SimpleDelegate::testCube() {
     FVertexContainer vertexData = FVertexContainer();
+    IndexContainer indexContainer = IndexContainer();
+
     Parser scfParser;
     scfParser.scfParse("media/cube.scj", vertexData);
     unique_ptr<Texture> texture(new FITexture("media/test.jpg"));
@@ -184,13 +199,30 @@ void SimpleDelegate::testCube() {
     // TODO: change near plane seems don't have any effect
     //mPipeline->confProjection(perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -10.0f));
     mRenderState.mTexture.reset(texture.release());
-    mRenderState.attachVertexData(GL_TRIANGLES, vertexData);
+    Mesh::createIndexContainer(GL_TRIANGLES, vertexData.size(), indexContainer);
+    mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);
+    mPipeline->requestRender();
+}
+
+void SimpleDelegate::testGeneCube() {
+    FVertexContainer vertexData;
+    IndexContainer indexContainer;
+
+    FVertex fVertex(Macro_FPoint4D(0.0f, 0.0f, 0.0f), RGBA(128, 128, 128));
+//    Mesh::Cube cube(fVertex, 0.2f);
+//    cube.tessellate(vertexData, indexContainer);
+    Mesh::Sphere sphere(fVertex, 0.2f);
+    sphere.tessellate(vertexData, indexContainer);
+
+    mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);
     mPipeline->requestRender();
 }
 
 // Attention: Render order is important
 void SimpleDelegate::testBlend() {
     FVertexContainer vertexData = FVertexContainer();
+    IndexContainer indexContainer = IndexContainer();
+
     int alpha = 153;
 
     // back
@@ -206,6 +238,7 @@ void SimpleDelegate::testBlend() {
     vertexData.push_back(FVertex(Macro_FPoint4D(-0.2f, -0.4f, -0.5f), rgbaF));
     vertexData.push_back(FVertex(Macro_FPoint4D(-0.2f, 0.4f, -0.5f), rgbaF));
 
-    mRenderState.attachVertexData(GL_TRIANGLES, vertexData);
+    Mesh::createIndexContainer(GL_TRIANGLES, vertexData.size(), indexContainer);
+    mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);
     mPipeline->requestRender();
 }

@@ -8,6 +8,8 @@
 #include "Line.hpp"
 #include "Triangle.hpp"
 
+using std::next;
+
 namespace Gl {
     void Raster::rasterUniverTriangle(const GL_PATTERN& pattern, const Vertex& vertexA, const Vertex& vertexB, const Vertex& vertexC, const unique_ptr<Texture>& texture, FragCache& fragCache) {
         if (pattern == GL_NORMAL)
@@ -16,28 +18,23 @@ namespace Gl {
             Triangle::rasterTriangleWire(vertexA, vertexB, vertexC, fragCache);
     }
 
-    void Raster::raster(const GL_MODE& mode, const GL_PATTERN& pattern, const VertexContainer& vecVertex, const unique_ptr<Texture>& texture, FragCache& fragCache) {
+    void Raster::raster(const GL_MODE& mode, const GL_PATTERN& pattern, const VertexContainer& vecVertex, const IndexContainer& indexContainer, 
+                        const unique_ptr<Texture>& texture, FragCache& fragCache) {
         switch (mode) {
             case GL_POINTS:
-                for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter++) {
-                    Point::rasterPoint(*iter, POINT_SIZE, fragCache);
+                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter++) {
+                    Point::rasterPoint(vecVertex[*iter], POINT_SIZE, fragCache);
                 }
                 break;
             case GL_LINES:
-                for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter += 2) {
-                    Line::rasterLine(*iter, *(iter + 1), LINE_WIDTH, fragCache);
+                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter += LINE_COUNT) {
+                    Line::rasterLine(vecVertex[*iter], vecVertex[*next(iter)], LINE_WIDTH, fragCache);
                 }
                 break;
             case GL_TRIANGLES:
-                for (auto iter = vecVertex.begin(); iter != vecVertex.end(); iter += 3) {
-                    rasterUniverTriangle(pattern, *iter, *(iter + 1), *(iter + 2), texture, fragCache);
-                }
-                break;
             case GL_TRIANGLES_STRIP:
-                auto iter = vecVertex.begin();
-                iter += 2;
-                for ( ; iter != vecVertex.end(); iter++) {
-                    rasterUniverTriangle(pattern, *(iter - 2), *(iter - 1), *iter, texture, fragCache);
+                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter += TRI_COUNT) {
+                    rasterUniverTriangle(pattern, vecVertex[*iter], vecVertex[*next(iter)], vecVertex[*next(iter, 2)], texture, fragCache);
                 }
                 break;
         }

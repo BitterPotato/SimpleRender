@@ -95,23 +95,27 @@ bool RenderState::checkData(const GL_MODE mode, const int dataSize) const {
 }
 
 // turn over the control
-void RenderState::attachVertexData(const GL_MODE& mode, FVertexContainer& outVertexData) {
+void RenderState::attachVertexData(const GL_MODE& mode, FVertexContainer& outVertexData, IndexContainer& indexContainer) {
 	this->mMode = mode;
     this->fVertexContainerPtr = make_shared<FVertexContainer >(outVertexData);
 
-	if(isDataValid = checkData(mode, fVertexContainerPtr->size())) {
 #ifdef BSP_ENABLE
-		if(supportBSP(mode))
-			// when BSPTree is constructed, fVertexData in the RenderState can be disposed
-			mBSPTree = new BSPTree(mMode, *fVertexContainerPtr);
+		if(supportBSP(mode)) {
+			if(isDataValid = checkData(mode, fVertexContainerPtr->size())) {
+				// when BSPTree is constructed, fVertexData in the RenderState can be disposed
+				mBSPTree = new BSPTree(mMode, *fVertexContainerPtr);
+			}
+			else {
+				// do nothing, not valid data
+			}
+		}
 		else {
-			Mesh::createIndexContainer(mode, outVertexData.size(), indexContainer);
+			isDataValid = true;
+			this->indexContainerPtr = make_shared<IndexContainer >(indexContainerPtr);
 		}
 #endif
 #ifndef BSP_ENABLE
-		Mesh::createIndexContainer(mode, outVertexData.size(), indexContainer);
+		isDataValid = true;
+		this->indexContainerPtr = make_shared<IndexContainer >(indexContainer);
 #endif
 	}
-
-
-}

@@ -69,7 +69,8 @@ using VertexContainer = Container<Vertex, std::vector<Vertex>>;
 //class FVertex;
 using FVertexContainer = Container<FVertex, std::vector<FVertex>>;
 
-using IndexContainer = Container<int, std::list<int>>;
+//using IndexContainer = Container<int, std::list<int>>;
+using IndexContainer = Container<int, std::vector<int>>;
 
 namespace Mesh {
     class Triangle {
@@ -126,10 +127,10 @@ namespace Mesh {
                 break;
         }
     }
-//    void for_each(GL_MODE mode, VertexContainer& vertexContainer, IndexContainer& indexContainer, function<void (auto iter)> func) {
+//    void for_each(GL_MODE mode, VertexContainer& vertexContainer, IndexContainer& indexContainerPtr, function<void (auto iter)> func) {
 //        switch(mode) {
 //            case GL_POINTS:
-//                for(auto iter = indexContainer.begin(); iter!= indexContainer
+//                for(auto iter = indexContainerPtr.begin(); iter!= indexContainerPtr
 //                        .end(); ) {
 //                    if(func)
 //                        func(iter);

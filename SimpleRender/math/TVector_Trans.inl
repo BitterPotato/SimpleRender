@@ -30,6 +30,11 @@ namespace math{
         return v / length(v);
     }
 
+//    template<typename T, const int len, typename Functor>
+//    auto move(const TVectorN<T, len> v, const int n, Functor&& func) {
+//        func(v[n]);
+//        return v;
+//    };
     // ------------------ not universal ------------------
     template<typename T>
      T det(const TVectorN<T, 2>& va, const TVectorN<T, 2>& vb) {
@@ -54,7 +59,7 @@ namespace math{
     // for homogeneous coordinate
     template<typename T>
     auto asVec4_homo(const TVectorN<T, 3>& vec3) {
-        return TVectorN<T, 3>(vec3[0], vec3[1], vec3[2], T(1));
+        return TVectorN<T, 4>(vec3[0], vec3[1], vec3[2], T(1));
     }
 
     // just for enlarge

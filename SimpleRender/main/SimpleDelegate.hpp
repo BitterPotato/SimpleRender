@@ -42,6 +42,8 @@ public:
 
     MY_COMP_FUNC_DECL void testCube();
 
+    MY_COMP_FUNC_DECL void testGeneCube();
+
     MY_COMP_FUNC_DECL void testBlend();
 
 private:

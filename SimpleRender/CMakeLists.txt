@@ -45,7 +45,7 @@ set(SOURCE_FILES
         material/FITexture.hpp
         material/FITexture.cpp common/Info.cpp common/Info.hpp material/Hsv.cpp material/Hsv.hpp common/Vertex.cpp common/Vertex.hpp common/setup.hpp common/FVertex.cpp common/FVertex.hpp common/Point.cpp common/Point.hpp common/Frag.cpp common/Frag.hpp geometry/Shape2D.cpp geometry/Shape2D.hpp geometry/Triangle2D.cpp geometry/Triangle2D.hpp format/Parser.cpp format/Parser.hpp mesh/Shape.cpp mesh/Shape.hpp mesh/Sphere.cpp mesh/Sphere.hpp geometry/Shape3D.cpp geometry/Shape3D.hpp geometry/Triangle3D.cpp geometry/Triangle3D.hpp raster/Raster.cpp raster/Raster.hpp platform/WinForm.cpp platform/WinForm.hpp pipeline/VertexShader.hpp pipeline/FragShader.hpp raster/Line.cpp raster/Line.hpp raster/Point.cpp raster/Point.hpp)
 
-add_executable(SimpleRender ${SOURCE_FILES} mesh/Container.cpp mesh/Container.hpp)
+add_executable(SimpleRender ${SOURCE_FILES} mesh/Container.cpp mesh/Container.hpp mesh/Cube.cpp mesh/Cube.hpp)
 add_library(SimpleRenderLib ${SOURCE_FILES})
 #set_source_files_properties(PROP)
 

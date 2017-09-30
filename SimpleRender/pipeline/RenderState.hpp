@@ -50,13 +50,9 @@ public:
 #ifdef BSP_ENABLE
 	BSPTree* mBSPTree;
 #endif
-//#ifndef BSP_ENABLE
-	IndexContainer indexContainer;
-//#endif
-//#ifndef BSP_ENABLE
+	shared_ptr<IndexContainer> indexContainerPtr;
 // add one reference count to the vertex data(so they won't be disposed)
 	shared_ptr<FVertexContainer> fVertexContainerPtr;
-//#endif
 	
 	RenderState() {
 		mTransformMatrix = asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER));
@@ -96,7 +92,7 @@ public:
 		mFragShader.reset(fragShader.release());
 	}
 
-	MY_COMP_FUNC_DECL void attachVertexData(const GL_MODE& Mode, FVertexContainer& outVertexData);
+	MY_COMP_FUNC_DECL void attachVertexData(const GL_MODE& Mode, FVertexContainer& outVertexData, IndexContainer& indexContainer);
 private:
 	const string EULER_ORDER = "xyz";
 

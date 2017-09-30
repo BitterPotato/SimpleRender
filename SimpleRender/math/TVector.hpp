@@ -32,10 +32,22 @@ public:
 	MY_OPERATOR_DECL  TVectorN(const TVectorN& vecN) {
 		assign(vecN);
 	}
+	MY_OPERATOR_DECL TVectorN operator+(const TVectorN& vecN) const {
+		TVectorN res;
+		for (int i = 0; i < len; i++)
+			res[i] = data[i] + vecN[i];
+		return res;
+	}
 	MY_OPERATOR_DECL TVectorN operator-(const TVectorN& vecN) const {
 		TVectorN res;
 		for (int i = 0; i < len; i++)
 			res[i] = data[i] - vecN[i];
+		return res;
+	}
+	MY_OPERATOR_DECL TVectorN operator*(const T& ratio) const {
+		TVectorN res;
+		for (int i = 0; i < len; i++)
+			res[i] = data[i] * ratio;
 		return res;
 	}
 	MY_OPERATOR_DECL TVectorN operator/(const T& ratio) const {

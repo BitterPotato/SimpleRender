@@ -16,7 +16,7 @@ void Pipeline::useProgram(const unique_ptr<VertexShader> &vertexShader, const un
     // keep the lifetime of Vertex Data
     auto& mode = mRenderState.mMode;
     auto &fVertexData = *mRenderState.fVertexContainerPtr;
-    auto &indexContainer = mRenderState.indexContainer;
+    auto &indexContainer = *mRenderState.indexContainerPtr;
 
     // get camera position and run bsp
 #ifdef BSP_ENABLE
@@ -49,7 +49,7 @@ void Pipeline::useProgram(const unique_ptr<VertexShader> &vertexShader, const un
 
     // 4. raster
     FragCache fragCache(mRenderState.width, mRenderState.height);
-    Raster::raster(mRenderState.mMode, mRenderState.mPattern, vertexContainer, mRenderState.mTexture, fragCache);
+    Raster::raster(mRenderState.mMode, mRenderState.mPattern, vertexContainer, indexContainer, mRenderState.mTexture, fragCache);
 
     // 5. frag vertex
     fragCache.runFrags(fragShader);
