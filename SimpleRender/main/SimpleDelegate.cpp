@@ -16,7 +16,7 @@ void SimpleDelegate::keysCallback(int *screen_keys) {
     // =============== move camera positions ==================
     if (screen_keys[VK_UP]) {
         clearColor();
-        mRenderState.triggerCameraCircleMove(UP_MOVE, POSITION_STEP);
+        mRenderState.triggerCameraFlatMove(UP_MOVE, 0.1f);
         mPipeline->requestRender();
     }
     if (screen_keys[VK_DOWN]) {

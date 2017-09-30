@@ -133,6 +133,9 @@ void clipTriangles(FVertexContainer &fVertexData, IndexContainer &indexContainer
                 myswap(indexCp, indexBp);
                 myswap(&vertexCP, &vertexBP);
             }
+            // make indexes safe from the changes to the indexContainer
+            int indexB = *indexBp;
+            int indexC = *indexCp;
 
             computeInterSect(*vertexBP, *vertexAP, interVertexThis);
             computeInterSect(*vertexCP, *vertexAP, interVertexThat);
@@ -144,10 +147,10 @@ void clipTriangles(FVertexContainer &fVertexData, IndexContainer &indexContainer
             iter = indexContainer.erase(iter, 3);
 
             iter = indexContainer.insert(iter, indexThis);
-            iter = indexContainer.insert(iter, *indexBp);
-            iter = indexContainer.insert(iter, *indexCp);
+            iter = indexContainer.insert(iter, indexB);
+            iter = indexContainer.insert(iter, indexC);
             iter = indexContainer.insert(iter, indexThis);
-            iter = indexContainer.insert(iter, *indexCp);
+            iter = indexContainer.insert(iter, indexC);
             iter = indexContainer.insert(iter, indexThat);
         } else if (
                 isInVisualBody(vertexAP->point) + isInVisualBody(vertexBP->point) + isInVisualBody(vertexCP->point) ==
@@ -167,6 +170,7 @@ void clipTriangles(FVertexContainer &fVertexData, IndexContainer &indexContainer
                 myswap(indexCp, indexBp);
                 myswap(&vertexCP, &vertexBP);
             }
+            int indexA = *indexAp;
 
             computeInterSect(*vertexAP, *vertexBP, interVertexThis);
             computeInterSect(*vertexAP, *vertexCP, interVertexThat);
@@ -176,7 +180,7 @@ void clipTriangles(FVertexContainer &fVertexData, IndexContainer &indexContainer
 
             iter = indexContainer.erase(iter, 3);
 
-            iter = indexContainer.insert(iter, *indexAp);
+            iter = indexContainer.insert(iter, indexA);
             iter = indexContainer.insert(iter, indexThis);
             iter = indexContainer.insert(iter, indexThat);
         } else {

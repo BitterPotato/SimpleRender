@@ -40,10 +40,10 @@ auto Container<T, C>::erase(It it) {
     return mRoom.erase(it);
 }
 
-// return the iterator pointer to element after last
+// return the iterator pointer to last, last won't be erased
 template<typename T, typename C>
 auto Container<T, C>::erase(It first, int len) {
-    return mRoom.erase(first, next(first, len-1));
+    return mRoom.erase(first, next(first, len));
 }
 
 template<typename T, typename C>
@@ -51,11 +51,10 @@ void Container<T, C>::clear() {
     mRoom.clear();
 }
 
-// return the iterator pointer to item
+// return the iterator pointer the next of item
 template<typename T, typename C>
-auto Container<T, C>::insert(It it, const T& item) {
-    // insert item before it
-    return mRoom.insert(it, item);
+auto Container<T, C>::insert(It it, const T &item) {
+    return next(mRoom.insert(it, item));
 }
 
 template<typename T, typename C>

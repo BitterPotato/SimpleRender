@@ -50,7 +50,7 @@ public:
     MY_SMALL_FUNC_DECL void clear();
 
     // insert before
-    MY_SMALL_FUNC_DECL auto insert(It it, const T& item);
+    MY_SMALL_FUNC_DECL auto insert(It it, const T &item);
 
     MY_SMALL_FUNC_DECL int size() const noexcept ;
 
@@ -69,6 +69,7 @@ using VertexContainer = Container<Vertex, std::vector<Vertex>>;
 //class FVertex;
 using FVertexContainer = Container<FVertex, std::vector<FVertex>>;
 
+// TODO: change it back to list
 //using IndexContainer = Container<int, std::list<int>>;
 using IndexContainer = Container<int, std::vector<int>>;
 
