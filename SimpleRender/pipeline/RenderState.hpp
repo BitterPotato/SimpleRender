@@ -1,7 +1,7 @@
 #ifndef RENDER_STATE_HPP
 #define RENDER_STATE_HPP
 
-//#define BSP_ENABLE
+#define BSP_ENABLE
 
 #ifdef BSP_ENABLE
 #include "BSPTree.hpp"
@@ -41,12 +41,11 @@ public:
 
 	// for render pipeline
 	int width, height;
-//	fmat4 mTransformMatrix = fmat4(1.0f);
-    fmat4 mTransformMatrix = asMat4(math::asXRotateMat(radians(-90)));
+	fmat4 mTransformMatrix = fmat4(1.0f);
 	fmat4 mLookatMatrix = fmat4(1.0f);
 	fmat4 mProjMatrix = fmat4(1.0f);
 	fmat3 mViewportMatrix = fmat3(1.0f);
-
+;
 	bool isDataValid = false;
 #ifdef BSP_ENABLE
 	BSPTree* mBSPTree;
@@ -58,8 +57,9 @@ public:
 	RenderState() {
 		mLookatMatrix = lookatMatrix(cameraPosition, cameraCenter, cameraUp, mDirtVec, mRightVec, mUpVec);
         mBaseDirtVec = mDirtVec;
-		mProjMatrix = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
-			fvec3(1.0f, 1.0f, -2.0f));
+        // notice: modified based the camera position
+		mProjMatrix = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f), fvec3(1.0f, 1.0f, -2.0f));
+//        mProjMatrix = perspectiveMatrix(radians(90.0f), 1.0f, -0.1f, -2.0f);
 	}
 	~RenderState() {
 #ifdef BSP_ENABLE
@@ -98,8 +98,8 @@ private:
 	// for application
 	// default camera
 	fvec3 cameraPosition = fvec3(0.0f, 0.0f, 1.0f);
-//    fvec3 cameraPosition = fvec3(0.5f, 0.5f, 1.0f);
-    fvec3 cameraCenter = fvec3(0.0f, 0.0f, 0.0f);
+//    fvec3 cameraCenter = fvec3(0.0f, 0.0f, 0.0f);
+	fvec3 cameraCenter = fvec3(-0.33f, -0.25f, 0.09f);
 	fvec3 cameraUp = fvec3(0.0f, 1.0f, 0.0f);
 
     // since only rotate will change dirt vec

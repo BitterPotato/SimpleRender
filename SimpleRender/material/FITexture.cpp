@@ -23,11 +23,17 @@ int FITexture::height() const {
 
 // TODO: texture wrap/ filter mode
 bool FITexture::getPixelColor(const int x, const int y, RGBA& out) const {
-    if (x < 0 || x >= width() || y < 0 || y >= height())
+    if (x < 0 || x > width() || y < 0 || y > height())
         return false;
 
+    // deal with the border value
+    int xc = x==0? 1:x;
+    xc = x==width()? width()-1 : x;
+    int yc = y==0? 1:y;
+    yc = y==height()? height()-1 : y;
+
     RGBQUAD color;
-    bool res = FreeImage_GetPixelColor(image, x, y, &color);
+    bool res = FreeImage_GetPixelColor(image, xc, yc, &color);
 
     out[R] = color.rgbRed;
     out[G] = color.rgbGreen;

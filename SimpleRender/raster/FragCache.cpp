@@ -6,6 +6,12 @@
 #include "pipeline/FragShader.hpp"
 
 void FragCache::addFrag(const Frag& frag) {
+#ifdef BUFFER_PROTECT
+    if(frag.point[X] < 0 || frag.point[X] > width - 1
+			|| frag.point[Y] < 0 || frag.point[Y] > height - 1) {
+		return;
+	}
+#endif
 	// do z-buffer test
 #ifdef Z_BUFFERTEST
 
@@ -55,11 +61,3 @@ void FragCache::runFrags(const unique_ptr<FragShader>& fragShader) const {
 		}
 	}
 }
-
-// TODO: to be fixed
-//void FragCache::pixelFrag(int x, int y, Frag& outFrag) const {
-//    int index = mFragIndexes[y][x];
-//    if (index == -1) {
-//        outFrag = mFragData[index];
-//    }
-//}

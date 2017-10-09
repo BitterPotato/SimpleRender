@@ -33,9 +33,10 @@ const int V = 1;
 
 
 MY_SMALL_STORAGE_DECL bool isInVisualBody(const FPoint4D& point) {
-    return point[X] >= -point[W] && point[X] <= point[W]
-           && point[Y] >= -point[W] && point[Y] <= point[W]
-           && point[Z] >= -point[W] && point[Z] <= point[W];
+    float homo = abs(point[W]);
+    return point[X] >= -homo && point[X] <= homo
+           && point[Y] >= -homo && point[Y] <= homo
+           && point[Z] >= -homo && point[Z] <= homo;
 }
 
 // use define as default parameter

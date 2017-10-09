@@ -1,8 +1,8 @@
 #include "BSPTree.hpp"
 
 void BSPTree::transferTo(const fvec3 &cameraPosi, IndexContainer& outTriList) const {
-    // TODO: temp
-    cout << cameraPosi[X] << " " << cameraPosi[Y] << " " << cameraPosi[Z] << endl;
+    cout << "---- node start ----" << endl;
+
     outTriList.clear();
     subTransferTo(root, cameraPosi, outTriList);
 }
@@ -15,10 +15,12 @@ void BSPTree::subTransferTo(const BSPNodeP node, const fvec3 &cameraPosi, IndexC
     if (distToTri(node->tri, cameraPosi) > 0) {
         subTransferTo(node->minus, cameraPosi, outTriList);
         Mesh::push_back_tri(outTriList, *node->tri);
+        cout << node->tri->indexA/3 << endl;
         subTransferTo(node->plus, cameraPosi, outTriList);
     } else {
         subTransferTo(node->plus, cameraPosi, outTriList);
         Mesh::push_back_tri(outTriList, *node->tri);
+        cout << node->tri->indexA/3 << endl;
         subTransferTo(node->minus, cameraPosi, outTriList);
     }
 }

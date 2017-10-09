@@ -166,9 +166,12 @@ void SimpleDelegate::testTriangle() {
     //vertexData.push_back({ infoA, 0.0f, -0.75f });
     //vertexData.push_back({ infoB, -0.75f, 1.5f });
     //vertexData.push_back({ infoC, 0.25f, 1.5f });
-    vertexData.push_back(FVertex(Macro_FPoint4D(0.0f, -0.75f, 0.0f), RGBA(255, 0, 0)));
-    vertexData.push_back(FVertex(Macro_FPoint4D(-0.75f, 0.5f, 0.0f), RGBA(0, 255, 0)));
-    vertexData.push_back(FVertex(Macro_FPoint4D(0.25f, -0.25f, 0.0f), RGBA(0, 0, 255)));
+    vertexData.push_back(FVertex(Macro_FPoint4D(0.0f, -0.75f, 0.0f), RGBA(255, 0, 0), TexCoord(0, 1)));
+    vertexData.push_back(FVertex(Macro_FPoint4D(-0.75f, 0.5f, 0.0f), RGBA(0, 255, 0), TexCoord(1, 1)));
+    vertexData.push_back(FVertex(Macro_FPoint4D(0.25f, -0.25f, 0.0f), RGBA(0, 0, 255), TexCoord(1, 1)));
+
+    unique_ptr<Texture> texture(new FITexture("media/test.jpg"));
+    mRenderState.mTexture.reset(texture.release());
 
     Mesh::createIndexContainer(GL_TRIANGLES, vertexData.size(), indexContainer);
     mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);
@@ -199,8 +202,6 @@ void SimpleDelegate::testCube() {
     unique_ptr<Texture> texture(new FITexture("media/test.jpg"));
 //    mRenderState.triggerCameraCircleMove(UP_MOVE, 3 * POSITION_STEP);
 
-    // TODO: change near plane seems don't have any effect
-    //mPipeline->confProjection(perspectiveMatrix(radians(45.0f), 1.0f, 2.0f, -10.0f));
     mRenderState.mTexture.reset(texture.release());
     Mesh::createIndexContainer(GL_TRIANGLES, vertexData.size(), indexContainer);
     mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);

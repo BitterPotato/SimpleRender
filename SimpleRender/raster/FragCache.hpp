@@ -8,14 +8,16 @@
 class Frag;
 class FragShader;
 
-#define Z_BUFFERTEST
-#define Z_BUFFERWRITE
+//#define Z_BUFFERTEST
+//#define Z_BUFFERWRITE
+// TODO: complex reason, clip when use perspective have some problems
+#define BUFFER_PROTECT
 //#define BLEND
 
 class FragCache {
 public:
-	FragCache(int width, int height) {
-		mFragIndexes = vector<vector<int>>(height, vector<int>(width, -1));
+	FragCache(int w, int h) : width(w), height(h) {
+		mFragIndexes = vector<vector<int>>(h, vector<int>(w, -1));
 	}
 	//FragCache(const FragCache& fragCache) {
 	//	this->mFragData = fragCache.mFragData;
@@ -33,6 +35,7 @@ public:
     MY_COMP_FUNC_DECL void runFrags(const unique_ptr<FragShader>& fragShader) const;
 //    void pixelFrag(int x, int y, Frag& outFrag) const;
 private:
+	int width, height;
 	vector<Frag> mFragData;
 	vector<vector<int>> mFragIndexes;
 

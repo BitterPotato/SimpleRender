@@ -96,9 +96,9 @@ void RenderState::triggerCameraRotate(const CAMERA_ROTATE rotate, const int degr
 	default:
 		break;
 	}
-
 	mDirtVec = eulerAsMatrix(pitch, yaw, roll, EULER_ORDER) * mBaseDirtVec;
 	cameraCenter = cameraPosition + mDirtVec;
+    cout << cameraCenter << endl;
 	mLookatMatrix = lookatMatrix(cameraPosition, cameraCenter, cameraUp, mDirtVec, mRightVec, mUpVec);
 }
 
