@@ -8,66 +8,69 @@
 #include "pipeline/MyVertexShader.hpp"
 #include "mesh/Cube.hpp"
 
+#include <ctime>
+
 void SimpleDelegate::clearColor() {
     mFrameBuffer.clearColor({0, 0, 0});
 }
 
 void SimpleDelegate::keysCallback(int *screen_keys) {
-    // =============== move camera positions ==================
-    if (screen_keys[VK_UP]) {
-        clearColor();
-        mRenderState.triggerCameraFlatMove(UP_MOVE, 0.1f);
-        mPipeline->requestRender();
-    }
-    if (screen_keys[VK_DOWN]) {
-        clearColor();
-        mRenderState.triggerCameraCircleMove(DOWN_MOVE, POSITION_STEP);
-        mPipeline->requestRender();
-    }
-    if (screen_keys[VK_LEFT]) {
-        clearColor();
-        mRenderState.triggerCameraCircleMove(LEFT_MOVE, POSITION_STEP);
-        mPipeline->requestRender();
-    }
-    if (screen_keys[VK_RIGHT]) {
-        clearColor();
-        mRenderState.triggerCameraCircleMove(RIGHT_MOVE, POSITION_STEP);
-        mPipeline->requestRender();
-    }
     // first anticlockwise and then clockwise
     // pitch, yaw modifies cameraCenter, and roll modifies cameraUp(as for camera)
     // there first try rotate the object
-    // ======== pitch ========
-    if (screen_keys[VK_F1]) {
+    if (screen_keys[VK_UP]) {
         clearColor();
         mRenderState.triggerCameraRotate(PITCH_ANTI, DEGREE_STEP);
         mPipeline->requestRender();
     }
-    if (screen_keys[VK_F2]) {
+    if (screen_keys[VK_DOWN]) {
         clearColor();
         mRenderState.triggerCameraRotate(PITCH, DEGREE_STEP);
         mPipeline->requestRender();
     }
-    // ======== yaw ========
-    if (screen_keys[VK_F3]) {
+    if (screen_keys[VK_LEFT]) {
         clearColor();
         mRenderState.triggerCameraRotate(YAW_ANTI, DEGREE_STEP);
         mPipeline->requestRender();
     }
-    if (screen_keys[VK_F4]) {
+    if (screen_keys[VK_RIGHT]) {
         clearColor();
         mRenderState.triggerCameraRotate(YAW, DEGREE_STEP);
         mPipeline->requestRender();
     }
-    // ======== roll ========
+
+    // =============== move camera positions ==================
+    // ======== front and back ========
+    if (screen_keys[VK_F1]) {
+        clearColor();
+        mRenderState.triggerCameraCircleMove(FRONT_MOVE, POSITION_STEP);
+        mPipeline->requestRender();
+    }
+    if (screen_keys[VK_F2]) {
+        clearColor();
+        mRenderState.triggerCameraCircleMove(BACK_MOVE, POSITION_STEP);
+        mPipeline->requestRender();
+    }
+    // ======== left and right ========
+    if (screen_keys[VK_F3]) {
+        clearColor();
+        mRenderState.triggerCameraCircleMove(LEFT_MOVE, POSITION_STEP);
+        mPipeline->requestRender();
+    }
+    if (screen_keys[VK_F4]) {
+        clearColor();
+        mRenderState.triggerCameraCircleMove(RIGHT_MOVE, POSITION_STEP);
+        mPipeline->requestRender();
+    }
+    // ======== up and down ========
     if (screen_keys[VK_F5]) {
         clearColor();
-        mRenderState.triggerCameraRotate(ROLL_ANTI, DEGREE_STEP);
+        mRenderState.triggerCameraCircleMove(UP_MOVE, POSITION_STEP);
         mPipeline->requestRender();
     }
     if (screen_keys[VK_F6]) {
         clearColor();
-        mRenderState.triggerCameraRotate(ROLL, DEGREE_STEP);
+        mRenderState.triggerCameraCircleMove(DOWN_MOVE, POSITION_STEP);
         mPipeline->requestRender();
     }
 
@@ -192,7 +195,7 @@ void SimpleDelegate::testCube() {
     IndexContainer indexContainer = IndexContainer();
 
     Parser scfParser;
-    scfParser.scfParse("media/cube.scj", vertexData);
+    scfParser.scfParse("media/cube1.scj", vertexData);
     unique_ptr<Texture> texture(new FITexture("media/test.jpg"));
 //    mRenderState.triggerCameraCircleMove(UP_MOVE, 3 * POSITION_STEP);
 
@@ -204,15 +207,38 @@ void SimpleDelegate::testCube() {
     mPipeline->requestRender();
 }
 
+void subGeneCube(FPoint4D left_bottom_back, float radius, FVertexContainer &outVertexData, IndexContainer& indexContainer) {
+    FVertex fVertex(left_bottom_back, RGBA(128, 128, 128));
+    Mesh::Cube cube(fVertex, radius);
+    cube.tessellate(outVertexData, indexContainer);
+}
+
+float randomFloat(float from, float to) {
+    float len = to - from;
+    return static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * len + from;
+}
+void randomGeneCube(FVertexContainer &outVertexData, IndexContainer& indexContainer) {
+    srand (static_cast <unsigned> (time(0)));
+    int cubeNum = 5;
+    for(int i=0; i<cubeNum; i++) {
+        subGeneCube(Macro_FPoint4D(randomFloat(-1.0f, 1.0f), randomFloat(-1.0f, 1.0f),
+                    randomFloat(-1.0f, 1.0f)), randomFloat(0.0f, 0.4f), outVertexData, indexContainer);
+    }
+}
+
 void SimpleDelegate::testGeneCube() {
     FVertexContainer vertexData;
     IndexContainer indexContainer;
 
-    FVertex fVertex(Macro_FPoint4D(0.0f, 0.0f, 0.0f), RGBA(128, 128, 128));
-//    Mesh::Cube cube(fVertex, 0.2f);
-//    cube.tessellate(vertexData, indexContainer);
-    Mesh::Sphere sphere(fVertex, 0.2f);
-    sphere.tessellate(vertexData, indexContainer);
+    subGeneCube(Macro_FPoint4D(-0.2f, -0.2f, -0.2f), 0.4f, vertexData, indexContainer);
+//    subGeneCube(Macro_FPoint4D(0.3f, 0.4f, -0.2f), 0.2f, vertexData, indexContainer);
+//    randomGeneCube(vertexData, indexContainer);
+
+//    Mesh::Sphere sphere(fVertex, 0.2f);
+//    sphere.tessellate(vertexData, indexContainer);
+
+    unique_ptr<Texture> texture(new FITexture("media/test.jpg"));
+    mRenderState.mTexture.reset(texture.release());
 
     mRenderState.attachVertexData(GL_TRIANGLES, vertexData, indexContainer);
     mPipeline->requestRender();

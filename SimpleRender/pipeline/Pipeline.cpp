@@ -15,8 +15,9 @@ void Pipeline::useProgram(const unique_ptr<VertexShader> &vertexShader, const un
 
     // keep the lifetime of Vertex Data
     auto& mode = mRenderState.mMode;
-    auto &fVertexData = *mRenderState.fVertexContainerPtr;
-    auto &indexContainer = *mRenderState.indexContainerPtr;
+    // make copy
+    auto fVertexData = *mRenderState.fVertexContainerPtr;
+    auto indexContainer = *mRenderState.indexContainerPtr;
 
     // get camera position and run bsp
 #ifdef BSP_ENABLE

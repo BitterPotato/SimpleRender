@@ -1,6 +1,9 @@
 #include "RenderState.hpp"
 #include "common/FVertex.hpp"
 
+using math::dirtVec;
+using math::rightVec;
+
 void RenderState::triggerCameraFlatMove(const CAMERA_MOVE move, const float degree) {
 	switch (move)
 	{
@@ -26,54 +29,77 @@ void RenderState::triggerCameraFlatMove(const CAMERA_MOVE move, const float degr
 	mLookatMatrix = lookatMatrix(cameraPosition, cameraCenter, cameraUp);
 }
 
+// this method only change the position of camera
 void RenderState::triggerCameraCircleMove(const CAMERA_MOVE move, const float degree) {
 	switch (move)
 	{
-	case UP_MOVE:
-		cameraPosition[1] += degree;
-		break;
-	case DOWN_MOVE:
-		cameraPosition[1] -= degree;
-		break;
-	case LEFT_MOVE:
-		cameraPosition[0] -= degree;
-		break;
-	case RIGHT_MOVE:
-		cameraPosition[0] += degree;
-		break;
-	default:
-		break;
+        case UP_MOVE: {
+//            cameraPosition[1] += degree;
+			cameraPosition = cameraPosition + mUpVec * degree;
+            break;
+        }
+        case DOWN_MOVE: {
+//            cameraPosition[1] -= degree;
+			cameraPosition = cameraPosition - mUpVec * degree;
+            break;
+        }
+        case LEFT_MOVE: {
+            // along the right direction
+            fvec3 right = rightVec(cameraPosition, cameraCenter, cameraUp);
+            cameraPosition = cameraPosition - mRightVec * degree;
+			cout << cameraPosition <<endl;
+            break;
+        }
+        case RIGHT_MOVE: {
+            cameraPosition = cameraPosition + mRightVec * degree;
+			cout << cameraPosition <<endl;
+            break;
+        }
+        case FRONT_MOVE: {
+            // along the lookat direction
+            cameraPosition = cameraPosition + mDirtVec * degree;
+            break;
+        }
+        case BACK_MOVE: {
+            cameraPosition = cameraPosition - mDirtVec * degree;
+            break;
+        }
+        default: {
+            break;
+        }
 	}
-	mLookatMatrix = lookatMatrix(cameraPosition, cameraCenter, cameraUp);
+	mLookatMatrix = lookatMatrix(mDirtVec, mRightVec, mUpVec, cameraPosition);
+
 }
 
-void RenderState::triggerCameraRotate(const CAMERA_ROTATE rotate, const float radians) {
+void RenderState::triggerCameraRotate(const CAMERA_ROTATE rotate, const int degrees) {
 	switch (rotate)
 	{
 	case PITCH_ANTI:
-		pitch += radians;
+		pitch += degrees;
 		break;
 	case PITCH:
-		pitch -= radians;
+		pitch -= degrees;
 		break;
 	case YAW_ANTI:
-		yaw += radians;
+		yaw += degrees;
 		break;
 	case YAW:
-		yaw -= radians;
+		yaw -= degrees;
 		break;
-	case ROLL_ANTI:
-		roll += radians;
-		break;
-	case ROLL:
-		roll -= radians;
-		break;
+//	case ROLL_ANTI:
+//		roll += degrees;
+//		break;
+//	case ROLL:
+//		roll -= degrees;
+//		break;
 	default:
 		break;
 	}
-	// rotate the thing itself at current
-	mTransformMatrix = asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER));
 
+	mDirtVec = eulerAsMatrix(pitch, yaw, roll, EULER_ORDER) * mBaseDirtVec;
+	cameraCenter = cameraPosition + mDirtVec;
+	mLookatMatrix = lookatMatrix(cameraPosition, cameraCenter, cameraUp, mDirtVec, mRightVec, mUpVec);
 }
 
 bool RenderState::checkData(const GL_MODE mode, const int dataSize) const {
@@ -101,9 +127,11 @@ void RenderState::attachVertexData(const GL_MODE& mode, FVertexContainer& outVer
 
 #ifdef BSP_ENABLE
 		if(supportBSP(mode)) {
-			if(isDataValid = checkData(mode, fVertexContainerPtr->size())) {
+			if(isDataValid = checkData(mode, indexContainer.size())) {
 				// when BSPTree is constructed, fVertexData in the RenderState can be disposed
-				mBSPTree = new BSPTree(mMode, *fVertexContainerPtr);
+				mBSPTree = new BSPTree(mMode, *fVertexContainerPtr, indexContainer);
+				mBSPTree->print();
+				this->indexContainerPtr = make_shared<IndexContainer >(IndexContainer());
 			}
 			else {
 				// do nothing, not valid data
@@ -111,7 +139,7 @@ void RenderState::attachVertexData(const GL_MODE& mode, FVertexContainer& outVer
 		}
 		else {
 			isDataValid = true;
-			this->indexContainerPtr = make_shared<IndexContainer >(indexContainerPtr);
+			this->indexContainerPtr = make_shared<IndexContainer >(indexContainer);
 		}
 #endif
 #ifndef BSP_ENABLE

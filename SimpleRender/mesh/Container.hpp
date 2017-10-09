@@ -72,6 +72,8 @@ using FVertexContainer = Container<FVertex, std::vector<FVertex>>;
 // TODO: change it back to list
 //using IndexContainer = Container<int, std::list<int>>;
 using IndexContainer = Container<int, std::vector<int>>;
+// TODO: clip IndexContainer to be mesh - the indexes belongs to the mesh,
+// so that we can apply different transforms to different mesh
 
 namespace Mesh {
     class Triangle {

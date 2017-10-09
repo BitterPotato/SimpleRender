@@ -71,16 +71,15 @@ public:
 	BSPTree(BSPTree& tree) = delete;
 	BSPTree& operator=(const BSPTree& tree) = delete;
 
-	BSPTree(const GL_MODE& mode, FVertexContainer& _vertexList) : vertexList(_vertexList){
+	BSPTree(const GL_MODE& mode, FVertexContainer& _vertexList, IndexContainer& _indexContainer)
+		: vertexList(_vertexList) {
 		switch (mode)
 		{
 		case GL_TRIANGLES:
-			for (int i = 0; i < _vertexList.size(); i += 3) {
-				addTri(i, i+1, i+2);
-			}
-			break;
 		case GL_TRIANGLES_STRIP:
-
+			for(auto iter = _indexContainer.begin(); iter!=_indexContainer.end(); iter = next(iter, TRI_COUNT)) {
+				addTri(*iter, *next(iter), *next(iter, 2));
+			}
 			break;
 		default:
 			break;
@@ -90,6 +89,21 @@ public:
         if (root)
             delete root;
     }
+
+	void subPrint(BSPNodeP node) const {
+		if(node->minus)
+			subPrint(node->minus);
+
+		cout << node->tri->indexA/3 << endl;
+
+		if(node->plus)
+			subPrint(node->plus);
+	}
+
+	// TODO: delete temp
+	void print() const {
+		subPrint(root);
+	}
 
     MY_COMP_FUNC_DECL void transferTo(const fvec3& cameraPosi, IndexContainer& outTriList) const;
 

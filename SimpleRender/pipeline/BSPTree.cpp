@@ -1,6 +1,9 @@
 #include "BSPTree.hpp"
 
 void BSPTree::transferTo(const fvec3 &cameraPosi, IndexContainer& outTriList) const {
+    // TODO: temp
+    cout << cameraPosi[X] << " " << cameraPosi[Y] << " " << cameraPosi[Z] << endl;
+    outTriList.clear();
     subTransferTo(root, cameraPosi, outTriList);
 }
 

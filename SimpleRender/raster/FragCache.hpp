@@ -26,7 +26,7 @@ public:
 	~FragCache() {
 		mFragData.clear();
 		mFragIndexes.clear();
-		std::cout << "FragCache: dispose\n";
+//		std::cout << "FragCache: dispose\n";
 	}
 
     MY_COMP_FUNC_DECL void addFrag(const Frag& frag);

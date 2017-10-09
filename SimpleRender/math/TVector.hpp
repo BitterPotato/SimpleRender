@@ -74,8 +74,15 @@ public:
 		}
 		return true;
 	}
+	MY_NFRIEND_FUNC_DECL ostream& operator<<(ostream& os, const TVectorN &vectorN) {
+		os << vectorN.data[0];
+		for(int i= 1; i<len; i++) {
+			os << ',' << vectorN.data[i];
+		}
+		return os;
+	}
 
-    MY_NFRIEND_FUNC_DECL TVectorN inter(const TVectorN &from, const TVectorN &to, const float t) {
+	MY_NFRIEND_FUNC_DECL TVectorN inter(const TVectorN &from, const TVectorN &to, const float t) {
         TVectorN ret;
         for(int i=0; i < len; i++) {
             ret.data[i] = (1-t)*from.data[i] + t*to.data[i];

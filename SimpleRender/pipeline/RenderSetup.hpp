@@ -13,7 +13,8 @@ enum GL_PATTERN : char {
 	GL_WIREFRAME
 };
 enum CAMERA_MOVE : char {
-	UP_MOVE, DOWN_MOVE, LEFT_MOVE, RIGHT_MOVE
+	// means to up/ down/ left/ right/ front/ back
+	UP_MOVE, DOWN_MOVE, LEFT_MOVE, RIGHT_MOVE, FRONT_MOVE, BACK_MOVE
 };
 enum CAMERA_ROTATE : char {
 	PITCH_ANTI, PITCH,

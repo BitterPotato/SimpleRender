@@ -46,6 +46,8 @@ using std::sqrt;
 using std::logic_error;
 using std::function;
 using std::memset;
+using std::next;
+using std::ostream;
 
 template<typename T>
 MY_SMALL_STORAGE_DECL void myswap(T* a, T* b) {

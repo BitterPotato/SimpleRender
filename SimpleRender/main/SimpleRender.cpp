@@ -24,8 +24,8 @@ int main(void)
 	SimpleDelegate simpleDelegate(frameBuffer, width, height);
 	uniform->mKeyCallback = [&simpleDelegate](int* screen_keys) {simpleDelegate.keysCallback(screen_keys); };
 	
-	simpleDelegate.testCube();
-//    simpleDelegate.testGeneCube();
+//	simpleDelegate.testCube();
+    simpleDelegate.testGeneCube();
 
 	uniform->runRender();
 	

@@ -5,6 +5,35 @@
 #include "TMatrix_Trans.hpp"
 
 namespace math {
+    template<typename T>
+    auto dirtVec(const TVectorN<T, 3> &position,
+                 const TVectorN<T, 3> &center) {
+        return normalize(center - position);
+    }
+
+    template<typename T>
+    auto rightVec(const TVectorN<T, 3> &position,
+                  const TVectorN<T, 3> &center, const TVectorN<T, 3> &up) {
+        return normalize(cross(dirtVec(position, center), up));
+    }
+
+    template<typename T>
+    auto lookatMatrix(const TVectorN<T, 3>& dirtVec, const TVectorN<T, 3>& rightVec,
+        const TVectorN<T, 3>& upVec, const TVectorN<T, 3>& position) {
+        auto posiMatrix = translate(TVectorN<T, 3>(-position[0], -position[1], -position[2]));
+
+        // dirtVec lookat -z
+        // use -dirtVec to keep the camera coordinate to be right-hand coordinate
+        auto dirtMatrix = TMatrix4<T>(
+                asVec4_exp(rightVec),
+                asVec4_exp(upVec),
+                TVectorN<T, 4>(-dirtVec[0], -dirtVec[1], -dirtVec[2], 0),
+                TVectorN<T, 4>(T(0), T(0), T(0), T(1))
+        );
+        dirtMatrix = transpose(dirtMatrix);
+
+        return dirtMatrix * posiMatrix;
+    }
 
     template<typename T>
     auto lookatMatrix(const TVectorN<T, 3> &position,
@@ -15,25 +44,20 @@ namespace math {
         auto rightVec = normalize(cross(dirtVec, beforeUpVec));
         auto afterUpVec = cross(rightVec, dirtVec);
 
-        //TMatrix4<T> posiMatrix = TMatrix4<T>(T(1));
-        //posiMatrix[3][0] = -position.x;
-        //posiMatrix[3][1] = -position.y;
-        //posiMatrix[3][2] = -position.z;
-        auto posiMatrix = translate(TVectorN<T, 3>(-position[0], -position[1], -position[2]));
+        return lookatMatrix(dirtVec, rightVec, afterUpVec, position);
+    }
 
-        // treat the (0, 0, 1) as the default camera
-        // and for the clip space to be (-1, -1, -1) to (1, 1, 1)
-        //TMatrix4<T> posiMatrix = translate(TVectorN<T, 3>(-position[0], -position[1], 1-position[2]));
+    template<typename T>
+    auto lookatMatrix(const TVectorN<T, 3> &position, const TVectorN<T, 3>& center,
+        const TVectorN<T, 3>& up, TVectorN<T, 3>& outDirtVec, TVectorN<T, 3>& outRightVec,
+        TVectorN<T, 3>& outUpVec) {
+        outDirtVec = normalize(center - position);
+        auto beforeUpVec = normalize(up);
 
-        auto dirtMatrix = TMatrix4<T>(
-                asVec4_exp(rightVec),
-                asVec4_exp(afterUpVec),
-                TVectorN<T, 4>(-dirtVec[0], -dirtVec[1], -dirtVec[2], 0),
-                TVectorN<T, 4>(T(0), T(0), T(0), T(1))
-        );
-        dirtMatrix = transpose(dirtMatrix);
+        outRightVec = normalize(cross(outDirtVec, beforeUpVec));
+        outUpVec = cross(outRightVec, outDirtVec);
 
-        return dirtMatrix * posiMatrix;
+        return lookatMatrix(outDirtVec, outRightVec, outUpVec, position);
     }
 
 // happens after dividing w

@@ -12,8 +12,8 @@ class Form;
 class FrameBuffer;
 class Pipeline;
 
-const float POSITION_STEP = 0.2f;
-const float DEGREE_STEP = 2;
+const float POSITION_STEP = 0.1f;
+const int DEGREE_STEP = 1;
 
 class SimpleDelegate {
 public:

@@ -41,7 +41,8 @@ public:
 
 	// for render pipeline
 	int width, height;
-	fmat4 mTransformMatrix = fmat4(1.0f);
+//	fmat4 mTransformMatrix = fmat4(1.0f);
+    fmat4 mTransformMatrix = asMat4(math::asXRotateMat(radians(-90)));
 	fmat4 mLookatMatrix = fmat4(1.0f);
 	fmat4 mProjMatrix = fmat4(1.0f);
 	fmat3 mViewportMatrix = fmat3(1.0f);
@@ -55,8 +56,8 @@ public:
 	shared_ptr<FVertexContainer> fVertexContainerPtr;
 	
 	RenderState() {
-		mTransformMatrix = asMat4(eulerAsMatrix(pitch, yaw, roll, EULER_ORDER));
-		mLookatMatrix = lookatMatrix(cameraPosition, cameraCenter, cameraUp);
+		mLookatMatrix = lookatMatrix(cameraPosition, cameraCenter, cameraUp, mDirtVec, mRightVec, mUpVec);
+        mBaseDirtVec = mDirtVec;
 		mProjMatrix = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f),
 			fvec3(1.0f, 1.0f, -2.0f));
 	}
@@ -67,19 +68,17 @@ public:
 			mBSPTree = nullptr;
 		}
 #endif
-#ifndef BSP_ENABLE
 		// do nothing
-#endif
 	}
 
 	MY_SMALL_FUNC_DECL const fvec3& getCameraPosition() const {
 		return cameraPosition;
 	}
-	MY_COMP_FUNC_DECL void triggerCameraFlatMove(const CAMERA_MOVE move, const float degree);
+	MY_COMP_FUNC_DECL void triggerCameraFlatMove(const CAMERA_MOVE move, const float step);
 
-	MY_COMP_FUNC_DECL void triggerCameraCircleMove(const CAMERA_MOVE move, const float degree);
+	MY_COMP_FUNC_DECL void triggerCameraCircleMove(const CAMERA_MOVE move, const float step);
 
-	MY_COMP_FUNC_DECL void triggerCameraRotate(const CAMERA_ROTATE rotate, const float radians);
+	MY_COMP_FUNC_DECL void triggerCameraRotate(const CAMERA_ROTATE rotate, const int degrees);
 
 	MY_SMALL_FUNC_DECL void attachViewport(const int width, const int height) {
 		this->width = width;
@@ -99,8 +98,15 @@ private:
 	// for application
 	// default camera
 	fvec3 cameraPosition = fvec3(0.0f, 0.0f, 1.0f);
-	fvec3 cameraCenter = fvec3(0.0f, 0.0f, 0.0f);
+//    fvec3 cameraPosition = fvec3(0.5f, 0.5f, 1.0f);
+    fvec3 cameraCenter = fvec3(0.0f, 0.0f, 0.0f);
 	fvec3 cameraUp = fvec3(0.0f, 1.0f, 0.0f);
+
+    // since only rotate will change dirt vec
+    fvec3 mBaseDirtVec;
+    fvec3 mDirtVec;
+    fvec3 mRightVec;
+    fvec3 mUpVec;
 
 	// thing rotate
 	int pitch = 0, yaw = 0, roll = 0;

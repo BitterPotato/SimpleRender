@@ -36,7 +36,8 @@ void Pipeline::afterClip(const FVertex& fVertex, Vertex& outVertex) const {
 
     // save info that doesn't change
     outVertex.info.rgba = fVertex.rgba;
-    outVertex.info.depth = fVertex.point[Z];
+    // with bigger z, the depth is lower, for we look at -z
+    outVertex.info.depth = -fVertex.point[Z];
     outVertex.tex = fVertex.tex;
 
     // save homogeneous info
