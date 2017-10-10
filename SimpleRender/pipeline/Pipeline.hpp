@@ -33,21 +33,6 @@ private:
 
 	MY_SMALL_FUNC_DECL void pipeTrans(FVertex& fVertex) const;
 
-	// TODO: form structure
-    MY_UTIL_DECL void pushMore(vector<FVertex>& vertexData, const FVertex& vertexA, const FVertex& vertexB, const FVertex& vertexC) {
-		vertexData.push_back(vertexA);
-		vertexData.push_back(vertexB);
-		vertexData.push_back(vertexC);
-	}
-
-    MY_UTIL_DECL void dealWithOne(vector<FVertex>& outVertexData, const FVertex& vertexIn, const FVertex& vertexFirst, const FVertex& vertexSecond) {
-		FVertex interVertexThis, interVertexThat;
-		computeInterSect(vertexIn, vertexFirst, interVertexThis);
-		computeInterSect(vertexIn, vertexSecond, interVertexThat);
-
-		pushMore(outVertexData, vertexIn, interVertexThis, interVertexThat);
-	}
-
 	// clip, may increase or decrease vertexes
 	MY_UTIL_DECL void clip(const GL_MODE &mode, FVertexContainer &fVertexData, IndexContainer &indexContainer) ;
 

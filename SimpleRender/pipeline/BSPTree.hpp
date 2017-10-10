@@ -90,21 +90,6 @@ public:
             delete root;
     }
 
-	void subPrint(BSPNodeP node) const {
-		if(node->minus)
-			subPrint(node->minus);
-
-		cout << node->tri->indexA/3 << endl;
-
-		if(node->plus)
-			subPrint(node->plus);
-	}
-
-	// TODO: delete temp
-	void print() const {
-		subPrint(root);
-	}
-
     MY_COMP_FUNC_DECL void transferTo(const fvec3& cameraPosi, IndexContainer& outTriList) const;
 
 private:

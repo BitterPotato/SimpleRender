@@ -130,7 +130,6 @@ void RenderState::attachVertexData(const GL_MODE& mode, FVertexContainer& outVer
 			if(isDataValid = checkData(mode, indexContainer.size())) {
 				// when BSPTree is constructed, fVertexData in the RenderState can be disposed
 				mBSPTree = new BSPTree(mMode, *fVertexContainerPtr, indexContainer);
-				mBSPTree->print();
 				this->indexContainerPtr = make_shared<IndexContainer >(IndexContainer());
 			}
 			else {

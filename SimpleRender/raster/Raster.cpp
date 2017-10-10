@@ -22,18 +22,18 @@ namespace Gl {
                         const unique_ptr<Texture>& texture, FragCache& fragCache) {
         switch (mode) {
             case GL_POINTS:
-                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter++) {
+                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter = next(iter)) {
                     Point::rasterPoint(vecVertex[*iter], POINT_SIZE, fragCache);
                 }
                 break;
             case GL_LINES:
-                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter += LINE_COUNT) {
+                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter = next(iter, LINE_COUNT)) {
                     Line::rasterLine(vecVertex[*iter], vecVertex[*next(iter)], LINE_WIDTH, fragCache);
                 }
                 break;
             case GL_TRIANGLES:
             case GL_TRIANGLES_STRIP:
-                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter += TRI_COUNT) {
+                for (auto iter = indexContainer.begin(); iter != indexContainer.end(); iter = next(iter, TRI_COUNT)) {
                     rasterUniverTriangle(pattern, vecVertex[*iter], vecVertex[*next(iter)], vecVertex[*next(iter, 2)], texture, fragCache);
                 }
                 break;

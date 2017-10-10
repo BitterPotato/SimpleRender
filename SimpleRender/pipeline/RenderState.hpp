@@ -98,8 +98,7 @@ private:
 	// for application
 	// default camera
 	fvec3 cameraPosition = fvec3(0.0f, 0.0f, 1.0f);
-//    fvec3 cameraCenter = fvec3(0.0f, 0.0f, 0.0f);
-	fvec3 cameraCenter = fvec3(-0.33f, -0.25f, 0.09f);
+    fvec3 cameraCenter = fvec3(0.0f, 0.0f, 0.0f);
 	fvec3 cameraUp = fvec3(0.0f, 1.0f, 0.0f);
 
     // since only rotate will change dirt vec
