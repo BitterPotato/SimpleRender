@@ -223,7 +223,7 @@ void randomGeneCube(FVertexContainer &outVertexData, IndexContainer& indexContai
     int cubeNum = 5;
     for(int i=0; i<cubeNum; i++) {
         subGeneCube(Macro_FPoint4D(randomFloat(-1.0f, 1.0f), randomFloat(-1.0f, 1.0f),
-                    randomFloat(-1.0f, 1.0f)), randomFloat(0.0f, 0.4f), outVertexData, indexContainer);
+                    randomFloat(-0.6f, 0.6f)), randomFloat(0.0f, 0.4f), outVertexData, indexContainer);
     }
 }
 
@@ -231,9 +231,9 @@ void SimpleDelegate::testGeneCube() {
     FVertexContainer vertexData;
     IndexContainer indexContainer;
 
-    subGeneCube(Macro_FPoint4D(-0.2f, -0.2f, -0.2f), 0.4f, vertexData, indexContainer);
+//    subGeneCube(Macro_FPoint4D(-0.2f, -0.2f, -0.2f), 0.4f, vertexData, indexContainer);
 //    subGeneCube(Macro_FPoint4D(0.3f, 0.4f, -0.2f), 0.2f, vertexData, indexContainer);
-//    randomGeneCube(vertexData, indexContainer);
+    randomGeneCube(vertexData, indexContainer);
 
 //    Mesh::Sphere sphere(fVertex, 0.2f);
 //    sphere.tessellate(vertexData, indexContainer);

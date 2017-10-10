@@ -8,8 +8,8 @@
 class Frag;
 class FragShader;
 
-//#define Z_BUFFERTEST
-//#define Z_BUFFERWRITE
+#define Z_BUFFERTEST
+#define Z_BUFFERWRITE
 // TODO: complex reason, clip when use perspective have some problems
 #define BUFFER_PROTECT
 //#define BLEND

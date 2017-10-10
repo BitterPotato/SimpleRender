@@ -1,31 +1,67 @@
-## TODOS
+# Simple Render
 
-- [ ] 简易漫游
+A small render engine written in C++11.
 
-- [ ] Clip
+## Done
 
-      ​
+* basic math operations
 
-- [ ] Cull - BSP
+* simplified pipeline
 
-- [ ] Cull - Z-buffer
+  * vertex transformation
 
-      ​
+  * clip by partition
 
-- [x] Texture Mapping(perspective correct)
+  * line/ triangle rasterization
 
-      > 扰动、噪声
+    > wireframe mode
 
-      ​
+  * blend operations and factors
 
-- [ ] Phong light
+    > rgba to hsv
 
-      ​
+* perspective-right texture mapping
 
-- [ ] Ray tracing
+* simplified custom file format
 
-      ​
+* BSP/ z-buffer
 
-- [ ] Curves: bezier, B-...
+* First-person Camera 
 
-- [ ] Optimize performance
+* Meshes
+
+  * cube/ sphere
+  * vertex-index structures
+
+## TODO
+
+* Phong
+* Ray tracing
+* ...
+
+## Screenshots
+
+### orthographic circumstance
+
+![](http://oi0xi3dzx.bkt.clouddn.com/graphics/theory/orthographic.gif)
+
+### perspective circumstance
+
+![](http://oi0xi3dzx.bkt.clouddn.com/graphics/theory/perspective.gif)
+
+## Getting Started
+
+1. Install cmake and mingw
+
+2. build
+```
+cmake -G "MinGW Makefiles"
+mingw32-make
+```
+
+
+## Acknowledgements
+
+* [如何开始用 C++ 写一个光栅化渲染器](https://www.zhihu.com/question/24786878)
+* [Fundamentals of Computer Graphics](https://book.douban.com/subject/2116178/)
+

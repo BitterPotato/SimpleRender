@@ -1,7 +1,7 @@
 #ifndef RENDER_STATE_HPP
 #define RENDER_STATE_HPP
 
-#define BSP_ENABLE
+//#define BSP_ENABLE
 
 #ifdef BSP_ENABLE
 #include "BSPTree.hpp"
@@ -59,7 +59,7 @@ public:
         mBaseDirtVec = mDirtVec;
         // notice: modified based the camera position
 		mProjMatrix = frontviewMatrix(fvec3(-1.0f, -1.0f, 0.0f), fvec3(1.0f, 1.0f, -2.0f));
-//        mProjMatrix = perspectiveMatrix(radians(90.0f), 1.0f, -0.1f, -2.0f);
+//        mProjMatrix = perspectiveMatrix(radians(90.0f), 1.0f, -0.1f, 2.0f);
 	}
 	~RenderState() {
 #ifdef BSP_ENABLE
