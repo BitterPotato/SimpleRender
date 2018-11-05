@@ -43,11 +43,11 @@ A small render engine written in C++11.
 
 ### orthographic circumstance
 
-![](http://oi0xi3dzx.bkt.clouddn.com/graphics/theory/orthographic.gif)
+![](http://45.63.110.68/uploads/big/6cb5ec0e4e26bb1b2c7449f1aa81fa5c.gif)
 
 ### perspective circumstance
 
-![](http://oi0xi3dzx.bkt.clouddn.com/graphics/theory/perspective.gif)
+![](http://45.63.110.68/uploads/big/9c6ad23ce502a4f3cee7a38201c6853d.gif)
 
 ## Getting Started
 
